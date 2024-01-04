@@ -1,0 +1,6 @@
+.idea
+.git
+index.html
+src/
+node/
+compressor/out/
