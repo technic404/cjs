@@ -110,14 +110,8 @@ function getImports(content) {
         for (const importedItem of importedItems) {
             const asSign = " as ";
             const hasImportAsSign = importedItem.includes(asSign); // import { Handler as CalendarHandler }
-            const importedVarName = (
-                hasImportAsSign ? 
-                importedItem.split(asSign)[1] :
-                importedItem
-            )
 
             importRanges.push({
-                // name: importedVarName,
                 name: {
                     source: (hasImportAsSign ? importedItem.split(asSign)[0] : importedItem),
                     target: (hasImportAsSign ? importedItem.split(asSign)[1] : importedItem)
@@ -140,9 +134,13 @@ function getImports(content) {
 
 /**
  * Merges duplicated import statements, so if there is
+ * 
  * `import { a } from "./b.js"`
+ * 
  * `import { b } form "./b.js"`
+ * 
  * the result will be:
+ * 
  * `import { a, b } from "./b.js"`
  * 
  * @param {String} jsCode 

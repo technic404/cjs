@@ -23,8 +23,6 @@ const UglifyJS = require("uglify-js");
  * @param {string} output path of the folder containing compiled files
  */
 async function compile(input, output) {
-    // const directory = "../../src";
-
     const style = new StyleCompressor(input);
     const js = new JsCompressor(input);
     const details = new DetailsCompressor(input);
@@ -37,7 +35,6 @@ async function compile(input, output) {
     
     const inAssetsDirectory = `${input}/assets`;
 
-    // const outDirectory = `../../compiled`;
     const outDirectory = `${output}`;
     const outAssetsDirectory = `${outDirectory}/src/assets`;
 

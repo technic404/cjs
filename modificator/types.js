@@ -9,6 +9,7 @@
  * @property {CompilerOutputConfig} output
  * @property {boolean} minifyScripts
  * @property {string} libraryPath
+ * @property {number} tempWebserverPort
  */
 
 /**

@@ -23,6 +23,7 @@
             }
         },
         "minifyScripts": true,
-        "libraryPath": "./cjs"
+        "libraryPath": "./cjs",
+        "tempWebserverPort": 7412
     }
 }
