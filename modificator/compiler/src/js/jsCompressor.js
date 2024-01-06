@@ -201,7 +201,7 @@ class JsCompressor {
                 }
 
                 if (!map.has(parsedImportPath)) {
-                    console.log(`[WARN] Cannot detect import path ${importPath} in file ${file}`);
+                    console.log(`${PrefixError}Cannot detect import path ${Colors.red}${importPath}${Colors.none} in file ${Colors.red}${file}${Colors.none}`);
                 }
     
                 /**
@@ -228,13 +228,10 @@ class JsCompressor {
                     const isEmptyImport = [" ", ""].includes(element.name.target.trim());
     
                     if (isEmptyImport) return;
-
-                    // console.log(element);
     
                     let identifiers = getIdentifiers(parsed, element.name.target);
     
                     while (identifiers.length !== 0) {
-                        // const insertText = `(${methodName}.${element.name})` // was ()
                         const insertText = `(${namings.setUpFunctionName}().${element.name.source})`;
                         const identifier = identifiers[0];
     
