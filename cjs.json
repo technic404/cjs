@@ -1,0 +1,11 @@
+{
+    "version": 1.0,
+    "compiler": {
+        "output": {
+            "index": {
+                "themeColor": "#317EFB"
+            }
+        },
+        "libraryPath": "./cjs"
+    }
+}

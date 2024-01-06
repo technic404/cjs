@@ -1,0 +1,12 @@
+
+&yellow[1] &noneOne argument commands:
+    &yellownode c.js &none[init] - Initialize the c.js project
+    &yellownode c.js &none[compile] - Compile the c.js project
+
+&yellow[2] &noneTwo argument commands:
+    &yellownode c.js &none[component] {ElementName} - Creates a component
+    &yellownode c.js &none[part] {ElementName} - Creates a part
+      &black--global&none - Global part, applied by default
+      &black--target="componentName"&none - Target specific component, and there create part
+    &yellownode c.js &none[layout] {ElementName} - Creates a layout
+&none

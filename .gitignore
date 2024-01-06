@@ -3,4 +3,6 @@
 index.html
 src/
 node/
-compressor/out/
+compiled/
+modificator/node_modules
+modificator/package-lock.json

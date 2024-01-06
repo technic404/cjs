@@ -1,0 +1,28 @@
+{
+    "version": 1.0,
+    "compiler": {
+        "output": {
+            "index": {
+                "title": "New project!",
+                "icon": null,
+                "description": "Default website description",
+                "themeColor": "#ffffff",
+                "author": null,
+                "keywords": [],
+                "robots": ["index", "follow"],
+                "socialMedia": {
+                    "title": "New project!",
+                    "description": "Default website description",
+                    "image": null,
+                    "url": null,
+                    "twitter": {
+                        "enabled": true,
+                        "card": "summary_large_image"
+                    }
+                }
+            }
+        },
+        "minifyScripts": true,
+        "libraryPath": "./cjs"
+    }
+}

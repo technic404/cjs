@@ -1,0 +1,10 @@
+import {{PascalCase}Handler} from "./{PascalCase}Handler.mjs";
+
+const Handler = new {PascalCase}Handler();
+
+export const {PascalCase}Component = createComponent(`
+    <div>{PascalCase}Component works!</div>
+`);
+
+{PascalCase}Component.importStyle('./src/components/{CamelStyle}/{PascalCase}Style.css');
+

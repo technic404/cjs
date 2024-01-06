@@ -1,5 +1,3 @@
-const CjsRunnableStyleWatcher = new Map();
-
 /**
  *
  * @param {String} cssRuleText
@@ -180,14 +178,6 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
  * @param {Boolean} options.enableMultiSelector it creates selector [attribute].class {} and [attribute] > * .class | if false it remain only [attribute].class {}
  */
 async function addRootStyle(selectorPrefix, path, options = { prefixStyleRules: true, encodeKeyframes: true, enableMultiSelector: true } ) {
-    if(cjsRunnable.isStyleValid()) {
-        CjsRunnableStyleWatcher.set(selectorPrefix, {
-            options,
-            path
-        });
-        return;
-    }
-
     if(!("prefixStyleRules" in options)) { options.prefixStyleRules = true; }
     if(!("encodeKeyframes" in options)) { options.encodeKeyframes = true; }
     if(!("enableMultiSelector" in options)) { options.enableMultiSelector = true; }

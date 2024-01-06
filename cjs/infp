@@ -1,7 +1,0 @@
-- added locking system for custom events (outerclick) [CHECK]
-- added aliases to outerclick event, you can mark elements that are not affected by outerclick by function (off)
-
-TODO:
-- add locking system for events that are working on onLoad (observer) system
-- make handlers in components global (class Handler {}, export const ComponentHandler = new Handler(); import { ComponentHandler as Handler } from '...';)
-- add system for organising requests in app

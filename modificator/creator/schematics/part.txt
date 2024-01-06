@@ -1,0 +1,9 @@
+import {{PascalCase}Handler} from "./{PascalCase}Handler.mjs";
+
+const Handler = new {PascalCase}Handler();
+
+export const {PascalCase}Part = createPart(`
+    <div>{PascalCase}Part works!</div>
+`);
+
+{PascalCase}Part.importStyle('./src/parts/{CamelStyle}/{PascalCase}Style.css');

@@ -94,19 +94,6 @@ class ChangesObserverListener {
      * @param {"add"|"remove"} type
      */
     executeAll(type) {
-        for(const [attribute, data] of CjsRunnableStyleWatcher.entries()) {
-            const elements = document.body.querySelectorAll(`[${attribute}='']`);
-
-            if(elements.length === 0) continue;
-
-            elements.forEach(element => {
-                const parsedPath = data.path;
-                const attribute = CjsRunnableDetails.style.map.get(parsedPath);
-
-                element.setAttribute(attribute.prefix, "");
-            })
-        }
-
         for(const [attribute, obj] of this.map.entries()) {
             if(obj.type !== type) continue;
 
@@ -116,7 +103,7 @@ class ChangesObserverListener {
 
             elements.forEach(element => {
                 this.execute(type, attribute, element);
-            });
+            })
         }
     }
 
@@ -137,6 +124,7 @@ class ChangesObserverListener {
             const registeredElementMatches = this.executedFunctions.get(attribute).element === element
 
             if(registeredElementMatches) return;
+
         }
 
         const obj = this.map.get(attribute);
@@ -177,27 +165,6 @@ const mutationCallback = function(mutationsList, observer) {
                 const fictionChildAttributes = {
                     element: getAttributeStartingWith(fictionChild, CJS_ELEMENT_PREFIX),
                     observer: getAttributeStartingWith(fictionChild, CJS_OBSERVER_PREFIX)
-                }
-
-                if(cjsRunnable.isStyleValid()) {
-                    const attributes = Array.from(fictionChild.attributes);
-
-                    attributes.forEach(attribute => {
-                        if(CjsRunnableStyleWatcher.has(attribute.name)) {
-                            // Find real path of the source style file
-                            const runnableStyleWatcherData = CjsRunnableStyleWatcher.get(attribute.name);
-
-                            // Find the short class name (compressed name) for style
-                            const runnableDetailsData = CjsRunnableDetails.style.map.get(runnableStyleWatcherData.path);
-
-                            // Find real elements with that attribute
-                            const documentChild = document.querySelectorAll(`[${attribute.name}='']`);
-    
-                            documentChild.forEach(child => {
-                                child.setAttribute(runnableDetailsData.prefix, "");
-                            });
-                        }
-                    });
                 }
 
                 // If there are no attributes just skip
@@ -243,4 +210,5 @@ window.addEventListener('DOMContentLoaded', () => {
     observer.observe(targetNode, config);
 
     changesObserver.executeAll("add"); // executes missing onLoad functions inside elements, because some elements might have been loaded before DOMContentLoaded
+
 })
