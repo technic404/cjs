@@ -1,8 +1,9 @@
 .idea
 .git
 index.html
-src/
-node/
-compiled/
-modificator/node_modules
-modificator/package-lock.json
+/src/
+/node/
+/compiled/
+/modificator/node_modules
+/modificator/package-lock.json
+/modificator/compiler/src/server/public/temp/script.js
