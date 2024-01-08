@@ -5,6 +5,7 @@ const DetailsCompressor = require('./src/details/detailsCompressor');
 const IndexCompressor = require('./src/index/indexCompressor');
 const readConfig = require('../config/configReader');
 const UglifyJS = require("uglify-js");
+const { cjs } = require('../lib');
 
 /**
  * Compiles the source files of the project
@@ -50,11 +51,7 @@ async function compile(input, output) {
         : workerScriptContent
     ));
 
-    fs.writeFileSync(`${outDirectory}/cup.js`, (minifyScripts
-        ? UglifyJS.minify(jsData.compressedFrameworkScript).code
-        : jsData.compressedFrameworkScript
-    ));
-
+    fs.writeFileSync(`${outDirectory}/cup.js`, cjs.library.getContent());
     fs.writeFileSync(`${outDirectory}/style.css`, styleData.content);
     fs.writeFileSync(`${outDirectory}/index.html`, indexData.content);
 

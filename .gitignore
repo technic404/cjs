@@ -1,6 +1,8 @@
 .idea
 .git
-index.html
+/c.js
+/index.html
+/temp/
 /src/
 /node/
 /compiled/

@@ -1,5 +1,5 @@
 const readConfig = require("./config/configReader");
-const Cjs = require("./framework/cjsLibrary");
+const Cjs = require("./framework/library");
 
 const cjs = new Cjs(readConfig());
 

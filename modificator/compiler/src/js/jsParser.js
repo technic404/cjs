@@ -220,60 +220,6 @@ function getParsedContent(content) {
     return parsed;
 }
 
-/**
- * 
- * @returns {string} merged file contents of cjs library
- */
-function getFrameworkCompressedFiles() {
-    const cjsScriptsOrder = [
-        "utils/ConsoleColorsUtil.js", 
-        "Constants.js", 
-        "Runnable.js",
-        "utils/StringUtil.js", 
-        "utils/ElementUtil.js", 
-        "utils/StyleUtil.js", 
-        "utils/ArrayUtil.js", 
-        "utils/NumericUtil.js", 
-        "utils/public/CjsTimingsUtil.js", 
-        "utils/public/CjsFiltersUtil.js", 
-        "utils/public/CjsRequestsUtil.js", 
-        "utils/public/CjsAssetsUtil.js", 
-        "utils/public/CjsKeyFramesUtil.js", 
-        "utils/public/CjsGlobalsUtil.js", 
-        "utils/public/CjsWebSocket.js", 
-        "ElementActions.js", 
-        "helpers/AttributeReloader.js", 
-        "builders/HtmlElementBuilder.js", 
-        "builders/PartBuilder.js", 
-        "builders/ComponentBuilder.js", 
-        "builders/LayoutBuilder.js", 
-        "FunctionMappings.js", 
-        "listeners/ChangesObserverListener.js", 
-        "helpers/ReferenceHelper.js", 
-        "DocumentRoot.js", 
-        "Initializer.js"
-    ];
-
-    const libraryPath = `../${readConfig().compiler.libraryPath}`;
-    const isFile = cjs.getLibType() === "file";
-
-    if(isFile) {
-        return fs.readFileSync(libraryPath, { encoding: 'utf-8' });
-    }
-
-    let mergedContent = ``;
-
-    for(const path of cjsScriptsOrder) {
-        const fullPath = `${libraryPath}/${path}`;
-
-        if(!fs.existsSync(fullPath)) continue;
-
-        mergedContent += fs.readFileSync(fullPath, { encoding: 'utf-8' }) + "\n";
-    }
-
-    return mergedContent;
-}
-
 module.exports = {
     getIdentifiers,
     getExports,
@@ -281,5 +227,4 @@ module.exports = {
     mergeImportStatements,
     removeComments,
     getParsedContent,
-    getFrameworkCompressedFiles
 }

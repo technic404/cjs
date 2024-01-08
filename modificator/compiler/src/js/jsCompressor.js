@@ -278,7 +278,6 @@ class JsCompressor {
 
         return {
             content: mergedContent,
-            compressedFrameworkScript: getFrameworkCompressedFiles(),
             map: map
         }
     }

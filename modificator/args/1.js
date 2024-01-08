@@ -1,7 +1,7 @@
 
 const compile = require("../compiler/main");
-const createProject = require("../creator/actions/project/createProject");
 const { Prefix } = require("../defaults");
+const { cjs } = require("../lib");
 const { getUsage, getArgumentsWithoutFlags } = require("./arguments");
 
 const ActionTypes = {
@@ -25,7 +25,7 @@ async function passed1Args(process) {
 
     switch (actionType) {
         case ActionTypes.Init:
-            createProject();
+            cjs.initEmptyProject();
 
             console.log(`${Prefix}Created new empty project`)
             break;

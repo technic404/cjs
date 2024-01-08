@@ -1,12 +1,10 @@
 const passed1Args = require("./args/1");
 const passed2Args = require("./args/2");
 const { getUsage, getArgumentsWithoutFlags } = require("./args/arguments");
-const { cjs } = require("./lib");
 
 const availableArgs = [1, 2];
 
 function command() {
-    console.log(cjs.getLibType());
 
     if(!availableArgs.includes(getArgumentsWithoutFlags(process.argv).length)) return console.log(getUsage())
 
