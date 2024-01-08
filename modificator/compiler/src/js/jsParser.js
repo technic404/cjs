@@ -1,5 +1,6 @@
 const fs = require('fs');
 const readConfig = require('../../../config/configReader');
+const { cjs } = require('../../../lib');
 
 /**
  * Returns javascript identifiers from file
@@ -219,6 +220,10 @@ function getParsedContent(content) {
     return parsed;
 }
 
+/**
+ * 
+ * @returns {string} merged file contents of cjs library
+ */
 function getFrameworkCompressedFiles() {
     const cjsScriptsOrder = [
         "utils/ConsoleColorsUtil.js", 
@@ -246,12 +251,11 @@ function getFrameworkCompressedFiles() {
         "listeners/ChangesObserverListener.js", 
         "helpers/ReferenceHelper.js", 
         "DocumentRoot.js", 
-        // "src/Root.mjs", 
         "Initializer.js"
     ];
 
     const libraryPath = `../${readConfig().compiler.libraryPath}`;
-    const isFile = fs.statSync(libraryPath).isFile();
+    const isFile = cjs.getLibType() === "file";
 
     if(isFile) {
         return fs.readFileSync(libraryPath, { encoding: 'utf-8' });

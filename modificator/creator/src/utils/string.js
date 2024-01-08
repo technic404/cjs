@@ -1,8 +1,8 @@
 /**
  * 
- * @param {String} str 
- * @param {Boolean} isCapitalized 
- * @returns {String}
+ * @param {string} str 
+ * @param {boolean} isCapitalized 
+ * @returns {string}
  */
 function changeFirstLetterCapitalization(str, isCapitalized = false) {
     if (str.length === 0) {

@@ -15,9 +15,8 @@ const Colors = {
 const Prefix = `${Colors.yellow}${Colors.underscore}[C.JS]${Colors.none} `;
 const PrefixError = `${Colors.red}${Colors.underscore}[C.JS]${Colors.none} `;
 
-
 module.exports = {
     Prefix: Prefix,
 	PrefixError: PrefixError,
-    Colors: Colors
+    Colors: Colors,
 }
