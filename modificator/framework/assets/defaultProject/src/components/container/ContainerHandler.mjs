@@ -1,7 +1,7 @@
-class ContainerHandler {
+class Handler {
     constructor() {
 
     }
 }
 
-export {ContainerHandler}
+export const ContainerHandler = new Handler();

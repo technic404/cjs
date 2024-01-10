@@ -1,6 +1,4 @@
-import { ContainerHandler } from "./ContainerHandler.mjs";
-
-const Handler = new ContainerHandler();
+import { ContainerHandler as Handler } from "./ContainerHandler.mjs";
 
 export const ContainerComponent = createComponent(`
     <div class="container"></div>

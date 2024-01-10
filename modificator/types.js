@@ -44,6 +44,12 @@
  * @property {"summary"|"summary_large_image"|"app"|"player"|"product"|"gallery"} [card] rich media representation format
  */
 
+/**
+ * @typedef {object} CjsCreatorNames
+ * @property {string} camelStyle
+ * @property {string} pascalCase
+ */
+
 module.exports = {
     Config: {}, 
     CompilerConfig: {},

@@ -4,6 +4,7 @@ const createPart = require("../creator/actions/part/createPart");
 const { ElementTypes } = require("../creator/actions/schematic");
 const { changeFirstLetterCapitalization } = require("../creator/src/utils/string");
 const { Prefix } = require("../defaults");
+const { cjs } = require("../lib");
 const { getUsage, getArgumentsWithoutFlags, getFlags } = require("./arguments");
 
 /**
@@ -39,7 +40,8 @@ function passed2Args(process) {
 
     switch(elementType) {
         case ElementTypes.COMPONENT:
-            createComponent(name);
+            // createComponent(name);
+            cjs.creator.create("component", args[1])
             break;
         case ElementTypes.PART:
             createPart(name, ("target" in flags ? flags.target : null));
