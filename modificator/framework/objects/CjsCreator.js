@@ -4,6 +4,7 @@ const fs = require('fs');
 const CjsHandler = require("./creator/CjsHandler");
 const CjsStyle = require("./creator/CjsStyle");
 const { PrefixError } = require("../../defaults");
+const CjsLayout = require("./creator/CjsLayout");
 
 class CjsCreator {
 
@@ -61,8 +62,20 @@ class CjsCreator {
         }
 
         if(element === "layout") {
+            const path = `../src/layouts/${names.camelStyle}`;
+            const layout = new CjsLayout(names, path);
 
-            return;
+            if(fs.existsSync(layout.getDirectory())) {
+                console.log(`${PrefixError}Layout directory already exists, cannot create layout`)
+
+                return null;
+            }
+
+            fs.mkdirSync(layout.getDirectory(), { recursive: true })
+
+            fs.writeFileSync(layout.getFilePath(), layout.getContent());
+
+            return layout;
         }
 
         if(element === "part") {
