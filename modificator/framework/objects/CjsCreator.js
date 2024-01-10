@@ -2,6 +2,8 @@ const { capitalizeFirst } = require("../utils/string");
 const CjsComponent = require("./creator/CjsComponent");
 const fs = require('fs');
 const CjsHandler = require("./creator/CjsHandler");
+const CjsStyle = require("./creator/CjsStyle");
+const { PrefixError } = require("../../defaults");
 
 class CjsCreator {
 
@@ -16,7 +18,7 @@ class CjsCreator {
      * 
      * @param {"component"|"part"|"layout"} element 
      * @param {string} name 
-     * @returns {CjsComponent}
+     * @returns {CjsComponent|null}
      */
     create(element, name) {
         const hasWrongEnding = name.toLowerCase().endsWith(element);
@@ -37,17 +39,23 @@ class CjsCreator {
 
         if(element === "component") {
             const path = `../src/components/${names.camelStyle}`;
-            const handler = new CjsHandler(names, path)
+            const handler = new CjsHandler(names, path);
+            const style = new CjsStyle(names, path);
             const component = new CjsComponent(names, path)
                 .supplyHandlerImport()
                 .supplyStyleImport();
 
-            if(fs.existsSync(component.getDirectory())) return null; // error, component exists
+            if(fs.existsSync(component.getDirectory())) {
+                console.log(`${PrefixError}Component directory already exists, cannot create component`)
+
+                return null;
+            }
 
             fs.mkdirSync(component.getDirectory(), { recursive: true })
 
             fs.writeFileSync(component.getFilePath(), component.getContent());
             fs.writeFileSync(handler.getFilePath(), handler.getContent());
+            fs.writeFileSync(style.getFilePath(), style.getContent());
 
             return component;
         }

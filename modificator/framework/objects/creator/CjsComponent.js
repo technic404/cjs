@@ -37,13 +37,13 @@ class CjsComponent extends CjsElement {
         const { pascalCase } = this.names;
         const content = [];
 
-        if(this.#imports.handler) content.push(this.#imports.handler);
+        if(this.#imports.handler) content.push(this.#imports.handler + "\n");
 
         content.push(`export const ${pascalCase}Component = createComponent(\``)
         content.push(`    <div>${pascalCase}Component works!</div>`);
         content.push(`\`);`);
 
-        if(this.#imports.style) content.push(this.#imports.style);
+        if(this.#imports.style) content.push("\n" + this.#imports.style);
 
         return content.join("\n");
     }
