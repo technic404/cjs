@@ -1,8 +1,8 @@
 const fs = require("fs");
-const { Colors } = require("../defaults");
+const { Colors } = require("../../defaults");
 
 function getUsage() {
-    let content = fs.readFileSync('./args/schematics/usage.txt', { encoding: 'utf-8' });
+    let content = fs.readFileSync('./usage.txt', { encoding: 'utf-8' });
 
     for(const [k, v] of Object.entries(Colors)) {
         content = content.replace(new RegExp(`&${k}`, 'g'), v);

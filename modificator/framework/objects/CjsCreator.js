@@ -110,8 +110,12 @@ class CjsCreator {
             fs.writeFileSync(handler.getFilePath(), handler.getContent());
             fs.writeFileSync(style.getFilePath(), style.getContent());
             
-            return;
+            return part;
         }
+
+        console.log(`${PrefixError}Got undefined element ${element}`);
+
+        return null;
     }
 }
 
