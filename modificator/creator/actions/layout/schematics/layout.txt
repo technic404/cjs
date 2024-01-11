@@ -1,5 +1,0 @@
-export const {PascalCase}Layout = new LayoutLoader(createLayout(
-    [
-
-    ]
-));

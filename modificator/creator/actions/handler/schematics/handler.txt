@@ -1,5 +1,0 @@
-export class Handler {
-    constructor() { }
-}
-
-export const {PascalCase}Handler = new Handler();
