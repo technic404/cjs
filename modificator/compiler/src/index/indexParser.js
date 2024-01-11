@@ -1,6 +1,8 @@
+const Tag = require("./tags/Tag");
+
 /**
  * 
- * @param {{htmlAttributes?: { name: string, value: string }[], head?: { tagName: string, text?: string, attributes?: { name: string, value: string }[] }[], body?: { tagName: string, text?: string, attributes?: { name: string, value: string }[] }[]}} data 
+ * @param {{htmlAttributes?: { name: string, value: string }[], head?: Tag[], body?: Tag[]}} data 
  * @returns {String} html string
  */
 function createHtmlStructure(data) {
