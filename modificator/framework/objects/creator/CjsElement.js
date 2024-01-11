@@ -5,6 +5,11 @@ class CjsElement {
     fileNameSuffix = "";
 
     /**
+     * @type {string}
+     */
+    #relativePathPrefix = "../"
+
+    /**
      * 
      * @param {import("../../../types").CjsCreatorNames} names 
      * @param {string} directory 
@@ -12,6 +17,14 @@ class CjsElement {
     constructor(names, directory) {
         this.names = names;
         this.directory = directory;
+
+        /**
+         * Path that includes real placement folder of the element files (ex. ./src/components or ./src/layouts)
+         * @type {string}
+         */
+        this.semiAbsolutePath = this.directory.startsWith(this.#relativePathPrefix)
+            ? `./${this.directory.substring(this.#relativePathPrefix.length)}`
+            : this.directory
     }
 
     /**

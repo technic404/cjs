@@ -1,7 +1,7 @@
 const CjsElement = require("./CjsElement");
 
-class CjsComponent extends CjsElement {
-    fileNameSuffix = "Component.mjs";
+class CjsPart extends CjsElement {
+    fileNameSuffix = "Part.mjs";
 
     #imports = {
         handler: null,
@@ -22,12 +22,13 @@ class CjsComponent extends CjsElement {
 
     /**
      * Adds style import statement to component content
+     * @param {string} path prefix path of the style source file
      * @returns {CjsComponent}
      */
-    supplyStyleImport() {
-        const { pascalCase } = this.names;
+    supplyStyleImport(path = "./src/components") {
+        const { pascalCase, camelStyle } = this.names;
 
-        this.#imports.style = `${pascalCase}Component.importStyle('${this.semiAbsolutePath}/${pascalCase}Style.css');`;
+        this.#imports.style = `${pascalCase}Part.importStyle('${path}/${camelStyle}/${pascalCase}Style.css');`;
 
         return this;
     }
@@ -38,8 +39,8 @@ class CjsComponent extends CjsElement {
 
         if(this.#imports.handler) content.push(this.#imports.handler + "\n");
 
-        content.push(`export const ${pascalCase}Component = createComponent(\``)
-        content.push(`    <div>${pascalCase}Component works!</div>`);
+        content.push(`export const ${pascalCase}Part = createPart(\``)
+        content.push(`    <div>${pascalCase}Part works!</div>`);
         content.push(`\`);`);
 
         if(this.#imports.style) content.push("\n" + this.#imports.style);
@@ -48,4 +49,4 @@ class CjsComponent extends CjsElement {
     }
 }
 
-module.exports = CjsComponent;
+module.exports = CjsPart;
