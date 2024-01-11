@@ -25,7 +25,7 @@ class Cjs {
     }
 
     initEmptyProject() {
-        fs.writeFileSync("../c.js", this.library.getContent());
+        fs.writeFileSync("../c.js", this.library.getContent(false));
         fs.cpSync("./framework/assets/defaultProject", this.#relative, { recursive: true });
     }
 }
