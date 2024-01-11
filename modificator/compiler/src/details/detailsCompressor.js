@@ -4,7 +4,7 @@ class DetailsCompressor {
     }
 
     async getData() {
-        const content = `/*\n Compressor details:\n`;
+        const content = [`/*\n Compressor details:\n`];
 
         const data = {
             "Date": new Date().toISOString(),
