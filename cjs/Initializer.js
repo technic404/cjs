@@ -1,5 +1,3 @@
-// import {MainLayout} from "../src/layouts/main/MainLayout.mjs";
-
 /**
  *
  * @param {LayoutLoader} layout
@@ -51,5 +49,3 @@ function createContainer(id) {
 
     return container;
 }
-
-// init(MainLayout);

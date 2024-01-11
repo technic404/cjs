@@ -32,7 +32,7 @@ class CjsWebSocket {
         }
 
         this.webSocket.onclose = (event) => {
-            //console.log(event);
+            
         }
 
         return this;

@@ -1,5 +1,5 @@
 /**
- *
+ * Variable that stores global settings for website
  * @type {{mouse: {up: boolean, state: "up"|"down", down: boolean}}, { window: { DOMContentLoaded: boolean } }}
  */
 const CjsGlobals = {

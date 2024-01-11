@@ -117,21 +117,3 @@ async function createFilter(el, options) {
 
     await passFilterToElement(el, options.filter, options.amount, options.direction, options.time);
 }
-
-/*
-async function blur(el, time, amount) {
-    await passFilterToElement(el, "blur", amount, "standard", time);
-}
-
-async function reverseBlur(el, time, amount) {
-    await passFilterToElement(el, "blur", amount, "reverse", time);
-}
-
-async function opacity(el, time, amount) {
-    await passFilterToElement(el, "opacity", amount, "standard", time);
-}
-
-async function reverseOpacity(el, time, amount) {
-    await passFilterToElement(el, "opacity", amount, "reverse", time);
-}
-*/
