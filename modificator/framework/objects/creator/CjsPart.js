@@ -10,7 +10,7 @@ class CjsPart extends CjsElement {
 
     /**
      * Adds handler import statement to component content
-     * @returns {CjsComponent}
+     * @returns {CjsPart}
      */
     supplyHandlerImport() {
         const { pascalCase } = this.names;
@@ -22,13 +22,12 @@ class CjsPart extends CjsElement {
 
     /**
      * Adds style import statement to component content
-     * @param {string} path prefix path of the style source file
-     * @returns {CjsComponent}
+     * @returns {CjsPart}
      */
-    supplyStyleImport(path = "./src/components") {
+    supplyStyleImport() {
         const { pascalCase, camelStyle } = this.names;
 
-        this.#imports.style = `${pascalCase}Part.importStyle('${path}/${camelStyle}/${pascalCase}Style.css');`;
+        this.#imports.style = `${pascalCase}Part.importStyle('${this.semiAbsolutePath}/${pascalCase}Style.css');`;
 
         return this;
     }

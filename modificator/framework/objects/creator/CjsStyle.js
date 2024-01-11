@@ -7,7 +7,7 @@ class CjsStyle extends CjsElement {
         const { pascalCase } = this.names;
         const content = [];
 
-        content.push(`/* Style for ${pascalCase}Component */`);
+        content.push(`/* Style for ${pascalCase} */`);
 
         return content.join("\n");
     }

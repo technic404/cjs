@@ -44,7 +44,8 @@ function passed2Args(process) {
             cjs.creator.create("component", args[1])
             break;
         case ElementTypes.PART:
-            createPart(name, ("target" in flags ? flags.target : null));
+            // createPart(name, ("target" in flags ? flags.target : null));
+            cjs.creator.create("part", args[1], { target: ("target" in flags ? flags.target : null) })
             break;
         case ElementTypes.LAYOUT:
             cjs.creator.create("layout", args[1])

@@ -5,6 +5,7 @@ const CjsHandler = require("./creator/CjsHandler");
 const CjsStyle = require("./creator/CjsStyle");
 const { PrefixError } = require("../../defaults");
 const CjsLayout = require("./creator/CjsLayout");
+const CjsPart = require("./creator/CjsPart");
 
 class CjsCreator {
 
@@ -19,9 +20,10 @@ class CjsCreator {
      * 
      * @param {"component"|"part"|"layout"} element 
      * @param {string} name 
+     * @param {{ target?: string }} flags
      * @returns {CjsComponent|null}
      */
-    create(element, name) {
+    create(element, name, flags = {}) {
         const hasWrongEnding = name.toLowerCase().endsWith(element);
 
         if(hasWrongEnding) {
@@ -79,7 +81,35 @@ class CjsCreator {
         }
 
         if(element === "part") {
+            const hasTargetFlag = "target" in flags && flags.target !== null;
+            const targettedComponentPath = `../src/components/${flags.target}`;
+            const path = hasTargetFlag
+                ? `${targettedComponentPath}/parts/${names.camelStyle}`
+                : `../src/parts/${names.camelStyle}`;
+            const part = new CjsPart(names, path)
+                .supplyHandlerImport()
+                .supplyStyleImport();
+            const handler = new CjsHandler(names, path);
+            const style = new CjsStyle(names, path);
 
+            if(hasTargetFlag && !fs.existsSync(targettedComponentPath)) {
+                console.log(`${PrefixError}Part cannot be created because component with that name doesn't exists`);
+
+                return null;
+            }
+
+            if(fs.existsSync(part.getDirectory())) {
+                console.log(`${PrefixError}Part directory already exists, cannot create part`)
+
+                return null;
+            }
+
+            fs.mkdirSync(part.getDirectory(), { recursive: true })
+
+            fs.writeFileSync(part.getFilePath(), part.getContent());
+            fs.writeFileSync(handler.getFilePath(), handler.getContent());
+            fs.writeFileSync(style.getFilePath(), style.getContent());
+            
             return;
         }
     }
