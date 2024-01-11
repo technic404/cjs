@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const { getRandomCharacters, cutOffTextFromString, insertTextAtIndex, removeTooManyNewLines } = require("../utils/stringUtil");
 const { getRecursivelyDirectoryFiles, getCombinedPath, slashesToBackslashes } = require('../utils/fileUtil');
-const { getParsedContent, getExports, getImports, getIdentifiers, getFrameworkCompressedFiles } = require('./jsParser');
+const { getParsedContent, getExports, getImports, getIdentifiers } = require('./jsParser');
 const { PrefixError, Colors } = require('../../../defaults');
 
 class JsCompressor {
