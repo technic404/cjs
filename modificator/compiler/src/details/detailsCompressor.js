@@ -4,18 +4,18 @@ class DetailsCompressor {
     }
 
     async getData() {
-        let mergedContent = `/*\n Compressor details:\n`;
+        const content = `/*\n Compressor details:\n`;
 
         const data = {
             "Date": new Date().toISOString(),
         }
 
-        for(const [key, value] of Object.entries(data)) { mergedContent += ` • ${key}: ${value}\n`; }
+        for(const [key, value] of Object.entries(data)) { content.push(` • ${key}: ${value}\n`); }
 
-        mergedContent += "*/";
+        content.push("*/");
 
         return {
-            content: mergedContent
+            content: content.join("\n")
         }
     }
 }
