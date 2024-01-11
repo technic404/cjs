@@ -5,7 +5,7 @@
  */
 function getRandomCharacters(length) {
     let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'.toLowerCase(); // lower case is html naming friendly
+    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789'; // lower case is html naming friendly
     const charactersLength = characters.length;
     let counter = 0;
 
@@ -83,24 +83,6 @@ function cutOffTextFromString(originalString, startIndex, endIndex) {
 function insertTextAtIndex(content, index, text) {
     return content.slice(0, index) + text + content.slice(index);
 }
-
-/**
- * 
- * @param {Number} length 
- * @returns {String}
- */
-function getRandomCharacters(length) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let randomString = '';
-  
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      randomString += characters.charAt(randomIndex);
-    }
-  
-    return randomString;
-}
-
 
 module.exports = {
     getRandomCharacters,

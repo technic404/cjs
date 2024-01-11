@@ -21,7 +21,7 @@ class CjsCreator {
      * @param {"component"|"part"|"layout"} element 
      * @param {string} name 
      * @param {{ target?: string }} flags
-     * @returns {CjsComponent|null}
+     * @returns {CjsComponent|CjsPart|CjsLayout|null}
      */
     create(element, name, flags = {}) {
         const hasWrongEnding = name.toLowerCase().endsWith(element);
