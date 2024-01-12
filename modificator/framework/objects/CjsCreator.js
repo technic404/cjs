@@ -64,11 +64,11 @@ class CjsCreator {
         }
 
         if(element === "layout") {
-            const path = `../src/layouts/${names.camelStyle}`;
+            const path = `../src/layouts/`;
             const layout = new CjsLayout(names, path);
 
-            if(fs.existsSync(layout.getDirectory())) {
-                console.log(`${PrefixError}Layout directory already exists, cannot create layout`)
+            if(fs.existsSync(layout.getFilePath())) {
+                console.log(`${PrefixError}Layout file already exists, cannot create layout`)
 
                 return null;
             }

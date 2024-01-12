@@ -268,7 +268,7 @@ class JsCompressor {
 
         const parsedDirectory = (
             (directory.startsWith("./") || directory.startsWith(".\\") ? directory.replace("./", "").replace(".\\") : directory)
-            + `\\layouts\\main\\MainLayout.mjs`
+            + `\\layouts\\MainLayout.mjs`
         ).replaceAll("/", `\\`)
 
         const mainNamings = map.get(parsedDirectory);

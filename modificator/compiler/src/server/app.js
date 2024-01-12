@@ -76,7 +76,7 @@ function stopWebServer() {
     if(server === null) return;
 
     server.close(() => {
-        console.log('Server is terminated');
+        // console.log('Server is terminated');
     });
 }
 

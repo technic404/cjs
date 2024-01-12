@@ -37,7 +37,7 @@ const commands = {
     }
 }
 
-function command() {
+async function command() {
     const flags = getFlags(process.argv);
     const args = getArgumentsWithoutFlags(process.argv);
 
@@ -48,7 +48,9 @@ function command() {
 
     if(!(firstCommand in commandsArgsCategory)) return console.log(getUsage());
 
-    commandsArgsCategory[firstCommand](args.slice(1), flags);
+    await commandsArgsCategory[firstCommand](args.slice(1), flags);
+
+    process.exit();
 }
 
 command();
