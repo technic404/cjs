@@ -12,8 +12,6 @@ class CjsRoot {
         this.website = {
             title: "New project",
             icon: null,
-            description: "Default website description",
-            themeColor: '#ffffff'
         };
     }
 
@@ -49,26 +47,12 @@ class CjsRoot {
             document.head.appendChild(element);
         }
 
-        function createMeta(name, content) {
-            if(content === null) return;
-
-            const element = document.createElement("meta");
-            element.name = name;
-            element.content = content;
-
-            document.head.appendChild(element);
-        }
-
         document.title = data.title;
 
         document.head.appendChild(document.createComment("Meta definitions"))
 
         // Links
         createLink("icon", data.icon);
-
-        // Metas
-        createMeta("description", data.description);
-        createMeta("theme-color", data.themeColor);
     }
 }
 
