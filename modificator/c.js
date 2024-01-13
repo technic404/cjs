@@ -1,6 +1,7 @@
-const { Prefix } = require("./defaults");
-const { getUsage, getArgumentsWithoutFlags, getFlags } = require("./framework/utils/cmd");
 const { cjs } = require("./lib");
+const { Prefix, PrefixError } = require("./defaults");
+const { getUsage, getArgumentsWithoutFlags, getFlags } = require("./framework/utils/cmd");
+const fs = require('fs');
 
 /**
  * @type {Object.<number, Object.<string, function(string[], Object.<string, string>)>>}
@@ -33,6 +34,21 @@ const commands = {
             if(cjs.creator.create("part", args[0], flags)) {
                 console.log(`${Prefix}Successfully created Part`)
             }
+        },
+        rebuild: async (args) => {
+            const option = args[0].toLowerCase()
+            const match = {
+                "library": () => fs.writeFileSync("../c.js", cjs.library.getContent(false))
+            }
+            const keys = Object.keys(match);
+
+            if(!(option in match)) return console.log(`${PrefixError}Unknown option ${option}, available options: ${keys.join(", ")}`);
+
+            const selected = match[option];
+
+            selected();
+
+            console.log(`${Prefix}Successfully rebuilded ${option}`);
         }
     }
 }
