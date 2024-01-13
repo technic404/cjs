@@ -10,5 +10,5 @@
       &black--target="componentName"&none - Target specific component, and there create part
     &yellownode c.js &none[layout] {ElementName} - Creates a layout
     &yellownode c.js &none[rebuild] [library]
-      &blacklibrary - Updates the library file from library source folder
+      &black[library] - Updates the library file from library source folder
 &none

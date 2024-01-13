@@ -20,14 +20,11 @@ async function startWebServer(port, scriptContent, callback = function() {}) {
         app.use(express.json());
 
         app.get('/', (req, res) => {
-            // fs.writeFileSync(`./src/server/public/temp/script.js`, scriptContent);
             fs.writeFileSync(`${__dirname}/public/temp/script.js`, scriptContent);
 
             res.send(
-                // fs.readFileSync("./src/server/public/index.html", { encoding: 'utf-8' })
                 fs.readFileSync(`${__dirname}/public/index.html`, { encoding: 'utf-8' })
                 .replace("{SCRIPT_CONTENT}", scriptContent)
-                // .replace("{WORKER_CONTENT}", fs.readFileSync("./src/server/public/script.js", { encoding: 'utf-8' }))
                 .replace("{WORKER_CONTENT}", fs.readFileSync(`${__dirname}/public/script.js`, { encoding: 'utf-8' }))
             );
         });

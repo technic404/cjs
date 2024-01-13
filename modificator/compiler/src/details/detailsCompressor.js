@@ -1,7 +1,5 @@
 class DetailsCompressor {
-    constructor(inputDirectory) {
-        this.inputDirectory = inputDirectory
-    }
+    constructor() { }
 
     async getData() {
         const content = [`/*\n Compressor details:\n`];

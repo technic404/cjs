@@ -26,7 +26,7 @@ const { cjs } = require('../lib');
 async function compile(input, output) {
     const style = new StyleCompressor(input);
     const js = new JsCompressor(input);
-    const details = new DetailsCompressor(input);
+    const details = new DetailsCompressor();
     const index = new IndexCompressor(input);
 
     const styleData = await style.getData();
