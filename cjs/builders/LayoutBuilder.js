@@ -3,12 +3,10 @@ class Layout {
      *
      * @param {Array<Array<Component>>} components
      * @param {Element} layoutElement
-     * @param {Function} f
      */
-    constructor(components, layoutElement, f = function() {}) {
+    constructor(components, layoutElement, subLayoutsOnloads = [function() {}]) {
         this.components = components;
         this.layoutElement = layoutElement;
-        this.function = f;
     }
 
     /**
@@ -40,17 +38,7 @@ class Layout {
         return new Layout(
             this.components,
             this.layoutElement.cloneNode(true),
-            this.function
         )
-    }
-
-    /**
-     *
-     * @deprecated use LayoutLoader.onLoad();
-     * @param {Function} f
-     */
-    onLoad(f) {
-        this.function = f;
     }
 }
 
@@ -73,7 +61,11 @@ function createLayout(components) {
 
         let result = null;
 
-        if(component[0].toElement(true) instanceof HTMLElement) {
+        if(component[0] instanceof LayoutLoader) {
+            const layoutLoader = component[0];
+
+            result = layoutLoader.getLayout().getLayoutElement();
+        } else if(component[0].toElement(true) instanceof HTMLElement) {
             let main = component[0].toElement(true).cloneNode(true);
 
             if(component.length === 2) {
@@ -192,7 +184,16 @@ class LayoutLoader {
     }
 
     loadLayoutMappings() {
-        flattenInfinite(this.layout.components).forEach(component => { component.function(); });
+        flattenInfinite(this.layout.components).forEach(component => { 
+            const isLayout = component instanceof LayoutLoader;
+
+            if(isLayout) {
+                component.loadLayoutMappings();
+                return;
+            }
+
+            component.function(this._data);
+        });
 
         this.function(this._data);
 
