@@ -4,7 +4,7 @@ class Layout {
      * @param {Array<Array<Component>>} components
      * @param {Element} layoutElement
      */
-    constructor(components, layoutElement, subLayoutsOnloads = [function() {}]) {
+    constructor(components, layoutElement) {
         this.components = components;
         this.layoutElement = layoutElement;
     }
