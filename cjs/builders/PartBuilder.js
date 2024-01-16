@@ -98,7 +98,8 @@ class Part {
     }
 
     /**
-     *
+     * 
+     * @deprecated
      * @param {Object} object
      * @return {Part}
      */
@@ -129,8 +130,19 @@ class Part {
         return this;
     }
 
-    toElement() {
-        return htmlToElement((this.tempHtml));
+    /**
+     * Provides part element as HTMLElement
+     * @param {object} data data to pass, to part
+     * @returns {HTMLElement}
+     */
+    toElement(data = {}) {
+        if(typeof data !== "object") console.log(`${CJS_PRETTY_PREFIX_X}Provided non-object type param, expected object`);
+
+        const hasData = Object.keys(data).length > 0;
+
+        if(hasData) this.setData(data);
+
+        return htmlToElement(this.tempHtml);
     }
 
     findAllExistingParts() {
@@ -156,10 +168,17 @@ class Part {
     }
 
     /**
-     *
-     * @returns {String}
+     * Provides part element as plain html
+     * @param {object} data data to pass, to part
+     * @returns {string}
      */
-    toHtml() {
+    toHtml(data = {}) {
+        if(typeof data !== "object") console.log(`${CJS_PRETTY_PREFIX_X}Provided non-object type param, expected object`);
+
+        const hasData = Object.keys(data).length > 0;
+
+        if(hasData) this.setData(data);
+
         return (this.tempHtml);
     }
 
