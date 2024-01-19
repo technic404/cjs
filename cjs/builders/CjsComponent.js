@@ -24,6 +24,12 @@ class CjsComponent extends CjsBuilderInterface {
      */
     toElement(ignoreReadyState = false) {
         const element = htmlToElement(this.html);
+        const doesNotHaveHtml = element == null;
+
+        if(doesNotHaveHtml) {
+            console.log(`${CJS_PRETTY_PREFIX_X}Component does not have any html inside, cannot paste it to website`);
+            return null;
+        }
 
         element.setAttribute(this.attribute, '');
 
