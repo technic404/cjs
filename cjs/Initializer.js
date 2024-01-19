@@ -1,6 +1,6 @@
 /**
  *
- * @param {LayoutLoader} layout
+ * @param {CjsLayout} layout
  */
 function init(layout) {
     const loadStartMs = new Date().getTime();
@@ -19,12 +19,12 @@ function init(layout) {
     document.addEventListener('DOMContentLoaded', async (e) => {
         /* Cjs body root */
         const container = createContainer(CJS_ROOT_CONTAINER_PREFIX);
-        const mainLayoutElement = layout.getLayout().getLayoutElement();
+        const mainLayoutElement = layout.toElement();
 
         container.innerHTML = ``;
         container.insertAdjacentElement(`beforeend`, mainLayoutElement);
 
-        layout.loadLayoutMappings();
+        layout._executeOnLoad();
 
         functionMappings.applyBodyMappings(); // loaded only on init of MainLayout
 
