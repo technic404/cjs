@@ -1,3 +1,14 @@
+/**
+ * @class
+ * @classdesc Class for creating a Part used for creating small elements in website
+ * @extends CjsBuilderInterface
+ * @description
+ * You can use that element to create repetitive elements on website like list elements.
+ * 
+ * That element is meant to be used as being duplicated.
+ * 
+ * If you want to use element single time, go for CjsComponent
+ */
 class CjsPart extends CjsBuilderInterface {
 
     /**

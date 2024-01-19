@@ -10,6 +10,14 @@ const CjsTakenAttributes = {
  * 
  */
 
+/**
+ * @class
+ * @classdesc Base class representing a generic builder interface.
+ * @description
+ * This class is designed to be extended by CjsPart or rather CjsComponent.
+ * 
+ * It provides common functionality that subclasses can build upon.
+ */
 class CjsBuilderInterface {
     /**
      * @type {string} attribute that indicated the element on the website

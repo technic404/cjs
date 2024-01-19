@@ -1,3 +1,12 @@
+/**
+ * @class
+ * @classdesc Class for creating a Component used for styling in website
+ * @extends CjsBuilderInterface
+ * @description
+ * You can use that element to set the website layout and flow.
+ * 
+ * It is recommended not to duplicate Components multiple times (CjsPart is for that).
+ */
 class CjsComponent extends CjsBuilderInterface {
 
     /**
