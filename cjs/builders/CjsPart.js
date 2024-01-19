@@ -235,7 +235,22 @@ class CjsPart extends CjsBuilderInterface {
 }
 
 /**
- *
+ * Used for passing text to CjsPart in fast way.
+ * 
+ * When used in code, the "text()" fragment is replaced by the corresponding value.
+ * 
+ * You can use dot (.) separator for going deeper in object propertieses
+ * @example 
+ * { name: "User156", activity: { level: 10, experience: 217 } }
+ * 
+ * @example 
+ * <div class="user">
+ *     <p class="name">${text("name")}</p>
+ *     <div class="level">
+ *         ${text("activity.level")} <span class="small">${text("activity.experience")}</span>
+ *     </div>
+ * </div>
+ * 
  * @param {string} fieldName
  * @return {string}
  */
