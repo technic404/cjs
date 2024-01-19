@@ -192,7 +192,12 @@ class LayoutLoader {
                 return;
             }
 
-            component.function(this._data);
+            const isComponent = component instanceof CjsComponent;
+
+            if(isComponent) {
+                component._executeOnLoad(this._data);
+                return;
+            }
         });
 
         this.function(this._data);
