@@ -1,7 +1,7 @@
 class CjsComponent extends CjsBuilderInterface {
 
     /**
-     * 
+     * Creates the component type element
      * @param {string} html 
      */
     constructor(html) {
@@ -28,7 +28,7 @@ class CjsComponent extends CjsBuilderInterface {
     }
 
     /**
-     *
+     * Loads layout inside the selected component
      * @param {LayoutLoader} layoutLoader
      */
     loadLayout(layoutLoader) {

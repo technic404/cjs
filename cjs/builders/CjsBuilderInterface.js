@@ -11,10 +11,19 @@ const CjsTakenAttributes = {
  */
 
 class CjsBuilderInterface {
+    /**
+     * @type {string} attribute that indicated the element on the website
+     */
     attribute = null;
 
+    /**
+     * Callback that is called when element is loaded into website
+     */
     #onLoadCallback = function() {};
 
+    /**
+     * Generated unique attribute for certain element type
+     */
     #generateAttribute() {
         const takenAttributes = CjsTakenAttributes[this.type];
 
@@ -73,7 +82,15 @@ class CjsBuilderInterface {
         addRootStyle(this.attribute, path, options).then();
     }
 
+    /**
+     * Converts element to HTMLElement type
+     * @returns {HTMLElement}
+     */
     toElement() {}
 
+    /**
+     * Converts element to plain html string
+     * @returns {string}
+     */
     toHtml() {}
 }

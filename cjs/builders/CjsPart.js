@@ -22,6 +22,10 @@ class CjsPart extends CjsBuilderInterface {
         return firstElementChild.outerHTML;
     }
 
+    /**
+     * Creates the part type element
+     * @param {string} html 
+     */
     constructor(html) {
         super("part", CJS_PART_PREFIX, html);
 
@@ -88,6 +92,11 @@ class CjsPart extends CjsBuilderInterface {
         return this.tempHtml;
     }
 
+    /**
+     * Sets data for part that could be recieved under text() method or action methods
+     * @param {object} data information that should be transformed to part
+     * @returns {CjsPart}
+     */
     setData(data) {
         const isObject = (any) => { return any instanceof Object; }
         const element = htmlToElement(this.html).cloneNode(true);
