@@ -6,12 +6,12 @@ class FunctionMappings {
     }
 
     /**
-     *
-     * @param {"click"|"contextmenu"|"dblclick"|"mousedown"|"mouseenter"|"mouseleave"|"mousemove"|"mouseout"|"mouseover"|"mouseup"|"keydown"|"keypress"|"keyup"|"blur"|"change"|"focus"|"focusin"|"focusout"|"input"|"invalid"|"reset"|"search"|"select"|"submit"|"drag"|"dragend"|"dragenter"|"dragleave"|"dragover"|"dragstart"|"drop"|"copy"|"cut"|"paste"|"animationend"|"animationiteration"|"animationstart"|"transitionend"|"abort"|"canplay"|"canplaythrough"|"durationchange"|"emptied"|"ended"|"loadeddata"|"loadedmetadata"|"loadstart"|"pause"|"play"|"playing"|"progress"|"ratechange"|"seeked"|"seeking"|"stalled"|"suspend"|"timeupdate"|"volumechange"|"waiting"|"beforeinput"|"fullscreenchange"|"fullscreenerror"|"resize"|"scroll"|"hashchange"|"load"|"unload"|"online"|"offline"|"popstate"|"storage"|"touchcancel"|"touchend"|"touchmove"|"touchstart"|"webkitfullscreenchange"|"webkitfullscreenerror"} type
-     * @param {Function} mappingFunction
+     * Adds new listener to website for provided event
+     * @param {CjsCommonEvents} type
+     * @param {function} mappingFunction
      * @param {{windowApplied: boolean, additionalName: string|null}} options
-     * @param {{}} data
-     * @returns {String} attribute
+     * @param {object} data
+     * @returns {string} attribute
      */
     add(type, mappingFunction, options = { windowApplied: false, additionalName: null }, data = {}) {
         let attribute = null;
@@ -26,9 +26,9 @@ class FunctionMappings {
     }
 
     /**
-     *
-     * @param {"outerclick"|"click"|"contextmenu"|"dblclick"|"mousedown"|"mouseenter"|"mouseleave"|"mousemove"|"mouseout"|"mouseover"|"mouseup"|"keydown"|"keypress"|"keyup"|"blur"|"change"|"focus"|"focusin"|"focusout"|"input"|"invalid"|"reset"|"search"|"select"|"submit"|"drag"|"dragend"|"dragenter"|"dragleave"|"dragover"|"dragstart"|"drop"|"copy"|"cut"|"paste"|"animationend"|"animationiteration"|"animationstart"|"transitionend"|"abort"|"canplay"|"canplaythrough"|"durationchange"|"emptied"|"ended"|"loadeddata"|"loadedmetadata"|"loadstart"|"pause"|"play"|"playing"|"progress"|"ratechange"|"seeked"|"seeking"|"stalled"|"suspend"|"timeupdate"|"volumechange"|"waiting"|"beforeinput"|"fullscreenchange"|"fullscreenerror"|"resize"|"scroll"|"hashchange"|"load"|"unload"|"online"|"offline"|"popstate"|"storage"|"touchcancel"|"touchend"|"touchmove"|"touchstart"|"webkitfullscreenchange"|"webkitfullscreenerror"} event
-     * @returns {String}
+     * Disables the provided event from being executed
+     * @param {CjsCustomEvents} event
+     * @returns {string}
      */
     disable(event) {
         let attribute = null;
@@ -45,7 +45,7 @@ class FunctionMappings {
     /**
      * Clones mapping without cloning the data and isApplied parameter
      * @param sourceAttribute
-     * @returns {String|null}
+     * @returns {string|null}
      */
     cloneMapping(sourceAttribute) {
         if(!this.mappings.has(sourceAttribute)) {
@@ -106,8 +106,8 @@ class FunctionMappings {
 
     /**
      *
-     * @param {String} attribute
-     * @param {Object} data
+     * @param {string} attribute
+     * @param {object} data
      */
     setData(attribute, data) {
         if(!this.mappings.has(attribute)) return console.log(`${CJS_PRETTY_PREFIX_X}Cannot set data for ${Colors.Yellow}"${attribute}"${Colors.None}, because it doesn't exists`);
@@ -120,8 +120,8 @@ class FunctionMappings {
     /**
      *
      * @param {HTMLElement} element
-     * @param {String} attribute
-     * @param {Boolean} allowDuplicates
+     * @param {string} attribute
+     * @param {boolean} allowDuplicates
      */
     applyElementAttributeMappingFunction(element, attribute, allowDuplicates = false) {
         if(!this.mappings.has(attribute)) return;
@@ -173,34 +173,13 @@ class FunctionMappings {
     /**
      *
      * @param {HTMLElement} element
-     * @param {Boolean} allowDuplicates
+     * @param {boolean} allowDuplicates
      */
     applyElementMappingFunction(element, allowDuplicates = false) {
         const attributes = getAttributeStartingWith(element, CJS_ELEMENT_PREFIX);
 
         for(const attribute of attributes) {
             this.applyElementAttributeMappingFunction(element, attribute, allowDuplicates);
-            /*
-            if(!this.mappings.has(attribute)) return;
-
-            const mapping = this.mappings.get(attribute);
-
-            if(mapping.isApplied && !allowDuplicates) return;
-
-            mapping.isApplied = true;
-
-            if(!element) {
-                return console.log(`${CJS_PRETTY_PREFIX_X}Fatal error mapping for ${Colors.Yellow}"${attribute}"${Colors.None} failed, cannot find element matching that attribute`);
-            }
-
-            const targetElementEvent = (mapping.options.windowApplied ? window : element);
-
-            targetElementEvent.addEventListener(mapping.type, (event) => {
-                if(this.isEventAttributeLocked(attribute)) return;
-
-                mapping.action(event, element, mapping.data);
-            });
-            */
         }
     }
 

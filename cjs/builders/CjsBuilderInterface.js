@@ -2,13 +2,7 @@ const CjsTakenAttributes = {
     component: [], part: []
 };
 
-/**
- * @typedef {Object} StyleImportOptions
- * @property {boolean} prefixStyleRules if prefix selectors by element attribute
- * @property {boolean} encodeKeyframes change names of the keyFrames so when you have two files with keyframe "click" there will be no conflict
- * @property {boolean} enableMultiSelector it creates selector [attribute].class {} and [attribute] > * .class | if false it remain only [attribute].class {}
- * 
- */
+
 
 /**
  * @class
@@ -84,7 +78,7 @@ class CjsBuilderInterface {
     /**
      * Imports style to element from specified file
      * @param {string} path path of the specific style file (.css)
-     * @param {StyleImportOptions} options
+     * @param {CjsStyleImportOptions} options
      */
     importStyle(path, options = { prefixStyleRules: true, encodeKeyframes: true, enableMultiSelector: true } ) {
         addRootStyle(this.attribute, path, options).then();

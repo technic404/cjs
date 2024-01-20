@@ -19,8 +19,6 @@ class Reference {
 
     insert(html) {
         this.getElement().innerHTML = html;
-
-        //functionMappings.applyBodyMappings(); // TODO change in append functions to applyElementMappingFunction
     }
 
     clearContent() {
@@ -29,14 +27,10 @@ class Reference {
 
     appendBefore(html) {
         this.getElement().insertAdjacentHTML(`afterbegin`, html);
-
-        //functionMappings.applyBodyMappings();
     }
 
     appendAfter(html) {
         this.getElement().insertAdjacentHTML(`beforeend`, html);
-
-        //functionMappings.applyBodyMappings();
     }
 
     appendElement(element) {

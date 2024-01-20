@@ -1,8 +1,8 @@
 /**
  * The maximum is inclusive and the minimum is inclusive
- * @param {Number} min
- * @param {Number} max
- * @returns {Number}
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
  */
 function getRandom(min, max) {
     min = Math.ceil(min);

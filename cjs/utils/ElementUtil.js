@@ -1,8 +1,8 @@
 /**
  *
  * @param {HTMLElement|Node} element
- * @param {String} startingWith
- * @returns {Array<String>} attribute name
+ * @param {string} startingWith
+ * @returns {string[]} attribute name
  */
 function getAttributeStartingWith(element, startingWith) {
     let attributes = [];
@@ -48,8 +48,8 @@ function createVirtualContainer(element) {
 /**
  * Finds parent that has attribute starting with passed value
  * @param {HTMLElement} countFromElement
- * @param {String} attribute
- * @param {Boolean} includeSelf
+ * @param {string} attribute
+ * @param {boolean} includeSelf
  * @return {null|HTMLElement}
  */
 function findParentThatHasAttribute(countFromElement, attribute, includeSelf = true) {

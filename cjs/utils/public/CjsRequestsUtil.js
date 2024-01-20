@@ -1,9 +1,9 @@
 class CjsRequestResult {
     /**
      *
-     * @param {Number} statusCode
-     * @param {String} responseText
-     * @param {Boolean} networkError
+     * @param {number} statusCode
+     * @param {string} responseText
+     * @param {boolean} networkError
      */
     constructor(statusCode, responseText, networkError) {
         this.statusCode = statusCode;
@@ -33,8 +33,8 @@ class CjsRequestResult {
 
     /**
      *
-     * @param {Number} code
-     * @param {Function} callback
+     * @param {number} code
+     * @param {function} callback
      */
     onStatus(code, callback) {
         if(this.statusCode === code) {
@@ -46,8 +46,8 @@ class CjsRequestResult {
 class CjsRequest {
     /**
      *
-     * @param {String} url
-     * @param {"post"|"get"|"options"|"head"|"patch"|"delete"|"put"} method
+     * @param {string} url
+     * @param {CjsRequestMethods} method
      */
     constructor(url, method) {
         this.url = url;
@@ -62,7 +62,7 @@ class CjsRequest {
 
     /**
      *
-     * @param {Function} callback
+     * @param {function} callback
      * @returns {CjsRequest}
      */
     onStart(callback) {
@@ -73,7 +73,7 @@ class CjsRequest {
 
     /**
      *
-     * @param {Function} callback
+     * @param {function} callback
      * @returns {CjsRequest}
      */
     onEnd(callback) {
@@ -165,7 +165,7 @@ class CjsRequest {
 
     /**
      *
-     * @param {Object} query
+     * @param {object} query
      * @return {CjsRequest}
      */
     setQuery(query) {
@@ -176,7 +176,7 @@ class CjsRequest {
 
     /**
      *
-     * @param {Object} headers
+     * @param {object} headers
      * @returns {CjsRequest}
      */
     setHeaders(headers) {
@@ -187,7 +187,7 @@ class CjsRequest {
 
     /**
      *
-     * @param {Object} body
+     * @param {object} body
      * @returns {CjsRequest}
      */
     setBody(body) {
@@ -198,7 +198,7 @@ class CjsRequest {
 
     /**
      *
-     * @param {Object} files
+     * @param {object} files
      * @returns {CjsRequest}
      */
     setFiles(files) {

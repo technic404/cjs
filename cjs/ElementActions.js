@@ -29,7 +29,7 @@ function cjsEventFunction(f, event, sourceElement, data) {
 
 /**
  *
- * @param {"outerclick"|"click"|"contextmenu"|"dblclick"|"mousedown"|"mouseenter"|"mouseleave"|"mousemove"|"mouseout"|"mouseover"|"mouseup"|"keydown"|"keypress"|"keyup"|"blur"|"change"|"focus"|"focusin"|"focusout"|"input"|"invalid"|"reset"|"search"|"select"|"submit"|"drag"|"dragend"|"dragenter"|"dragleave"|"dragover"|"dragstart"|"drop"|"copy"|"cut"|"paste"|"animationend"|"animationiteration"|"animationstart"|"transitionend"|"abort"|"canplay"|"canplaythrough"|"durationchange"|"emptied"|"ended"|"loadeddata"|"loadedmetadata"|"loadstart"|"pause"|"play"|"playing"|"progress"|"ratechange"|"seeked"|"seeking"|"stalled"|"suspend"|"timeupdate"|"volumechange"|"waiting"|"beforeinput"|"fullscreenchange"|"fullscreenerror"|"resize"|"scroll"|"hashchange"|"load"|"unload"|"online"|"offline"|"popstate"|"storage"|"touchcancel"|"touchend"|"touchmove"|"touchstart"|"webkitfullscreenchange"|"webkitfullscreenerror"} event
+ * @param {CjsCustomEvents} event
  */
 function off(...event) {
     return functionMappings.disable(event);
@@ -76,8 +76,6 @@ function onDblclick(f) {
     return functionMappings.add("dblclick", (event, element, data) => { cjsEventFunction(f, event, element, data); });
 }
 
-// TODO add outerclick lock and unlock detection separate from click event
-// extra event
 /**
  * Executes when clicked outside the element
  * @param {function(CjsEvent)} f

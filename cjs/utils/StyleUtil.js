@@ -2,7 +2,7 @@ const CjsRunnableStyleWatcher = new Map();
 
 /**
  *
- * @param {String} cssRuleText
+ * @param {string} cssRuleText
  * @return {Promise<CSSRule>}
  */
 async function parseCSSRule(cssRuleText) {
@@ -58,12 +58,9 @@ async function addUniqueKeyframes(keyframesRules, rules) {
 
 /**
  *
- * @param {String} cssText
- * @param {String} prefix
- * @param {Object} options
- * @param {Boolean} options.prefixStyleRules
- * @param {Boolean} options.encodeKeyframes
- * @param {Boolean} options.enableMultiSelector
+ * @param {string} cssText
+ * @param {string} prefix
+ * @param {CjsStyleImportOptions} options
  * @return {Promise<string>}
  */
 async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRules: true, encodeKeyframes: true, enableMultiSelector: true }) {
@@ -172,25 +169,16 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
 
 /**
  *
- * @param {String} selectorPrefix
- * @param {String} path
- * @param {Object} options
- * @param {Boolean} options.prefixStyleRules
- * @param {Boolean} options.encodeKeyframes
- * @param {Boolean} options.enableMultiSelector it creates selector [attribute].class {} and [attribute] > * .class | if false it remain only [attribute].class {}
+ * @param {string} selectorPrefix
+ * @param {string} path
+ * @param {CjsStyleImportOptions} options
  */
 async function addRootStyle(selectorPrefix, path, options = { prefixStyleRules: true, encodeKeyframes: true, enableMultiSelector: true } ) {
-    if(cjsRunnable.isStyleValid()) {
-        CjsRunnableStyleWatcher.set(selectorPrefix, {
-            options,
-            path
-        });
-        return;
-    }
-
     if(!("prefixStyleRules" in options)) { options.prefixStyleRules = true; }
     if(!("encodeKeyframes" in options)) { options.encodeKeyframes = true; }
     if(!("enableMultiSelector" in options)) { options.enableMultiSelector = true; }
+    
+    if(cjsRunnable.isStyleValid()) return CjsRunnableStyleWatcher.set(selectorPrefix, { options, path }); 
 
     const request = await new CjsRequest(path, "get").doRequest();
 

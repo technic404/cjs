@@ -11,7 +11,7 @@ class CjsWebSocket {
 
     /**
      *
-     * @param {String} url ws://address:port/
+     * @param {string} url ws://address:port/
      * @returns {CjsWebSocket}
      */
     connect(url) {
@@ -57,7 +57,7 @@ class CjsWebSocket {
 
     /**
      *
-     * @param {Object} json
+     * @param {object} json
      * @returns {CjsWebSocket}
      */
     sendJson(json) {
@@ -69,7 +69,7 @@ class CjsWebSocket {
     /**
      *
      * @param {function(MessageEvent)} callback
-     * @returns {String} id of the created capture
+     * @returns {string} id of the created capture
      */
     createCapture(callback) {
         const id = getRandomCharacters(16);
@@ -81,7 +81,7 @@ class CjsWebSocket {
 
     /**
      *
-     * @param {String} id
+     * @param {string} id
      * @returns {CjsWebSocket}
      */
     removeCapture(id) {
@@ -92,8 +92,8 @@ class CjsWebSocket {
 
     /**
      *
-     * @param {String} id
-     * @returns {Boolean}
+     * @param {string} id
+     * @returns {boolean}
      */
     hasCapture(id) {
         return this.captures.has(id);

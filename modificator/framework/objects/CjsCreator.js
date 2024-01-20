@@ -1,9 +1,9 @@
 const { capitalizeFirst } = require("../utils/string");
+const { PrefixError } = require("../../defaults");
 const CjsComponent = require("./creator/CjsComponent");
 const fs = require('fs');
 const CjsHandler = require("./creator/CjsHandler");
 const CjsStyle = require("./creator/CjsStyle");
-const { PrefixError } = require("../../defaults");
 const CjsLayout = require("./creator/CjsLayout");
 const CjsPart = require("./creator/CjsPart");
 

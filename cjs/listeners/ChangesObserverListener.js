@@ -20,7 +20,7 @@ class ChangesObserverListener {
      *
      * @param {"add"|"remove"} type
      * @param {function(CjsEvent)} f function to execute when changes observer detects the trigger
-     * @returns {String} attribute
+     * @returns {string} attribute
      */
     listen(type, f) {
         if(!["add", "remove"].includes(type)) {
@@ -41,8 +41,8 @@ class ChangesObserverListener {
 
     /**
      *
-     * @param {String} attribute
-     * @return {String|Null} new attribute
+     * @param {string} attribute
+     * @return {string|null} new attribute
      */
     cloneAttribute(attribute) {
         if(!this.map.has(attribute)) {
@@ -71,9 +71,9 @@ class ChangesObserverListener {
 
     /**
      * Observer needs to reload attributes
-     * @param {String} attribute
-     * @param {Object} data
-     * @returns {String|Null}
+     * @param {string} attribute
+     * @param {object} data
+     * @returns {string|Null}
      */
     setData(attribute, data) {
         if(!this.map.has(attribute)) {
@@ -123,7 +123,7 @@ class ChangesObserverListener {
     /**
      *
      * @param {"add"|"remove"} type
-     * @param {String} attribute
+     * @param {string} attribute
      * @param {HTMLElement|Node} element source element that has been changed
      */
     execute(type, attribute, element) {

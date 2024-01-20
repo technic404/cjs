@@ -1,7 +1,7 @@
 /**
  * To lower case (html naming friendly)
- * @param {Number} length
- * @returns {String}
+ * @param {number} length
+ * @returns {string}
  */
 function getRandomCharacters(length) {
     let result = '';
@@ -30,8 +30,8 @@ function getRandomCharacters(length) {
 
 /**
  *
- * @param {String} string
- * @return {Number}
+ * @param {string} string
+ * @return {number}
  */
 function getUniqueNumberId(string) {
     let hash = 5381; // Initial hash value
@@ -46,10 +46,10 @@ function getUniqueNumberId(string) {
 
 /**
  *
- * @param {String} string source string
- * @param {String} search
- * @param {String} value
- * @return {String}
+ * @param {string} string source string
+ * @param {string} search
+ * @param {string} value
+ * @return {string}
  */
 function safeReplaceAll(string, search, value) {
     return string.replace(new RegExp(`${search}`, 'g'), `${value}`)

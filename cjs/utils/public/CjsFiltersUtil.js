@@ -1,11 +1,11 @@
 class CjsFilter {
     /**
      *
-     * @param {String} name
-     * @param {Number} amount
-     * @param {String} direction
-     * @param {Number} time
-     * @param {String} className
+     * @param {string} name
+     * @param {number} amount
+     * @param {string} direction
+     * @param {number} time
+     * @param {string} className
      */
     constructor(name, amount, direction, time, className) {
         this.name = name;
@@ -22,10 +22,10 @@ class CjsFilter {
 
 /**
  *
- * @param {"grayscale"|"blur"|"brightness"|"contrast"|"hue-rotate"|"invert"|"opacity"|"saturate"|"sepia"} filterName
- * @param {Number} filterAmount
- * @param {"standard"|"reverse"} filterDirection
- * @param {Number} timeMs
+ * @param {CjsFilterTypes} filterName
+ * @param {number} filterAmount
+ * @param {CjsFilterDirections} filterDirection
+ * @param {number} timeMs
  */
 function addStyle(filterName, filterAmount, filterDirection, timeMs) {
     const style = document.head.querySelector(`[id="${CJS_STYLE_FILTERS_PREFIX}"]`);
@@ -94,7 +94,6 @@ async function passFilterToElement(el, name, amount, direction, time) {
     const cjsFilter = (matchingElements.length > 0 ? matchingElements[0] : addStyle(name, amount, direction, time));
 
     ACTIVE_FILTERS[name].push(cjsFilter);
-
     ACTIVE_FILTERS[name].forEach(c => { el.classList.remove(c.getClassName()); });
 
     el.classList.add(cjsFilter.getClassName());
@@ -105,15 +104,15 @@ async function passFilterToElement(el, name, amount, direction, time) {
 }
 
 /**
- *
- * @param el
- * @param {{filter: "grayscale"|"blur"|"brightness"|"contrast"|"hue-rotate"|"invert"|"opacity"|"saturate"|"sepia", time?: number, amount?: number, direction?: "standard"|"reverse"}} options
+ * 
+ * @param {HTMLElement} element
+ * @param {CjsFilterOptions} options
  * @return {Promise<void>}
  */
-async function createFilter(el, options) {
+async function createFilter(element, options) {
     if(!("time" in options)) { options.time = 500; }
     if(!("amount" in options)) { options.amount = 10; }
     if(!("direction" in options)) { options.direction = "standard"; }
 
-    await passFilterToElement(el, options.filter, options.amount, options.direction, options.time);
+    await passFilterToElement(element, options.filter, options.amount, options.direction, options.time);
 }
