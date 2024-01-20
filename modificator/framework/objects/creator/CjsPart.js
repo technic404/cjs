@@ -38,7 +38,7 @@ class CjsPart extends CjsElement {
 
         if(this.#imports.handler) content.push(this.#imports.handler + "\n");
 
-        content.push(`export const ${pascalCase}Part = createPart(\``)
+        content.push(`export const ${pascalCase}Part = new CjsPart(\``)
         content.push(`    <div>${pascalCase}Part works!</div>`);
         content.push(`\`);`);
 
