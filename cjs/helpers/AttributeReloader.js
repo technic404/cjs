@@ -15,28 +15,6 @@ function reloadAttributes(html) {
             references: getAttributeStartingWith(child, CJS_REFERENCE_PREFIX)
         }
 
-        /*
-        for(const [key, value] of Object.entries(attributes)) {
-            value.forEach(a => child.removeAttribute(a));
-        }
-
-        attributes.component.forEach(a => {
-            child.setAttribute(COMPONENT_PREFIX + getRandomCharacters(ID_LENGTH), "")
-        });
-
-        attributes.part.forEach(a => {
-            child.setAttribute(PART_PREFIX + getRandomCharacters(ID_LENGTH), "")
-        });
-
-        attributes.partTextField.forEach(a => {
-            child.setAttribute(PART_TEXT_FIELD_PREFIX + getRandomCharacters(ID_LENGTH), "")
-        });
-        */
-
-        attributes.references.forEach(a => {
-            //child.removeAttribute(a);
-        })
-
         attributes.element.forEach(a => {
             child.removeAttribute(a);
 
@@ -46,10 +24,6 @@ function reloadAttributes(html) {
                 child.setAttribute(newAttribute.trim(), "");
             }
         });
-
-        attributes.element.forEach(a => {
-            //functionMappings.mappings.delete(a);
-        })
     }
 
     return element.outerHTML;
