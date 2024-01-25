@@ -49,12 +49,10 @@ class CjsBuilderInterface {
      * 
      * @param {"component"|"part"} type 
      * @param {string} prefix 
-     * @param {string} html 
      */
-    constructor(type, prefix, html) {
+    constructor(type, prefix) {
         this.type = type;
         this.prefix = prefix;
-        this.html = html;
 
         this.#generateAttribute();
     }

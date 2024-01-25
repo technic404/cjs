@@ -14,7 +14,9 @@ class CjsComponent extends CjsBuilderInterface {
      * @param {string} html 
      */
     constructor(html) {
-        super("component", CJS_COMPONENT_PREFIX, html);
+        super("component", CJS_COMPONENT_PREFIX);
+
+        this.html = html;
     }
 
     /**
