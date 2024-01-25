@@ -57,22 +57,26 @@ class CjsPart extends CjsBuilderInterface {
          * @param {object} obj1 object that will be changed to merged object
          * @param {object} obj2 object that will be overwriting data to obj1
          */
-        function mergeObjects(obj1, obj2) {
+        function mergeObjects(obj1, obj2, l = false) {
             for (const key in obj2) {
                 if(!obj2.hasOwnProperty(key)) continue;
 
-                if (typeof obj2[key] === 'object' && obj2[key] !== null && obj1[key]) {
-                    // If both are objects, merge them recursively
+                const hasObjectInside = typeof obj2[key] === 'object' && obj2[key] !== null && obj1[key]
+
+                if (hasObjectInside) {
                     mergeObjects(obj1[key], obj2[key]);
                 } else {
-                    // Otherwise, overwrite the value from user settings
-                    obj1[key] = obj2[key];
+                    const propertyHasNullableValue = obj1[key] === null || obj1[key] === undefined;
+
+                    if(propertyHasNullableValue) {
+                        obj1[key] = obj2[key];
+                    }
                 }
             }
         }
 
         mergeObjects(mergedData, data);
-        mergeObjects(mergedData, this.defaultData);
+        mergeObjects(mergedData, this.defaultData, true);
 
         return mergedData;
     }
@@ -175,6 +179,10 @@ class CjsPart extends CjsBuilderInterface {
         applyDataToActionMethods();
     }
 
+    /**
+     * Sets default data, so if there is no values in original data, the missing values will be replaced with defaults
+     * @param {object} data 
+     */
     setDefaultData(data) {
         const isObject = (any) => { return any instanceof Object; }
 
