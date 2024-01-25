@@ -45,6 +45,39 @@ class CjsPart extends CjsBuilderInterface {
     }
 
     /**
+     * Returns data that will be passed to html
+     * @param {object} data
+     * @returns {object} data with merged default data 
+     */
+    #getData(data) {
+        const mergedData = {};
+
+        /**
+         * Recursive function to merge objects
+         * @param {object} obj1 object that will be changed to merged object
+         * @param {object} obj2 object that will be overwriting data to obj1
+         */
+        function mergeObjects(obj1, obj2) {
+            for (const key in obj2) {
+                if(!obj2.hasOwnProperty(key)) continue;
+
+                if (typeof obj2[key] === 'object' && obj2[key] !== null && obj1[key]) {
+                    // If both are objects, merge them recursively
+                    mergeObjects(obj1[key], obj2[key]);
+                } else {
+                    // Otherwise, overwrite the value from user settings
+                    obj1[key] = obj2[key];
+                }
+            }
+        }
+
+        mergeObjects(mergedData, data);
+        mergeObjects(mergedData, this.defaultData);
+
+        return mergedData;
+    }
+
+    /**
      * Creates the part type element
      * @param {function(object)} func function that will return part html
      */
@@ -52,6 +85,7 @@ class CjsPart extends CjsBuilderInterface {
         super("part", CJS_PART_PREFIX);
 
         this.func = func;
+        this.defaultData = {};
     }
 
     /**
@@ -64,7 +98,7 @@ class CjsPart extends CjsBuilderInterface {
 
         if(notAnObject) console.log(`${CJS_PRETTY_PREFIX_X}Provided non-object type param, expected object`);
 
-        return htmlToElement(this.#getHtml(data));
+        return htmlToElement(this.#getHtml(this.#getData(data)));
     }
 
     /**
@@ -102,7 +136,7 @@ class CjsPart extends CjsBuilderInterface {
 
         if(notAnObject) console.log(`${CJS_PRETTY_PREFIX_X}Provided non-object type param, expected object`);
 
-        return this.#getHtml(data);
+        return this.#getHtml(this.#getData(data));
     }
 
     /**
@@ -115,7 +149,7 @@ class CjsPart extends CjsBuilderInterface {
 
         if(!isObject(data)) return console.log(`${CJS_PRETTY_PREFIX_X}Data passed into CjsPart.setData() have to be object type argument`)
 
-        const html = this.#getHtml(data);
+        const html = this.#getHtml(this.#getData(data));
 
         const applyDataToActionMethods = () => {
             const element = htmlToElement(html);
@@ -139,5 +173,13 @@ class CjsPart extends CjsBuilderInterface {
         }
 
         applyDataToActionMethods();
+    }
+
+    setDefaultData(data) {
+        const isObject = (any) => { return any instanceof Object; }
+
+        if(!isObject(data)) return console.log(`${CJS_PRETTY_PREFIX_X}Data passed into CjsPart.setData() have to be object type argument`);
+
+        this.defaultData = data;
     }
 }
