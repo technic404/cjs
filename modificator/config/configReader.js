@@ -35,7 +35,11 @@ function readConfig() {
         // Deep clone the default configuration to avoid modifying it directly
         const mergedConfig = JSON.parse(JSON.stringify(defaultConfig));
     
-        // Recursive function to merge objects
+        /**
+         * Recursive function to merge objects
+         * @param {object} obj1 object that will be changed to merged object
+         * @param {object} obj2 object that will be overwriting data to obj1
+         */
         function mergeObjects(obj1, obj2) {
             for (const key in obj2) {
                 if(!obj2.hasOwnProperty(key)) continue;
