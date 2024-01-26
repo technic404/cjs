@@ -38,7 +38,8 @@ class CjsLibrary {
         "listeners/ChangesObserverListener.js", 
         "helpers/ReferenceHelper.js", 
         "DocumentRoot.js", 
-        "Initializer.js"
+        "Initializer.js",
+        "utils/public/CjsShortcutsUtil.js"
     ]
 
     /**
