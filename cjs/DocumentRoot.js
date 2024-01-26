@@ -25,7 +25,7 @@ class CjsRoot {
 
     /**
      *
-     * @param {{title?: string, icon?: string, description?: string, themeColor?: string}} data
+     * @param {{title?: string, icon?: string}} data
      */
     setDocumentData(data) {
         // Set default values for missing options in data object
