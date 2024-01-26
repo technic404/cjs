@@ -91,6 +91,12 @@ class IndexCompressor {
                 new Tag("link").addAttributes(new Attr("rel", "stylesheet"), new Attr("href", `style.css?v=${getRandomCharacters(QUERY_PARAM_LENGTH)}`)),
                 
                 new Tag(null),
+
+                new Tag("style").addAttributes(new Attr("id", "c_js-style-")),
+                new Tag("style").addAttributes(new Attr("id", "c_js-filters-")),
+                new Tag("style").addAttributes(new Attr("id", "c_js-keyframes-")),
+
+                new Tag(null),
                 
                 new Tag("script").setText(runnableScript),
                 new Tag("script").addAttributes(new Attr("src", `cup.js?v=${getRandomCharacters(QUERY_PARAM_LENGTH)}`)),

@@ -23,6 +23,7 @@ class CjsLibrary {
         "utils/public/CjsRequestsUtil.js", 
         "utils/public/CjsAssetsUtil.js", 
         "utils/public/CjsKeyFramesUtil.js", 
+        "utils/public/CjsAnimationsUtil.js",
         "utils/public/CjsGlobalsUtil.js", 
         "utils/public/CjsWebSocket.js", 
         "ElementActions.js", 

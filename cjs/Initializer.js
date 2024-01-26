@@ -5,16 +5,7 @@
 function init(layout) {
     const loadStartMs = new Date().getTime();
 
-    document.head.appendChild(document.createComment("Styles"))
-
-    /* Style root */
-    createStyle(CJS_STYLE_PREFIX);
-
-    /* Filters style */
-    createStyle(CJS_STYLE_FILTERS_PREFIX);
-
-    /* KeyFrames style */
-    createStyle(CJS_STYLE_KEYFRAMES_PREFIX);
+    document.head.appendChild(document.createComment("Styles"));
 
     document.addEventListener('DOMContentLoaded', async (e) => {
         /* Cjs body root */
@@ -30,15 +21,6 @@ function init(layout) {
 
         console.log(`${CJS_PRETTY_PREFIX_V}Website loaded in ${Colors.Green}${new Date().getTime() - loadStartMs} ms${Colors.None}.`)
     });
-}
-
-function createStyle(id) {
-    const style = document.createElement("style");
-    style.setAttribute("id", id);
-
-    document.head.appendChild(style);
-
-    return style;
 }
 
 function createContainer(id) {
