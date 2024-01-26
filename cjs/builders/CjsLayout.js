@@ -45,7 +45,7 @@ class CjsLayout {
             const isComponent = element instanceof CjsComponent;
 
             if(isComponent) {
-                element._executeOnLoad(this._data);
+                element._executeOnLoad(this.data);
                 return;
             }
         });

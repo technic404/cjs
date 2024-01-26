@@ -46,15 +46,15 @@ class CjsComponent extends CjsBuilderInterface {
 
     /**
      * Loads layout inside the selected component
-     * @param {LayoutLoader} layoutLoader
+     * @param {CjsLayout} layout
      */
-    loadLayout(layoutLoader) {
+    loadLayout(layout) {
         const element = this.toElement();
 
         element.innerHTML = ``;
-        element.insertAdjacentElement(`beforeend`, layoutLoader.getLayout().getLayoutElement());
+        element.insertAdjacentElement(`beforeend`, layout.toElement());
 
-        layoutLoader.loadLayoutMappings();
+        layout._executeOnLoad();
     }
 
 }
