@@ -56,5 +56,4 @@ class CjsComponent extends CjsBuilderInterface {
 
         layout._executeOnLoad();
     }
-
 }

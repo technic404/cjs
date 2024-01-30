@@ -59,15 +59,16 @@ class CjsLayout {
      * @returns {CjsComponent|null}
      */
     select(component) {
-        const selected = this.toElement().querySelector(`[${component.attribute}='']`);;
+        const filtered = flattenInfinite(this.elements).filter(e => e.attribute === component.attribute);
+        const componentNotExists = filtered.length === 0;
 
-        if(!selected) {
+        if(componentNotExists) {
             console.log(`${CJS_PRETTY_PREFIX_X}Component not found when trying to use select(), make sure that provided component exists in layout`);
         
             return null;
         }
 
-        return selected;
+        return filtered[0];
     }
 
     /**
