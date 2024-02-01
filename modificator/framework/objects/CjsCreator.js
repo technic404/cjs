@@ -82,7 +82,7 @@ class CjsCreator {
 
         if(element === "part") {
             const hasTargetFlag = "target" in flags && flags.target !== null;
-            const targettedComponentPath = `../src/components/${flags.target}`;
+            const targettedComponentPath = `../src/components/${capitalizeFirst(flags.target, false)}`;
             const path = hasTargetFlag
                 ? `${targettedComponentPath}/parts/${names.camelStyle}`
                 : `../src/parts/${names.camelStyle}`;
