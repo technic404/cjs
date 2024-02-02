@@ -46,6 +46,7 @@ class CjsLayout {
 
             if(isComponent) {
                 element._executeOnLoad(this.data);
+                element._setLoadData(this.data);
                 return;
             }
         });
@@ -200,9 +201,10 @@ class CjsLayout {
         /**
          * 
          * @param {CjsComponent|CjsLayout[][]} elements 
+         * @param {object} parentLayoutData
          * @returns {HTMLElement}
          */
-        const walk = (elements) => {
+        const walk = (elements, parentLayoutData) => {
             const componentInArray = elements instanceof Array;
 
             if(!componentInArray) return console.log(`${CJS_PRETTY_PREFIX_X}Layout have wrong pattern, component should be in array`)
@@ -224,7 +226,10 @@ class CjsLayout {
                 return document.createElement(`cjslayouterror`)
             }
             
-            const component = layoutElement.toElement(true).cloneNode(true);
+            /**
+             * @type {CjsComponent}
+             */
+            const component = layoutElement._setLoadData(parentLayoutData).toElement(true).cloneNode(true);
             const hasParentAndChild = elements.length === 2;
 
             if(hasParentAndChild) {
@@ -237,7 +242,7 @@ class CjsLayout {
                 if(!isChildAnArray) return console.log(`${CJS_PRETTY_PREFIX_X}Layout sub components at second argument have to be Array`);
 
                 componentChildren.forEach(componentChild => {
-                    component.insertAdjacentElement(`beforeend`, walk(componentChild))
+                    component.insertAdjacentElement(`beforeend`, walk(componentChild, parentLayoutData))
                 });
             }
 
@@ -245,7 +250,7 @@ class CjsLayout {
         }
 
         this.elements.forEach(elements => {
-            container.insertAdjacentElement(`beforeend`, walk(elements));
+            container.insertAdjacentElement(`beforeend`, walk(elements, this.#data.active));
         });
 
         return container;

@@ -1,4 +1,9 @@
 /**
+ * @typedef {Object} CjsPartData
+ * @description ldata that was passed to Part using setData, toHtml or toElement method
+ */
+
+/**
  * @class
  * @classdesc Class for creating a Part used for creating small elements in website
  * @extends CjsBuilderInterface
@@ -10,39 +15,6 @@
  * If you want to use element single time, go for CjsComponent
  */
 class CjsPart extends CjsBuilderInterface {
-
-    /**
-     * Returns html containing part attribute with data transformed into its references
-     * @param {object} data 
-     * @returns {string} html
-     */
-    #getHtml = (data) => {
-        const html = this.func(data);
-
-        /**
-         * Adds attribute to part root element
-         * 
-         * For example if you have `<div class="wrapper"><p>text</p></div>`
-         * 
-         * The transformed code will be `<div c_js-part class="wrapped"><p>text</p></div>`
-         * @param {string} html
-         * @returns {string} code with added part
-         */
-        const addAttribute = (html) => {
-            const element = createVirtualContainer(htmlToElement(html));
-            const hasNoChildren = element.children.length === 0;
-    
-            if(hasNoChildren) return ``;
-    
-            const { firstElementChild } = element;
-    
-            firstElementChild.setAttribute(this.attribute, "");
-    
-            return firstElementChild.outerHTML;
-        }
-
-        return addAttribute(html);
-    }
 
     /**
      * Returns data that will be passed to html
@@ -83,12 +55,11 @@ class CjsPart extends CjsBuilderInterface {
 
     /**
      * Creates the part type element
-     * @param {function(object)} func function that will return part html
+     * @param {function(CjsPartData)} func function that will return part html
      */
     constructor(func) {
-        super("part", CJS_PART_PREFIX);
+        super("part", CJS_PART_PREFIX, func);
 
-        this.func = func;
         this.defaultData = {};
     }
 
@@ -102,7 +73,7 @@ class CjsPart extends CjsBuilderInterface {
 
         if(notAnObject) console.log(`${CJS_PRETTY_PREFIX_X}Provided non-object type param, expected object`);
 
-        return htmlToElement(this.#getHtml(this.#getData(data)));
+        return htmlToElement(this._getHtml(this.#getData(data)));
     }
 
     /**
@@ -140,7 +111,7 @@ class CjsPart extends CjsBuilderInterface {
 
         if(notAnObject) console.log(`${CJS_PRETTY_PREFIX_X}Provided non-object type param, expected object`);
 
-        return this.#getHtml(this.#getData(data));
+        return this._getHtml(this.#getData(data));
     }
 
     /**
@@ -153,7 +124,7 @@ class CjsPart extends CjsBuilderInterface {
 
         if(!isObject(data)) return console.log(`${CJS_PRETTY_PREFIX_X}Data passed into CjsPart.setData() have to be object type argument`)
 
-        const html = this.#getHtml(this.#getData(data));
+        const html = this._getHtml(this.#getData(data));
 
         const applyDataToActionMethods = () => {
             const element = htmlToElement(html);

@@ -46,13 +46,48 @@ class CjsBuilderInterface {
     }
 
     /**
+     * Returns html containing attribute in parent with data transformed into its references
+     * @param {object} data 
+     * @returns {string} html
+     */
+    _getHtml = (data) => {
+        const html = this.func(data);
+
+        /**
+         * Adds attribute to part root element
+         * 
+         * For example if you have `<div class="wrapper"><p>text</p></div>`
+         * 
+         * The transformed code will be `<div c_js-part class="wrapped"><p>text</p></div>`
+         * @param {string} html
+         * @returns {string} code with added part
+         */
+        const addAttribute = (html) => {
+            const element = createVirtualContainer(htmlToElement(html));
+            const hasNoChildren = element.children.length === 0;
+    
+            if(hasNoChildren) return ``;
+    
+            const { firstElementChild } = element;
+    
+            firstElementChild.setAttribute(this.attribute, "");
+    
+            return firstElementChild.outerHTML;
+        }
+
+        return addAttribute(html);
+    }
+
+    /**
      * 
      * @param {"component"|"part"} type 
      * @param {string} prefix 
+     * @param {function(object)} func function that will return html
      */
-    constructor(type, prefix) {
+    constructor(type, prefix, func) {
         this.type = type;
         this.prefix = prefix;
+        this.func = func;
 
         this.#generateAttribute();
     }

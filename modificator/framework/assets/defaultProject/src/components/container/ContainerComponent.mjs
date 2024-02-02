@@ -1,6 +1,6 @@
 import { ContainerHandler as Handler } from "./ContainerHandler.mjs";
 
-export const ContainerComponent = new CjsComponent(`
+export const ContainerComponent = new CjsComponent((data) => `
     <div class="container"></div>
 `);
 
