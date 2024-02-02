@@ -87,6 +87,10 @@ class CjsTypeWrite {
         const start = new Date().getTime();
 
         const interval = setInterval(() => {
+            if(charCounter === 0) {
+                this.element.innerHTML = ``;
+            }
+
             const charsToAppend = textSplit.slice(charCounter, charCounter + charIncrementBy).join("")
 
             this.element.innerHTML += charsToAppend;

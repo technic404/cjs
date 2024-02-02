@@ -39,7 +39,8 @@ class CjsLibrary {
         "helpers/ReferenceHelper.js", 
         "DocumentRoot.js", 
         "Initializer.js",
-        "utils/public/CjsShortcutsUtil.js"
+        "utils/public/CjsShortcutsUtil.js",
+        "plugins/text/CjsTypeWritePlugin.js",
     ]
 
     /**
