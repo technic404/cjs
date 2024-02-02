@@ -1,9 +1,4 @@
 /**
- * @typedef {Object} CjsComponentData
- * @description layout data that you can use inside this component
- */
-
-/**
  * @class
  * @classdesc Class for creating a Component used for styling in website
  * @extends CjsBuilderInterface
@@ -16,7 +11,7 @@ class CjsComponent extends CjsBuilderInterface {
 
     /**
      * Creates the component type element
-     * @param {function(CjsComponentData)} func function that will return component html
+     * @param {function(object)} func function that will return component html. The object argument is data provided by parent layout
      */
     constructor(func) {
         super("component", CJS_COMPONENT_PREFIX, func);

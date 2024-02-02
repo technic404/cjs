@@ -1,9 +1,4 @@
 /**
- * @typedef {Object} CjsPartData
- * @description ldata that was passed to Part using setData, toHtml or toElement method
- */
-
-/**
  * @class
  * @classdesc Class for creating a Part used for creating small elements in website
  * @extends CjsBuilderInterface
@@ -55,7 +50,7 @@ class CjsPart extends CjsBuilderInterface {
 
     /**
      * Creates the part type element
-     * @param {function(CjsPartData)} func function that will return part html
+     * @param {function(object)} func function that will return part html. The object argument is data provided to CjsPart using setData, toElement or toHtml.
      */
     constructor(func) {
         super("part", CJS_PART_PREFIX, func);
