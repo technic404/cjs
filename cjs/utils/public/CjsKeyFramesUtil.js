@@ -9,6 +9,7 @@ class CjsKeyFrame {
         this.keepEndingEntryStyle = true;
         this.selector = '';
         this.isImportant = false;
+        this.fillMode = '';
     }
 
     /**
@@ -18,6 +19,17 @@ class CjsKeyFrame {
      */
     setSelector(selector) {
         this.selector = selector;
+
+        return this;
+    }
+
+    /**
+     * Sets the filling style of the animation
+     * @param {"none"|"forwards"|"backwards"|"both"} fillMode
+     * @returns {CjsKeyFrame}
+     */
+    setFillMode(fillMode) {
+        this.fillMode = fillMode;
 
         return this;
     }
