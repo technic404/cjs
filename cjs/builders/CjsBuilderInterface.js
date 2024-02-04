@@ -21,7 +21,7 @@ class CjsBuilderInterface {
     /**
      * @type {object}
      */
-    #onLoadData = {};
+    _onLoadData = {};
 
     /**
      * Callback that is called when element is loaded into website
@@ -84,7 +84,7 @@ class CjsBuilderInterface {
         }
 
         if(this.type === "part" || true) {
-            const onLoadAttribute = changesObserver.listen("add", () => this.#onLoadCallback(this.#onLoadData));
+            const onLoadAttribute = changesObserver.listen("add", () => this.#onLoadCallback(this._onLoadData));
 
             return addAttributes(html, [
                 this.attribute, onLoadAttribute.trim()
@@ -122,7 +122,7 @@ class CjsBuilderInterface {
      * @returns {CjsPart|CjsComponent}
      */
     _setOnLoadData(onLoadData) {
-        this.#onLoadData = onLoadData;
+        this._onLoadData = onLoadData;
 
         return this;
     }

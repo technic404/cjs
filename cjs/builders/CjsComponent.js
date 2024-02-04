@@ -15,8 +15,6 @@ class CjsComponent extends CjsBuilderInterface {
      */
     constructor(func) {
         super("component", CJS_COMPONENT_PREFIX, func);
-
-        this._loadData = {};
     }
 
     /**
@@ -25,7 +23,7 @@ class CjsComponent extends CjsBuilderInterface {
      * @returns {HTMLElement}
      */
     toElement(ignoreReadyState = false) {
-        const element = htmlToElement(this._getHtml(this._loadData));
+        const element = htmlToElement(this._getHtml(this._onLoadData));
         const selector = document.body.querySelector(`[${this.attribute}=""]`);
         const elementExists = selector !== null;
         const isDocumentLoaded = document.readyState === 'complete'
