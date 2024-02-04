@@ -20,33 +20,12 @@ class CjsComponent extends CjsBuilderInterface {
     }
 
     /**
-     * Sets data that will be replaced if used in html content of component
-     * @param {object} data 
-     * @returns {CjsComponent}
-     */
-    _setLoadData(data) {
-        // TODO add deeper cloning of the object
-        this._loadData = Object.assign({}, data);
-
-        return this;
-    }
-
-    /**
      * Provides component element as HTMLElement
      * @param {boolean} ignoreReadyState 
      * @returns {HTMLElement}
      */
     toElement(ignoreReadyState = false) {
         const element = htmlToElement(this._getHtml(this._loadData));
-        // const doesNotHaveHtml = element == null;
-
-        // if(doesNotHaveHtml) {
-        //     console.log(`${CJS_PRETTY_PREFIX_X}Component does not have any html inside, cannot paste it to website`);
-        //     return null;
-        // }
-
-        // element.setAttribute(this.attribute, '');
-
         const selector = document.body.querySelector(`[${this.attribute}=""]`);
         const elementExists = selector !== null;
         const isDocumentLoaded = document.readyState === 'complete'

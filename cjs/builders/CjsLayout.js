@@ -45,8 +45,8 @@ class CjsLayout {
             const isComponent = element instanceof CjsComponent;
 
             if(isComponent) {
-                element._executeOnLoad(this.data);
-                element._setLoadData(this.data);
+                // element._executeOnLoad(this.data);
+                element._setOnLoadData(this.data);
                 return;
             }
         });
@@ -229,7 +229,7 @@ class CjsLayout {
             /**
              * @type {CjsComponent}
              */
-            const component = layoutElement._setLoadData(parentLayoutData).toElement(true).cloneNode(true);
+            const component = layoutElement._setOnLoadData(parentLayoutData).toElement(true).cloneNode(true);
             const hasParentAndChild = elements.length === 2;
 
             if(hasParentAndChild) {

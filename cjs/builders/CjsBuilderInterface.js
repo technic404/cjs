@@ -17,6 +17,11 @@ class CjsBuilderInterface {
      * @type {string} attribute that indicated the element on the website
      */
     attribute = null;
+    
+    /**
+     * @type {object}
+     */
+    #onLoadData = {};
 
     /**
      * Callback that is called when element is loaded into website
@@ -54,28 +59,39 @@ class CjsBuilderInterface {
         const html = this.func(data);
 
         /**
-         * Adds attribute to part root element
+         * Adds attributes to root element
          * 
          * For example if you have `<div class="wrapper"><p>text</p></div>`
          * 
-         * The transformed code will be `<div c_js-part class="wrapped"><p>text</p></div>`
+         * The transformed code will be `<div attribute-1 attribute-2 class="wrapped"><p>text</p></div>`
          * @param {string} html
-         * @returns {string} code with added part
+         * @param {string[]} attributes
+         * @returns {string} code with added attributes
          */
-        const addAttribute = (html) => {
+        const addAttributes = (html, attributes) => {
             const element = createVirtualContainer(htmlToElement(html));
             const hasNoChildren = element.children.length === 0;
     
             if(hasNoChildren) return ``;
     
             const { firstElementChild } = element;
-    
-            firstElementChild.setAttribute(this.attribute, "");
+
+            attributes.forEach(attribute => {
+                firstElementChild.setAttribute(attribute, "");
+            });
     
             return firstElementChild.outerHTML;
         }
 
-        return addAttribute(html);
+        if(this.type === "part" || true) {
+            const onLoadAttribute = changesObserver.listen("add", () => this.#onLoadCallback(this.#onLoadData));
+
+            return addAttributes(html, [
+                this.attribute, onLoadAttribute.trim()
+            ]);
+        }
+
+        return addAttributes(html);
     }
 
     /**
@@ -98,6 +114,17 @@ class CjsBuilderInterface {
      */
     onLoad(callback) {
         this.#onLoadCallback = callback;
+    }
+
+    /**
+     * Sets load data for generic onLoad function
+     * @param {object} onLoadData 
+     * @returns {CjsPart|CjsComponent}
+     */
+    _setOnLoadData(onLoadData) {
+        this.#onLoadData = onLoadData;
+
+        return this;
     }
 
     /**
