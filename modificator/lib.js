@@ -1,8 +1,8 @@
-const readConfig = require("./config/configReader");
+const { cjsConfig } = require("./constants");
 const Cjs = require("./framework/library");
 
-const cjs = new Cjs(readConfig());
+const cjs = new Cjs(cjsConfig.getUser());
 
 module.exports = {
-    cjs: cjs
+    cjs: cjs,
 }

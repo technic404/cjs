@@ -6,6 +6,7 @@ const CjsHandler = require("./creator/CjsHandler");
 const CjsStyle = require("./creator/CjsStyle");
 const CjsLayout = require("./creator/CjsLayout");
 const CjsPart = require("./creator/CjsPart");
+const { cjsConfig } = require("../../constants");
 
 class CjsCreator {
 
@@ -20,10 +21,18 @@ class CjsCreator {
      * 
      * @param {"component"|"part"|"layout"} element 
      * @param {string} name 
-     * @param {{ target?: string }} flags
+     * @param {import("../../types").CjsCommandFlags} flags
      * @returns {CjsComponent|CjsPart|CjsLayout|null}
      */
-    create(element, name, flags = {}) {
+    create(element, name, flags) {
+        const isLayoutTree = cjsConfig.getUser().projectStructure.type === "layoutTree"
+
+        if(isLayoutTree && (!("layout" in flags) || flags.layout === null)) {
+            console.log(`${PrefixError}You have to provide layout flag using --layout`);
+
+            return null;
+        }
+
         const hasWrongEnding = name.toLowerCase().endsWith(element);
 
         if(hasWrongEnding) {
@@ -41,7 +50,9 @@ class CjsCreator {
         // TODO FINISH CREATOR
 
         if(element === "component") {
-            const path = `../src/components/${names.camelStyle}`;
+            const path = isLayoutTree
+                ? `../src/layouts/${capitalizeFirst(flags.layout, false)}/components/${names.camelStyle}`
+                : `../src/components/${names.camelStyle}`
             const handler = new CjsHandler(names, path);
             const style = new CjsStyle(names, path);
             const component = new CjsComponent(names, path)
@@ -64,7 +75,7 @@ class CjsCreator {
         }
 
         if(element === "layout") {
-            const path = `../src/layouts/`;
+            const path = `../src/layouts/${names.camelStyle}`;
             const layout = new CjsLayout(names, path);
 
             if(fs.existsSync(layout.getFilePath())) {
@@ -82,17 +93,38 @@ class CjsCreator {
 
         if(element === "part") {
             const hasTargetFlag = "target" in flags && flags.target !== null;
-            const targettedComponentPath = `../src/components/${capitalizeFirst(flags.target, false)}`;
-            const path = hasTargetFlag
-                ? `${targettedComponentPath}/parts/${names.camelStyle}`
-                : `../src/parts/${names.camelStyle}`;
+
+            const path = (
+                hasTargetFlag
+                ? (
+                    isLayoutTree
+                    ? `../src/layouts/${capitalizeFirst(flags.layout, false)}/components/${capitalizeFirst(flags.target, false)}/${names.camelStyle}`
+                    : `../src/components/${capitalizeFirst(flags.target, false)}/parts/${names.camelStyle}`
+                )
+                : (
+                    !isLayoutTree || flags.superGlobal
+                    ? `../src/parts/${names.camelStyle}`
+                    : `../src/layouts/${capitalizeFirst(flags.layout, false)}/parts/${names.camelStyle}`
+                )
+            )
+
+            const backwardsPath = (number) => {
+                return path.split("/").slice(0, -1 * number).join("/")
+            }
+
             const part = new CjsPart(names, path)
                 .supplyHandlerImport()
                 .supplyStyleImport();
             const handler = new CjsHandler(names, path);
             const style = new CjsStyle(names, path);
 
-            if(hasTargetFlag && !fs.existsSync(targettedComponentPath)) {
+            if(isLayoutTree && !fs.existsSync(backwardsPath(2))) {
+                console.log(`${PrefixError}Part cannot be created because layout with that name doesn't exists`);
+
+                return null;
+            }
+
+            if(hasTargetFlag && !fs.existsSync(backwardsPath(1))) {
                 console.log(`${PrefixError}Part cannot be created because component with that name doesn't exists`);
 
                 return null;

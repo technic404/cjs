@@ -1,5 +1,8 @@
 {
     "version": 1.0,
+    "projectStructure": {
+        "type": "layoutTree"
+    },
     "compiler": {
         "output": {
             "index": {

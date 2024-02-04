@@ -1,5 +1,4 @@
 const fs = require('fs');
-const readConfig = require('../../../config/configReader');
 const { cjs } = require('../../../lib');
 
 /**

@@ -3,7 +3,7 @@ const { getRandomCharacters } = require("../utils/stringUtil");
 const { createHtmlStructure } = require("./indexParser");
 const Tag = require("./tags/Tag");
 const Attr = require("./tags/Attr");
-const readConfig = require("../../../config/configReader");
+const { cjsConfig } = require("../../../constants");
 
 class IndexCompressor {
     constructor(inputDirectory) {
@@ -18,7 +18,7 @@ class IndexCompressor {
     getData(styleData = new Map()) {
         const QUERY_PARAM_LENGTH = 16;
 
-        const config = readConfig().compiler.output.index;
+        const config = cjsConfig.getUser().compiler.output.index;
 
         const stringMap = JSON.stringify(Array.from(styleData.entries()).map(e => { return [e[0].replace("../", "./"), e[1] ] }));
         const runnableScript = `const CjsRunnableDetails = { style: { map: new Map(${stringMap}) } };`;

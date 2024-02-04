@@ -2,6 +2,21 @@
  * @typedef {object} Config
  * @property {string} version
  * @property {CompilerConfig} compiler
+ * @property {ProjectStructureConfig} projectStructure
+ */
+
+/**
+ * @typedef {object} ProjectStructureConfig
+ * @property {ProjectStructureTypes} type
+ */
+
+/**
+ * @typedef {"layoutTree"|"componentTree"} ProjectStructureTypes
+ */
+
+/**
+ * @typedef {object} ProjectInitOptions
+ * @property {ProjectStructureTypes} projectStructureType
  */
 
 /**
@@ -50,11 +65,28 @@
  * @property {string} pascalCase
  */
 
+/**
+ * @typedef {object} CjsCommandFlags
+ * @property {string} target used to determinate where create part
+ * If target is not set the part will be global in area of:
+ * - `layout`, if the `superGlobal` flag is `false`
+ * - `./src/parts`, if the `superGlobal` flag is `true` or the `projectStructure`.`type` in config is set to `layoutTree`
+ * 
+ * If target is set the part will be in area of:
+ * - `component`, provided as a target value
+ * @property {string} layout used to determinate where create a component or part 
+ * 
+ * (needed only when the `projectStructure.type` in config is set to `layoutTree`)
+ * @property {boolean} superGlobal used to determinate the `target` property
+ */
+
 module.exports = {
     Config: {}, 
     CompilerConfig: {},
     CompilerOutputConfig: {},
     IndexTagsConfig: {},
     IndexSocialMediaTagsConfig: {},
-    IndexTwitterTagsConfig: {}
+    IndexTwitterTagsConfig: {},
+    ProjectInitOptions: {},
+    CjsCommandFlags: {}
 }

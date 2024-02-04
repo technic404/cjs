@@ -1,3 +1,4 @@
+const { cjsConfig } = require('../constants');
 const CjsCreator = require('./objects/CjsCreator');
 const CjsLibrary = require('./objects/CjsLibrary');
 const fs = require('fs');
@@ -24,7 +25,19 @@ class Cjs {
         this.creator = new CjsCreator(this.#relative);
     }
 
-    initEmptyProject() {
+    /**
+     * Creates an empty project with default files
+     * @param {import('../types').ProjectInitOptions} options 
+     */
+    initEmptyProject(options) {
+        const rawConfig = cjsConfig.getRawUser();
+
+        rawConfig.projectStructure.type = options.projectStructureType;
+
+        cjsConfig.write(rawConfig);
+
+        this.#config = cjsConfig.getUser();
+
         fs.writeFileSync("../c.js", this.library.getContent(false));
         fs.cpSync("./framework/assets/defaultProject", this.#relative, { recursive: true });
     }

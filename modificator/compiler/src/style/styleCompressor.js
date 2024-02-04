@@ -2,7 +2,7 @@ const fs = require('fs');
 const { getRecursivelyDirectoryFiles } = require('../utils/fileUtil');
 const { getRandomCharacters } = require('../utils/stringUtil');
 const { startWebServer } = require('../server/app');
-const readConfig = require('../../../config/configReader');
+const { cjsConfig } = require('../../../constants');
 
 class StyleCompressor {
     constructor(inputDirectory) {
@@ -29,7 +29,7 @@ class StyleCompressor {
             browserScriptContent += `await fetch("/submit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ fileUrl: "${parsedFilePath}", prefix: "${prefix}", result: (await addPrefixToSelectors(\`${content}\`, "${prefix}")) }) })\ndocument.body.innerHTML += "<p>Request ${parsedFilePath} completed</p>";\n`
         }
 
-        await startWebServer(readConfig().compiler.tempWebserverPort, browserScriptContent, (fileUrl, result, prefix) => {
+        await startWebServer(cjsConfig.getUser().compiler.tempWebserverPort, browserScriptContent, (fileUrl, result, prefix) => {
             map.set(fileUrl, { prefix });
 
             const isEmpty = result.trim() === "";

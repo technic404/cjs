@@ -3,9 +3,9 @@ const StyleCompressor = require("./src/style/styleCompressor");
 const JsCompressor = require("./src/js/jsCompressor");
 const DetailsCompressor = require('./src/details/detailsCompressor');
 const IndexCompressor = require('./src/index/indexCompressor');
-const readConfig = require('../config/configReader');
 const UglifyJS = require("uglify-js");
 const { cjs } = require('../lib');
+const { cjsConfig } = require('../constants');
 
 /**
  * Compiles the source files of the project
@@ -43,7 +43,7 @@ async function compile(input, output) {
     if(!fs.existsSync(outAssetsDirectory)) { fs.mkdirSync(outAssetsDirectory, { recursive: true }) }
 
     const workerScriptContent = detailsData.content + "\n\n" + jsData.content
-    const config = readConfig();
+    const config = cjsConfig.getUser();
     const { minifyScripts } = config.compiler;
 
     fs.writeFileSync(`${outDirectory}/script.js`, (minifyScripts

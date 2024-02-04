@@ -20,8 +20,8 @@ const commands = {
         }
     },
     2: {
-        component: (args) => {
-            if(cjs.creator.create("component", args[0])) {
+        component: (args, flags) => {
+            if(cjs.creator.create("component", args[0], flags)) {
                 console.log(`${Prefix}Successfully created Component`)
             }
         },
