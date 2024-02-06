@@ -24,10 +24,10 @@ class CjsCreator {
      * @param {import("../../types").CjsCommandFlags} flags
      * @returns {CjsComponent|CjsPart|CjsLayout|null}
      */
-    create(element, name, flags) {
+    create(element, name, flags = {}) {
         const isLayoutTree = cjsConfig.getUser().projectStructure.type === "layoutTree"
 
-        if(isLayoutTree && (!("layout" in flags) || flags.layout === null)) {
+        if(isLayoutTree && (!("layout" in flags) || flags.layout === null) && element !== "layout") {
             console.log(`${PrefixError}You have to provide layout flag using --layout`);
 
             return null;
