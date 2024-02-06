@@ -1,6 +1,7 @@
 
 &yellow[1] &noneOne argument commands:
     &yellownode c.js &none[init] - Initialize the c.js project
+      &black--projectStructureType&none - Can be rather "layoutTree" or "componentTree"
     &yellownode c.js &none[compile] - Compile the c.js project
 
 &yellow[2] &noneTwo argument commands:

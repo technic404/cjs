@@ -32,7 +32,7 @@ class Cjs {
     initEmptyProject(options) {
         const rawConfig = cjsConfig.getRawUser();
 
-        rawConfig.projectStructure.type = options.projectStructureType;
+        rawConfig.projectStructure.type = "projectStructureType" in options ? options.projectStructureType : "layoutTree";
 
         cjsConfig.write(rawConfig);
 

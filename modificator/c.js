@@ -8,8 +8,8 @@ const fs = require('fs');
  */
 const commands = {
     1: {
-        init: () => {
-            cjs.initEmptyProject();
+        init: (args, flags) => {
+            cjs.initEmptyProject(flags);
 
             console.log(`${Prefix}Created new empty project`)
         },
