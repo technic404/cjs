@@ -192,6 +192,16 @@ class CjsLayout {
     }
 
     /**
+     * Replaces the website content with layout elements
+     */
+    replacePage() {
+        const container = document.getElementById(CJS_ROOT_CONTAINER_PREFIX);
+
+        container.innerHTML = ``;
+        container.appendChild(this.toElement());
+    }
+
+    /**
      * Creates the HTMLElement from other layouts and components inside layout
      * @returns {HTMLElement} layout element
      */
