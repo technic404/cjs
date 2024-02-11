@@ -3,11 +3,15 @@
  * @param {CjsLayout} layout
  */
 function init(layout) {
+    const sleep = async (ms) => await new Promise((res) => { setTimeout(() => { res() }, 10) });
+
     const loadStartMs = new Date().getTime();
 
     document.head.appendChild(document.createComment("Styles"));
 
     document.addEventListener('DOMContentLoaded', async (e) => {
+        await sleep(3); // avoid conflict between ChangesObserver
+
         /* Cjs body root */
         const container = createContainer(CJS_ROOT_CONTAINER_PREFIX);
         const mainLayoutElement = layout.toElement();

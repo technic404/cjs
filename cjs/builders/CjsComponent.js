@@ -43,6 +43,11 @@ class CjsComponent extends CjsBuilderInterface {
         element.innerHTML = ``;
         element.insertAdjacentElement(`beforeend`, layout.toElement());
 
-        layout._executeOnLoad();
+        // timeout because of addEventListener overlaping
+        setTimeout(() => { 
+            layout._executeOnLoad();
+
+            CjsFrameworkEvents.onLoadLayout();
+        }, 2);
     }
 }

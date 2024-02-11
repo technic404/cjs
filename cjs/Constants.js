@@ -18,3 +18,7 @@ const CJS_ELEMENT_PREFIX = `${CJS_PREFIX}element-`
 const CJS_ELEMENT_DISABLED_PREFIX = `${CJS_PREFIX}elementdisabled-`
 const CJS_OBSERVER_PREFIX = `${CJS_PREFIX}observer-`
 const CJS_REFERENCE_PREFIX = `${CJS_PREFIX}reference-`
+
+const CjsFrameworkEvents = {
+    onLoadLayout: () => {}
+}
