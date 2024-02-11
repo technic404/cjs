@@ -27,7 +27,7 @@ class CjsCreator {
     create(element, name, flags = {}) {
         const isLayoutTree = cjsConfig.getUser().projectStructure.type === "layoutTree"
 
-        if(isLayoutTree && (!("layout" in flags) || flags.layout === null) && element !== "layout") {
+        if(isLayoutTree && (!("layout" in flags) || flags.layout === null) && element !== "layout" && element !== "component" && !("superGlobal" in flags)) {
             console.log(`${PrefixError}You have to provide layout flag using --layout`);
 
             return null;
@@ -50,7 +50,7 @@ class CjsCreator {
         // TODO FINISH CREATOR
 
         if(element === "component") {
-            const path = isLayoutTree
+            const path = isLayoutTree && "layout" in flags
                 ? `../src/layouts/${capitalizeFirst(flags.layout, false)}/components/${names.camelStyle}`
                 : `../src/components/${names.camelStyle}`
             const handler = new CjsHandler(names, path);

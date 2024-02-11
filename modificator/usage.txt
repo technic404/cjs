@@ -6,9 +6,12 @@
 
 &yellow[2] &noneTwo argument commands:
     &yellownode c.js &none[component] {ElementName} - Creates a component
+      &black--layout="layoutName"&none - Target specific layout, and there create component
     &yellownode c.js &none[part] {ElementName} - Creates a part
       &black--global&none - Global part, applied by default
       &black--target="componentName"&none - Target specific component, and there create part
+      &black--layout="layoutName"&none - Target specific layout, and there create part
+      &black--superGlobal - Makes part global in range of all layouts
     &yellownode c.js &none[layout] {ElementName} - Creates a layout
     &yellownode c.js &none[rebuild] [library]
       &black[library] - Updates the library file from library source folder
