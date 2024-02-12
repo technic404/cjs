@@ -19,6 +19,10 @@ const CJS_ELEMENT_DISABLED_PREFIX = `${CJS_PREFIX}elementdisabled-`
 const CJS_OBSERVER_PREFIX = `${CJS_PREFIX}observer-`
 const CJS_REFERENCE_PREFIX = `${CJS_PREFIX}reference-`
 
-const CjsFrameworkEvents = {
-    onLoadLayout: () => {}
+const CjsFrameworkEvents = { 
+    /**
+     * Executes when layout is being loaded to component
+     * @param {CjsLayout}
+     */
+    onLoadLayout: (layout) => {}
 }
