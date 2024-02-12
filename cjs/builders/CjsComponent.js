@@ -47,7 +47,7 @@ class CjsComponent extends CjsBuilderInterface {
         setTimeout(() => { 
             layout._executeOnLoad();
 
-            CjsFrameworkEvents.onLoadLayout();
+            CjsFrameworkEvents.onLoadLayout(layout);
         }, 2);
     }
 }
