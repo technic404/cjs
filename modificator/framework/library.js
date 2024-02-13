@@ -27,15 +27,8 @@ class Cjs {
 
     /**
      * Creates an empty project with default files
-     * @param {import('../types').ProjectInitOptions} options 
      */
-    initEmptyProject(options) {
-        const rawConfig = cjsConfig.getRawUser();
-
-        rawConfig.projectStructure.type = "projectStructureType" in options ? options.projectStructureType : "layoutTree";
-
-        cjsConfig.write(rawConfig);
-
+    initEmptyProject() {
         this.#config = cjsConfig.getUser();
 
         fs.writeFileSync("../c.js", this.library.getContent(false));

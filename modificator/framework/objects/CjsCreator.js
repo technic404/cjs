@@ -25,14 +25,6 @@ class CjsCreator {
      * @returns {CjsComponent|CjsPart|CjsLayout|null}
      */
     create(element, name, flags = {}) {
-        const isLayoutTree = cjsConfig.getUser().projectStructure.type === "layoutTree"
-
-        if(isLayoutTree && (!("layout" in flags) || flags.layout === null) && element !== "layout" && element !== "component" && !("superGlobal" in flags)) {
-            console.log(`${PrefixError}You have to provide layout flag using --layout`);
-
-            return null;
-        }
-
         const hasWrongEnding = name.toLowerCase().endsWith(element);
 
         if(hasWrongEnding) {
@@ -50,7 +42,8 @@ class CjsCreator {
         // TODO FINISH CREATOR
 
         if(element === "component") {
-            const path = isLayoutTree && "layout" in flags
+            const hasLayoutFlag = "layout" in flags && flags.layout !== null;
+            const path = hasLayoutFlag
                 ? `../src/layouts/${capitalizeFirst(flags.layout, false)}/components/${names.camelStyle}`
                 : `../src/components/${names.camelStyle}`
             const handler = new CjsHandler(names, path);
@@ -93,18 +86,19 @@ class CjsCreator {
 
         if(element === "part") {
             const hasTargetFlag = "target" in flags && flags.target !== null;
+            const hasLayoutFlag = "layout" in flags && flags.layout !== null;
 
             const path = (
                 hasTargetFlag
                 ? (
-                    isLayoutTree
+                    hasLayoutFlag
                     ? `../src/layouts/${capitalizeFirst(flags.layout, false)}/components/${capitalizeFirst(flags.target, false)}/${names.camelStyle}`
                     : `../src/components/${capitalizeFirst(flags.target, false)}/parts/${names.camelStyle}`
                 )
                 : (
-                    !isLayoutTree || flags.superGlobal
-                    ? `../src/parts/${names.camelStyle}`
-                    : `../src/layouts/${capitalizeFirst(flags.layout, false)}/parts/${names.camelStyle}`
+                    hasLayoutFlag
+                    ? `../src/layouts/${capitalizeFirst(flags.layout, false)}/parts/${names.camelStyle}`
+                    : `../src/parts/${names.camelStyle}`
                 )
             )
 
@@ -118,7 +112,7 @@ class CjsCreator {
             const handler = new CjsHandler(names, path);
             const style = new CjsStyle(names, path);
 
-            if(isLayoutTree && !fs.existsSync(backwardsPath(2))) {
+            if(hasLayoutFlag && !fs.existsSync(backwardsPath(2))) {
                 console.log(`${PrefixError}Part cannot be created because layout with that name doesn't exists`);
 
                 return null;
