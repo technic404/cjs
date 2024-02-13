@@ -2,7 +2,7 @@ class FunctionMappings {
     constructor() {
         this.mappings = new Map(); // attribute, { type: "click", action: function }
         this.disabled = new Map(); // attribute, { events: ["click", "input", "outerclick"] }
-        this.appliedFunctions = new Map(); // attribute, [ { element: HTMLElement type: "click", appliedFunction: function } ]
+        this.appliedFunctions = new Map(); // attribute, [ { element: HTMLElement, type: "click", appliedFunction: function } ]
     }
 
     /**
@@ -166,6 +166,15 @@ class FunctionMappings {
 
             mapping.action(event, element, mapping.data);
         }
+
+        // Remove last applied event to prevent multi addEventListener to the element
+        if(this.appliedFunctions.has(attribute)) { 
+            const lastApplied = this.appliedFunctions.get(attribute);
+
+            targetElementEvent.removeEventListener(lastApplied.type, lastApplied.mappingFunction);
+        }
+
+        this.appliedFunctions.set(attribute, { element: targetElementEvent, type: mapping.type, mappingFunction: eventFunction });
 
         targetElementEvent.addEventListener(mapping.type, eventFunction);
     }
