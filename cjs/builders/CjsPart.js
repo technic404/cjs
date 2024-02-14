@@ -56,6 +56,7 @@ class CjsPart extends CjsBuilderInterface {
         super("part", CJS_PART_PREFIX, func);
 
         this.defaultData = {};
+        this.preSetData = {};
     }
 
     /**
@@ -63,12 +64,8 @@ class CjsPart extends CjsBuilderInterface {
      * @param {object} data data to pass, to part
      * @returns {HTMLElement}
      */
-    toElement(data = {}) {
-        const notAnObject = typeof data !== "object";
-
-        if(notAnObject) console.log(`${CJS_PRETTY_PREFIX_X}Provided non-object type param, expected object`);
-
-        return htmlToElement(this._getHtml(this.#getData(data)));
+    toElement(data = null) {
+        return htmlToElement(this.toHtml(data));
     }
 
     /**
@@ -101,10 +98,14 @@ class CjsPart extends CjsBuilderInterface {
      * @param {object} data data to pass, to part
      * @returns {string}
      */
-    toHtml(data = {}) {
+    toHtml(data = null) {
+        const isSet = data !== null;
+
+        if(!isSet) return this._getHtml(this.#getData(this.preSetData));
+
         const notAnObject = typeof data !== "object";
 
-        if(notAnObject) console.log(`${CJS_PRETTY_PREFIX_X}Provided non-object type param, expected object`);
+        if(isSet && notAnObject) console.log(`${CJS_PRETTY_PREFIX_X}Provided non-object type param, expected object`);
 
         return this._getHtml(this.#getData(data));
     }
@@ -118,6 +119,8 @@ class CjsPart extends CjsBuilderInterface {
         const isObject = (any) => { return any instanceof Object; }
 
         if(!isObject(data)) return console.log(`${CJS_PRETTY_PREFIX_X}Data passed into CjsPart.setData() have to be object type argument`)
+
+        this.preSetData = data;
 
         const html = this._getHtml(this.#getData(data));
 
@@ -143,6 +146,8 @@ class CjsPart extends CjsBuilderInterface {
         }
 
         applyDataToActionMethods();
+
+        return this;
     }
 
     /**
@@ -152,8 +157,21 @@ class CjsPart extends CjsBuilderInterface {
     setDefaultData(data) {
         const isObject = (any) => { return any instanceof Object; }
 
-        if(!isObject(data)) return console.log(`${CJS_PRETTY_PREFIX_X}Data passed into CjsPart.setData() have to be object type argument`);
+        if(!isObject(data)) return console.log(`${CJS_PRETTY_PREFIX_X}Data passed into CjsPart.setDefaultData() have to be object type argument`);
 
         this.defaultData = data;
+    }
+}
+
+// TODO add forward feature to findPart
+
+/**
+ * Finds part with selected direction of searching
+ * @param {HTMLElement} part 
+ * @param {"backward"} mode 
+ */
+function findPart(part, mode = "backward") {
+    if(mode === "backward") {
+        return findParentThatHasAttribute(part, CJS_PART_PREFIX, false);
     }
 }
