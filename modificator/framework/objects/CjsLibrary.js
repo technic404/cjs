@@ -18,6 +18,8 @@ class CjsLibrary {
         "utils/StyleUtil.js", 
         "utils/ArrayUtil.js", 
         "utils/NumericUtil.js", 
+        "utils/public/CjsStringFormatterUtil.js", 
+        "utils/public/CjsObjectsUtil.js", 
         "utils/public/CjsTimingsUtil.js", 
         "utils/public/CjsFiltersUtil.js", 
         "utils/public/CjsRequestsUtil.js", 
