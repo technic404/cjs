@@ -126,9 +126,12 @@ class JsCompressor {
                 };
     
                 // When the case is:
-                // __export["class"] = Person { constructor() {  }; getName() { return "defaultName"; } }
-                // __export["function"] = function myFunction() { return "coolValue"; }
-                // __export["async"] = async function myAsyncFunction() { return await fetch("https://google.com"); }
+                // class Person { constructor() {  }; getName() { return "defaultName"; } }
+                // __export["Person"] = Person;
+                //
+                // __export["myFunction"] = function myFunction() { return "coolValue"; }
+                //
+                // __export["myAsyncFunction"] = async function myAsyncFunction() { return await fetch("https://google.com"); }
                 const isReversedTransformation = ["class", "function", "async"].includes(
                     element.varName
                 );
@@ -174,6 +177,7 @@ class JsCompressor {
                             `${element.varName} ${element.name}`
                         )
                     } else {
+                        
                         parsed = insertTextAtIndex(
                             parsed,
                             element.exportKeywordStart,
