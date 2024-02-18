@@ -134,11 +134,56 @@ class JsCompressor {
                 );
     
                 if (isReversedTransformation) {
-                    parsed = insertTextAtIndex(
-                        parsed,
-                        element.exportKeywordStart,
-                        `${transformation.transformed} = ${transformation.real}`
-                    );
+                    const isClass = "class" === element.varName;
+
+                    if(isClass) {
+                        const findEndIndexOfTheClassLastBracket = () => {
+                            let openingBracketsNumber = 0;
+                            let iter = 1;
+
+                            while(true) {
+                                if(openingBracketsNumber === 0 && iter !== 1) break;
+
+                                const char = parsed[element.exportKeywordStart + iter];
+
+                                if(char === "{") openingBracketsNumber++;
+
+                                if(char === "}") openingBracketsNumber--;
+
+                                iter++;
+                            }
+
+                            return element.exportKeywordStart + iter;
+                        }
+
+                        const classEndIndex = findEndIndexOfTheClassLastBracket();
+
+                        // Inserts after the class declaration
+                        // __export["ClassName"] = ClassName;
+                        parsed = insertTextAtIndex(
+                            parsed,
+                            classEndIndex,
+                            `\n\n    ${transformation.transformed} = ${element.name};`
+                        )
+
+                        // Inserts before the class content { constructor() {} getName() { return "something"; } }
+                        // class ClassName
+                        parsed = insertTextAtIndex(
+                            parsed,
+                            element.exportKeywordStart,
+                            `${element.varName} ${element.name}`
+                        )
+                    } else {
+                        parsed = insertTextAtIndex(
+                            parsed,
+                            element.exportKeywordStart,
+                            `${transformation.transformed} = ${transformation.real}`
+                        );
+                    }
+
+                    
+
+                        
                 } else if (isMultiExport) {
                     // Contains names of the exported elements
                     // export { variable1, function1, class1 }

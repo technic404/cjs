@@ -82,12 +82,6 @@ class IndexCompressor {
                 (config.socialMedia.description !== null && config.socialMedia.twitter.enabled ? new Tag("meta").addAttributes(new Attr("name", "twitter:description"), new Attr("content", config.socialMedia.description)) : null),
                 (config.socialMedia.image !== null && config.socialMedia.twitter.enabled ? new Tag("meta").addAttributes(new Attr("name", "twitter:image"), new Attr("content", config.socialMedia.description)) : null),
                 
-                new Tag(null),
-
-                ...extraHeadAssetsTags,
-
-                new Tag(null),
-                
                 new Tag("link").addAttributes(new Attr("rel", "stylesheet"), new Attr("href", `style.css?v=${getRandomCharacters(QUERY_PARAM_LENGTH)}`)),
                 
                 new Tag(null),
@@ -101,6 +95,12 @@ class IndexCompressor {
                 new Tag("script").setText(runnableScript),
                 new Tag("script").addAttributes(new Attr("src", `cup.js?v=${getRandomCharacters(QUERY_PARAM_LENGTH)}`)),
                 new Tag("script").addAttributes(new Attr("defer"), new Attr("src", `script.js?v=${getRandomCharacters(QUERY_PARAM_LENGTH)}`)),
+            
+                new Tag(null),
+
+                ...extraHeadAssetsTags,
+
+                new Tag(null),
             ]
         })
 

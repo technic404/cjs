@@ -6,6 +6,7 @@
                 "themeColor": "#317EFB"
             }
         },
+        "minifyScripts": false,
         "libraryPath": "./cjs"
     }
 }
