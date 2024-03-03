@@ -6,7 +6,6 @@ const CjsHandler = require("./creator/CjsHandler");
 const CjsStyle = require("./creator/CjsStyle");
 const CjsLayout = require("./creator/CjsLayout");
 const CjsPart = require("./creator/CjsPart");
-const { cjsConfig } = require("../../constants");
 
 class CjsCreator {
 
@@ -44,7 +43,7 @@ class CjsCreator {
         if(element === "component") {
             const hasLayoutFlag = "layout" in flags && flags.layout !== null;
             const path = hasLayoutFlag
-                ? `../src/layouts/${capitalizeFirst(flags.layout, false)}/components/${names.camelStyle}`
+                ? `../src/layouts/${capitalizeFirst(flags.layout, false)}/${names.camelStyle}`
                 : `../src/components/${names.camelStyle}`
             const handler = new CjsHandler(names, path);
             const style = new CjsStyle(names, path);
@@ -92,12 +91,12 @@ class CjsCreator {
                 hasTargetFlag
                 ? (
                     hasLayoutFlag
-                    ? `../src/layouts/${capitalizeFirst(flags.layout, false)}/components/${capitalizeFirst(flags.target, false)}/${names.camelStyle}`
-                    : `../src/components/${capitalizeFirst(flags.target, false)}/parts/${names.camelStyle}`
+                    ? `../src/layouts/${capitalizeFirst(flags.layout, false)}/${capitalizeFirst(flags.target, false)}/${names.camelStyle}`
+                    : `../src/components/${capitalizeFirst(flags.target, false)}/${names.camelStyle}`
                 )
                 : (
                     hasLayoutFlag
-                    ? `../src/layouts/${capitalizeFirst(flags.layout, false)}/parts/${names.camelStyle}`
+                    ? `../src/layouts/${capitalizeFirst(flags.layout, false)}/${names.camelStyle}`
                     : `../src/parts/${names.camelStyle}`
                 )
             )
