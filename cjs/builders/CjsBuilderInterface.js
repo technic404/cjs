@@ -51,12 +51,50 @@ class CjsBuilderInterface {
     }
 
     /**
+     * Returns data that will be passed to html
+     * @param {object} data
+     * @returns {object} data with merged default data 
+     */
+    _getData(data) {
+        const mergedData = {};
+
+        /**
+         * Recursive function to merge objects
+         * @param {object} obj1 object that will be changed to merged object
+         * @param {object} obj2 object that will be overwriting data to obj1
+         */
+        function mergeObjects(obj1, obj2, l = false) {
+            for (const key in obj2) {
+                if(!obj2.hasOwnProperty(key)) continue;
+
+                const hasObjectInside = typeof obj2[key] === 'object' && obj2[key] !== null && obj1[key]
+
+                if (hasObjectInside) {
+                    mergeObjects(obj1[key], obj2[key]);
+                } else {
+                    const propertyHasNullableValue = obj1[key] === null || obj1[key] === undefined;
+
+                    if(propertyHasNullableValue) {
+                        obj1[key] = obj2[key];
+                    }
+                }
+            }
+        }
+
+        mergeObjects(mergedData, data);
+        mergeObjects(mergedData, this.defaultData, true);
+
+        return mergedData;
+    }
+
+    /**
      * Returns html containing attribute in parent with data transformed into its references
      * @param {object} data 
+     * @param {object} layoutData
      * @returns {string} html
      */
-    _getHtml = (data) => {
-        const html = this.func(data);
+    _getHtml = (data, layoutData = {}) => {
+        const html = this.func(data, layoutData);
 
         /**
          * Adds attributes to root element
@@ -98,12 +136,15 @@ class CjsBuilderInterface {
      * 
      * @param {"component"|"part"} type 
      * @param {string} prefix 
-     * @param {function(object)} func function that will return html
+     * @param {function(object, object)} func function that will return html
      */
     constructor(type, prefix, func) {
         this.type = type;
         this.prefix = prefix;
         this.func = func;
+
+        this.defaultData = {};
+        this.preSetData = {};
 
         this.#generateAttribute();
     }
@@ -155,4 +196,37 @@ class CjsBuilderInterface {
      * @returns {string}
      */
     toHtml() {}
+
+    /**
+     * Sets default data, so if there is no values in original data, the missing values will be replaced with defaults
+     * @param {object} data 
+     * @returns {CjsBuilderInterface}
+     */
+    setDefaultData(data) {
+        const isObject = (any) => { return any instanceof Object; }
+
+        if(!isObject(data)) return console.log(`${CJS_PRETTY_PREFIX_X}Data passed into setDefaultData() have to be object type argument`);
+
+        this.defaultData = data;
+
+        return this;
+    }
+
+    /**
+     * Returns the first element that is a descendant of node that matches selectors.
+     * @param {string} selectors 
+     * @returns {HTMLElement|Element|null}
+     */
+    querySelector(selectors) {
+        return this.toElement().querySelector(selectors);
+    }
+
+    /**
+     * Returns all element descendants of node that match selectors.
+     * @param {string} selectors 
+     * @returns {HTMLElement[]|Element[]}
+     */
+    querySelectorAll(selectors) {
+        return Array.from(this.toElement().querySelectorAll(selectors));
+    }
 }

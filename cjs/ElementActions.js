@@ -60,6 +60,14 @@ function onFocus(f) {
 }
 
 /**
+ * Executes when focused out the element
+ * @param {function(CjsEvent)} f
+ */
+function onFocusOut(f) {
+    return functionMappings.add("focusout", (event, element, data) => { cjsEventFunction(f, event, element, data); });
+}
+
+/**
  * Executes when mouse enter the element
  * @param {function(CjsEvent)} f
  */
