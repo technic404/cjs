@@ -44,6 +44,12 @@ class CjsRequestResult {
 }
 
 class CjsRequest {
+
+    #onStartCallback = function() {};
+    #onEndCallback = function() {};
+    #onErrorCallback = function() {};
+    #onSuccessCallback = function() {};
+
     /**
      *
      * @param {string} url
@@ -56,8 +62,7 @@ class CjsRequest {
         this.body = {};
         this.headers = {};
         this.files = {};
-        this.onStartCallback = function() {};
-        this.onEndCallback = function() {};
+        this.cooldown = 0;
     }
 
     /**
@@ -66,7 +71,7 @@ class CjsRequest {
      * @returns {CjsRequest}
      */
     onStart(callback) {
-        this.onStartCallback = callback;
+        this.#onStartCallback = callback;
 
         return this;
     }
@@ -77,7 +82,41 @@ class CjsRequest {
      * @returns {CjsRequest}
      */
     onEnd(callback) {
-        this.onEndCallback = callback;
+        this.#onEndCallback = callback;
+
+        return this;
+    }
+
+
+    /**
+     * Sets cooldown before making a request
+     * @param {number} cooldown in milliseconds
+     * @returns {CjsRequest}
+     */
+    setCooldown(cooldown) {
+        this.cooldown = cooldown;
+
+        return this;
+    }
+
+    /**
+     * Sets function that will be called if occurred error
+     * @param {function} callback 
+     * @returns {CjsRequest}
+     */
+    onError(callback) {
+        this.#onErrorCallback = callback;
+
+        return this;
+    }
+
+    /**
+     * Sets function that will be called if request was successfull
+     * @param {function} callback 
+     * @returns {CjsRequest}
+     */
+    onSuccess(callback) {
+        this.#onSuccessCallback = callback;
 
         return this;
     }
@@ -141,16 +180,19 @@ class CjsRequest {
         }
 
         xhr.onerror = (e) => {
+            this.#onErrorCallback();
             return new CjsRequestResult(0, null, true)
         }
 
-        await this.onStartCallback();
+        await this.#onStartCallback();
 
         return await new Promise(((resolve, reject) => {
             xhr.onreadystatechange = async () => {
-                this.onEndCallback();
+                this.#onEndCallback();
 
                 if(xhr.readyState !== 4) return;
+
+                this.#onSuccessCallback();
 
                 resolve(
                     new CjsRequestResult(
