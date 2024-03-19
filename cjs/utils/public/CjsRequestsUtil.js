@@ -78,7 +78,7 @@ class CjsRequest {
 
     /**
      *
-     * @param {function} callback
+     * @param {function(CjsRequestResult)} callback
      * @returns {CjsRequest}
      */
     onEnd(callback) {
@@ -101,7 +101,7 @@ class CjsRequest {
 
     /**
      * Sets function that will be called if occurred error
-     * @param {function} callback 
+     * @param {function(CjsRequestResult)} callback 
      * @returns {CjsRequest}
      */
     onError(callback) {
@@ -112,7 +112,7 @@ class CjsRequest {
 
     /**
      * Sets function that will be called if request was successfull
-     * @param {function} callback 
+     * @param {function(CjsRequestResult)} callback 
      * @returns {CjsRequest}
      */
     onSuccess(callback) {
@@ -126,6 +126,10 @@ class CjsRequest {
      * @return {Promise<CjsRequestResult>}
      */
     async doRequest() {
+        if(this.cooldown > 0) {
+            await new Promise((res) => setTimeout(() => res(), this.cooldown));
+        }
+
         const xhr = new XMLHttpRequest();
 
         if(this.url === undefined) {
@@ -180,27 +184,32 @@ class CjsRequest {
         }
 
         xhr.onerror = (e) => {
-            this.#onErrorCallback();
-            return new CjsRequestResult(0, null, true)
+            const requestResult = new CjsRequestResult(0, null, true);
+
+            this.#onErrorCallback(requestResult);
+
+            return requestResult;
         }
 
-        await this.#onStartCallback();
+        this.#onStartCallback();
 
         return await new Promise(((resolve, reject) => {
             xhr.onreadystatechange = async () => {
-                this.#onEndCallback();
+                const requestResult = new CjsRequestResult(
+                    xhr.status,
+                    xhr.responseText,
+                    (xhr.status === 0)
+                );
+
+                this.#onEndCallback(requestResult);
 
                 if(xhr.readyState !== 4) return;
 
-                this.#onSuccessCallback();
+                if(!requestResult.isError()) {
+                    this.#onSuccessCallback(requestResult);
+                }
 
-                resolve(
-                    new CjsRequestResult(
-                        xhr.status,
-                        xhr.responseText,
-                        (xhr.status === 0)
-                    )
-                )
+                resolve(requestResult);
             }
         }))
     }
