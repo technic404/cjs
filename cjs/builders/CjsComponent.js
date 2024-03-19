@@ -35,6 +35,15 @@ class CjsComponent extends CjsBuilderInterface {
     }
 
     /**
+     * Renders the html string from provided data
+     * @param {object} data 
+     * @returns {string}
+     */
+    render(data) {
+        return this._getHtml(data, this._onLoadData);
+    }
+
+    /**
     * Sets data for component and reload the old component occurrence
     * @param {object} data information that should be inserted to component
     * @returns {CjsBuilderInterface}

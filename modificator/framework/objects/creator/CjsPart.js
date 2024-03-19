@@ -1,7 +1,7 @@
 const CjsElement = require("./CjsElement");
 
 class CjsPart extends CjsElement {
-    fileNameSuffix = "Part.mjs";
+    fileNameSuffix = ".mjs";
 
     #imports = {
         handler: null,
@@ -27,7 +27,7 @@ class CjsPart extends CjsElement {
     supplyStyleImport() {
         const { pascalCase, camelStyle } = this.names;
 
-        this.#imports.style = `${pascalCase}Part.importStyle('${this.semiAbsolutePath}/${pascalCase}Style.css');`;
+        this.#imports.style = `${pascalCase}.importStyle('${this.semiAbsolutePath}/styles/${pascalCase}.css');`;
 
         return this;
     }
@@ -37,10 +37,12 @@ class CjsPart extends CjsElement {
         const content = [];
 
         if(this.#imports.handler) content.push(this.#imports.handler + "\n");
-
-        content.push(`export const ${pascalCase}Part = new CjsPart((data) => \``)
-        content.push(`    <div>${pascalCase}Part works!</div>`);
-        content.push(`\`);`);
+        
+        content.push(`export const ${pascalCase} = new CjsPart((data) => {`)
+        content.push(`    return \``)
+        content.push(`        <div>${pascalCase} part works!</div>`);
+        content.push(`    \`;`);
+        content.push(`});`);
 
         if(this.#imports.style) content.push("\n" + this.#imports.style);
 

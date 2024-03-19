@@ -43,25 +43,30 @@ class CjsCreator {
         if(element === "component") {
             const hasLayoutFlag = "layout" in flags && flags.layout !== null;
             const path = hasLayoutFlag
-                ? `../src/layouts/${capitalizeFirst(flags.layout, false)}/${names.camelStyle}`
-                : `../src/components/${names.camelStyle}`
+                ? `../src/layouts/${capitalizeFirst(flags.layout, false)}`
+                : `../src/${names.camelStyle}`
             const handler = new CjsHandler(names, path);
-            const style = new CjsStyle(names, path);
+            const style = new CjsStyle(names, path + "/styles");
             const component = new CjsComponent(names, path)
-                .supplyHandlerImport()
+                // .supplyHandlerImport()
                 .supplyStyleImport();
 
-            if(fs.existsSync(component.getDirectory())) {
-                console.log(`${PrefixError}Component directory already exists, cannot create component`)
-
-                return null;
+            if(fs.existsSync(component.getFilePath())) {
+                console.log(`${PrefixError}Component file path already exists, cannot create component`)
+            } else {
+                fs.mkdirSync(component.getDirectory(), { recursive: true });
+                fs.writeFileSync(component.getFilePath(), component.getContent());
             }
 
-            fs.mkdirSync(component.getDirectory(), { recursive: true })
-
-            fs.writeFileSync(component.getFilePath(), component.getContent());
-            fs.writeFileSync(handler.getFilePath(), handler.getContent());
-            fs.writeFileSync(style.getFilePath(), style.getContent());
+            if(fs.existsSync(style.getFilePath())) {
+                console.log(`${PrefixError}Style file path already exists, cannot create style`);
+            } else {
+                fs.mkdirSync(style.getDirectory(), { recursive: true });
+                fs.writeFileSync(style.getFilePath(), style.getContent());
+            }
+            
+            // fs.writeFileSync(handler.getFilePath(), handler.getContent());
+            
 
             return component;
         }
@@ -83,8 +88,10 @@ class CjsCreator {
             return layout;
         }
 
+        // TODO UPDATE PART TO REDUCE DIRS
         if(element === "part") {
-            const hasTargetFlag = "target" in flags && flags.target !== null;
+            // const hasTargetFlag = "target" in flags && flags.target !== null;
+            const hasTargetFlag = false;
             const hasLayoutFlag = "layout" in flags && flags.layout !== null;
 
             const path = (
@@ -96,8 +103,8 @@ class CjsCreator {
                 )
                 : (
                     hasLayoutFlag
-                    ? `../src/layouts/${capitalizeFirst(flags.layout, false)}/${names.camelStyle}`
-                    : `../src/parts/${names.camelStyle}`
+                    ? `../src/layouts/${capitalizeFirst(flags.layout, false)}`
+                    : `../src/${names.camelStyle}`
                 )
             )
 
@@ -106,10 +113,10 @@ class CjsCreator {
             }
 
             const part = new CjsPart(names, path)
-                .supplyHandlerImport()
+                // .supplyHandlerImport()
                 .supplyStyleImport();
             const handler = new CjsHandler(names, path);
-            const style = new CjsStyle(names, path);
+            const style = new CjsStyle(names, path + "/styles");
 
             if(hasLayoutFlag && !fs.existsSync(backwardsPath(2))) {
                 console.log(`${PrefixError}Part cannot be created because layout with that name doesn't exists`);
@@ -123,17 +130,19 @@ class CjsCreator {
                 return null;
             }
 
-            if(fs.existsSync(part.getDirectory())) {
-                console.log(`${PrefixError}Part directory already exists, cannot create part`)
-
-                return null;
+            if(fs.existsSync(part.getFilePath())) {
+                console.log(`${PrefixError}Part file path already exists, cannot create part`)
+            } else {
+                fs.mkdirSync(part.getDirectory(), { recursive: true });
+                fs.writeFileSync(part.getFilePath(), part.getContent());
             }
 
-            fs.mkdirSync(part.getDirectory(), { recursive: true })
-
-            fs.writeFileSync(part.getFilePath(), part.getContent());
-            fs.writeFileSync(handler.getFilePath(), handler.getContent());
-            fs.writeFileSync(style.getFilePath(), style.getContent());
+            if(fs.existsSync(style.getFilePath())) {
+                console.log(`${PrefixError}Style file path already exists, cannot create style`)
+            } else {
+                fs.mkdirSync(style.getDirectory(), { recursive: true });
+                fs.writeFileSync(style.getFilePath(), style.getContent());
+            }
             
             return part;
         }

@@ -1,7 +1,8 @@
 const CjsElement = require("./CjsElement");
 
 class CjsStyle extends CjsElement {
-    fileNameSuffix = "Style.css";
+    fileNameSuffix = ".css";
+    // fileNameSuffix = "Style.css";
 
     getContent() {
         const { pascalCase } = this.names;

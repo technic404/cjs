@@ -1,8 +1,8 @@
-import {ContainerComponent} from "./components/container/ContainerComponent.mjs";
+import {Container} from "./Container.mjs";
 
 export const MainLayout = new CjsLayout(
     [
-        [ContainerComponent]
+        [Container]
     ]
 );
 

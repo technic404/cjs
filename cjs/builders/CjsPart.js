@@ -151,6 +151,15 @@ class CjsPart extends CjsBuilderInterface {
     }
 
     /**
+     * Render part with provided data and parses it to string
+     * @param {object} data 
+     * @returns {string}
+     */
+    render(data) {
+        return this.toHtml(data);
+    }
+
+    /**
      * Sets default data, so if there is no values in original data, the missing values will be replaced with defaults
      * @param {object} data 
      */
