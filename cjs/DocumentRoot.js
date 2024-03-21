@@ -1,9 +1,4 @@
 /**
- * Definition of base action modules
- */
-const functionMappings = new FunctionMappings();
-
-/**
  * Definition of Root website class
  */
 class CjsRoot {

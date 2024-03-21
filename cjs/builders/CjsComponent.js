@@ -9,6 +9,16 @@
  */
 class CjsComponent extends CjsBuilderInterface {
 
+    /** @type {boolean} */
+    rerenderSearchCondition = false;
+
+    /** @type {CjsForm[]} */
+    forms = [];
+
+    #updateForms(element) {
+        this.forms = Array.from(element.querySelectorAll("form")).map(form => new CjsForm(form));
+    }
+
     /**
      * Creates the component type element
      * @param {function(object, object)} func function that will return component html. The object argument is data provided by parent layout
@@ -29,7 +39,13 @@ class CjsComponent extends CjsBuilderInterface {
         const elementExists = selector !== null;
         const isDocumentLoaded = document.readyState === 'complete';
 
-        if((isDocumentLoaded && !ignoreReadyState) || elementExists) return selector;
+        if((isDocumentLoaded && !ignoreReadyState) || elementExists) {
+            this.#updateForms(selector);
+
+            return selector;
+        }
+
+        this.#updateForms(element);
 
         return element;
     }
@@ -40,7 +56,11 @@ class CjsComponent extends CjsBuilderInterface {
      * @returns {string}
      */
     render(data) {
-        return this._getHtml(data, this._onLoadData);
+        const html = this._getHtml(data, this._onLoadData);
+
+        this.#updateForms(htmlToElement(html));
+
+        return html;
     }
 
     /**
@@ -81,5 +101,166 @@ class CjsComponent extends CjsBuilderInterface {
 
             CjsFrameworkEvents.onLoadLayout(layout);
         }, 2);
+    }
+
+    /**
+     * 
+     * @param {boolean} condition 
+     * @returns {CjsComponent}
+     */
+    setSearchCondition(condition) {
+        this.rerenderSearchCondition = condition;
+
+        return this;
+    }
+
+    rerenderOnSearch() {
+        Search.addListener(() => this.rerenderComponents());
+
+        return this;
+    }
+
+    /**
+     * 
+     * @returns {CjsComponent}
+     */
+    rerenderComponents() {
+        const components = Array.from(document.body.querySelectorAll(`[${this.attribute}]`));
+        const element = htmlToElement(this._getHtml({}, this._onLoadData));
+
+        const useSmartReplace = true;
+
+        if(useSmartReplace) {
+            for(const component of components) {
+                /**
+                 * 
+                 * @param {HTMLElement} parent 
+                 * @param {HTMLElement} newParent 
+                 */
+                const walk = (parent, newParent) => {
+                    const attributesMap = (attributes) => {
+                        const obj = {};
+                        
+                        Array.from(attributes).forEach(attribute => {
+                            obj[attribute.name] = attribute.value;
+                        });
+
+                        return obj;
+                    }
+
+                    if(newParent === null) {
+                        parent.remove();
+                        return;
+                    }
+
+                    const children = Array.from(parent.children);
+                    const newChildren = Array.from("children" in newParent ? newParent.children : []);
+
+                    for(let i = 0; i < children.length; i++) {
+                        const child = children[i];
+                        const newChild = newChildren[i];
+
+                        if(newChild === undefined) continue;
+
+                        const sameInnerText = child.innerText === newChild.innerText;
+                        const hasNoChildren = child.children.length === 0;
+
+                        if(!sameInnerText && hasNoChildren) {
+                            child.innerText = newChild.innerText;
+                        }
+
+                        const sameTags = child.tagName === newChild.tagName;
+
+                        if(!sameTags) {
+                            child.replaceWith(newChild);
+                            continue;
+                        }
+
+                        const attributes = attributesMap(child.attributes);
+                        const newAttributes = attributesMap(newChild.attributes);
+                        const addedAttributeNames = [];
+
+                        for(const [name, value] of Object.entries(attributes)) {
+                            const hasUnusedAttribute = !(name in newAttributes);
+                            const isCjsAttribute = name.startsWith(CJS_PREFIX);
+
+                            if(hasUnusedAttribute) {
+                                child.removeAttribute(name);
+
+                                if(isCjsAttribute) {
+                                    functionMappings.removeElementAppliedFunctions(name);
+                                }
+
+                                continue;
+                            }
+
+                            const newAttributeValue = newAttributes[name];
+
+                            const isSameValue = value === newAttributeValue;
+
+                            if(!isSameValue) {
+                                child.setAttribute(name, newAttributeValue);
+                                addedAttributeNames.push(name);
+                                continue;
+                            }
+                        }
+
+                        for(const [name, value] of Object.entries(newAttributes)) {
+                            const wasAdded = addedAttributeNames.includes(name);
+
+                            if(wasAdded) continue;
+
+                            const isCjsAttribute = name.startsWith(CJS_PREFIX);
+
+                            if(isCjsAttribute) {
+                                functionMappings.applyElementAttributeMappingFunction(child, name, false);
+                            }
+
+                            child.setAttribute(name, value);
+                        }
+                    }
+
+                    const childrenToAppend = newChildren.slice(children.length);
+
+                    for(const child of childrenToAppend) {
+                        parent.appendChild(child);
+                    }
+                }
+
+                /**
+                 * 
+                 * @param {HTMLElement} root 
+                 * @param {HTMLElement} newRoot 
+                 */
+                const traverse = (root, newRoot) => {
+                    walk(root, newRoot);
+
+                    let rootChildNode = root.firstChild;
+                    let newRootChildNode = newRoot !== null ? newRoot.firstChild : null;
+                    while(rootChildNode) {
+                        if(rootChildNode.nodeType === Node.ELEMENT_NODE) {
+                            traverse(rootChildNode, newRootChildNode);
+                        }
+
+                        if(newRootChildNode === null) return;
+
+                        rootChildNode = rootChildNode.nextSibling;
+                        newRootChildNode = newRootChildNode.nextSibling;
+                    }
+                }
+
+                traverse(component, element);
+
+                this.#updateForms(component);
+            }
+        } else {
+            for(const component of components) {
+                component.replaceWith(element);
+            }
+
+            this.#updateForms(element);
+        }
+
+        return this;
     }
 }

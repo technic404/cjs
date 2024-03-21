@@ -2,7 +2,7 @@ class FunctionMappings {
     constructor() {
         this.mappings = new Map(); // attribute, { type: "click", action: function }
         this.disabled = new Map(); // attribute, { events: ["click", "input", "outerclick"] }
-        this.appliedFunctions = new Map(); // attribute, [ { element: HTMLElement, type: "click", appliedFunction: function } ]
+        this.appliedFunctions = new Map(); // attribute, [ { element: HTMLElement, type: "click", mappingFunction: function } ]
     }
 
     /**
@@ -180,6 +180,26 @@ class FunctionMappings {
     }
 
     /**
+     * Removes applied functions on element with specific attribute
+     * @param {string} attribute 
+     * @returns {boolean} if is success or not
+     */
+    removeElementAppliedFunctions(attribute) {
+        if(!this.appliedFunctions.has(attribute)) {
+            return false;
+        }
+
+        const data = this.appliedFunctions.get(attribute);
+        const { element, type, mappingFunction } = data;
+
+        element.removeEventListener(type, mappingFunction);
+
+        return true;
+    }
+
+
+
+    /**
      *
      * @param {HTMLElement} element
      * @param {boolean} allowDuplicates
@@ -201,3 +221,5 @@ class FunctionMappings {
         }
     }
 }
+
+const functionMappings = new FunctionMappings();

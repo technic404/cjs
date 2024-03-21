@@ -1,4 +1,4 @@
-class CjsSearchLocation {
+class CjsSearch {
     /**
      * Returns the specific url part without domain and query search
      * 
@@ -23,46 +23,64 @@ class CjsSearchLocation {
     }
 
     /** @type {string} */
-    #debugBoxId = "cjs-debug/SearchLocation";
+    #debugBoxId = "cjs-debug/Search";
 
     /** @returns {HTMLElement} */
     #createDebugBox() {
-        const box = document.createElement("div");
-        box.style.position = `absolute`;
-        box.style.bottom = `20px`;
-        box.style.right = `20px`;
-        box.style.background = `#000000`;
-        box.style.color = `#ffffff`;
-        box.style.padding = `6px 12px`;
-        box.style.border = `2px solid #ffffff`;
-        box.style.borderRadius = `6px`;
-        box.style.fontFamily = `Consolas, sans-serif`;
-        box.style.fontSize = `16px`;
-        box.id = this.#debugBoxId;
+        const element = htmlToElement(`
+            <div style="
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                background: #000000;
+                padding: 6px 12px;
+                border: 2xp solid #ffffff;
+                border-radius: 6px;
+            " id="${this.#debugBoxId}">
+                <p style="
+                    font-family: Consolas, sans-serif;
+                    margin: 0;
+                    color: #acacac;
+                    font-size: 10px;
+                    user-select: none;
+                ">Search url</p>
+                <p style="
+                    font-family: Consolas, sans-serif;
+                    margin: 0;
+                    color: #ffffff;
+                    font-size: 15px;
+                "></p>
+            </div>
+        `);
 
         const bodyNotLoaded = document.body === null;
 
-        if(bodyNotLoaded) return box;
+        if(bodyNotLoaded) return element;
 
-        document.body.appendChild(box);
+        document.body.appendChild(element);
 
-        return box;
+        return element;
     }
 
     #displayOnScreen = true;
     #updateWebsiteUrl = false;
 
-    #localStorageId = "cjsSearchLocation";
+    #localStorageId = "cjsSearch";
+
+    /** @type {function()[]} */
+    #listeners = [];
 
     #update() {
         localStorage.setItem(this.#localStorageId, this.search);
+
+        this.#listeners.forEach(listener => listener());
 
         if(this.#displayOnScreen) {
             const debugBox = document.getElementById(this.#debugBoxId) === null 
             ? this.#createDebugBox()
             : document.getElementById(this.#debugBoxId);
 
-            debugBox.innerText = `/${this.search}`;
+            debugBox.querySelector("p:nth-child(2)").innerText = `/${this.search}`;
         }
 
         if(this.#updateWebsiteUrl) {
@@ -79,7 +97,7 @@ class CjsSearchLocation {
     /**
      * If display the actual search in the black box on the website.
      * @param {boolean} displayOnScreen 
-     * @returns {SearchLocation}
+     * @returns {CjsSearch}
      */
     setDisplayedOnScreen(displayOnScreen) {
         this.#displayOnScreen = displayOnScreen;
@@ -88,9 +106,20 @@ class CjsSearchLocation {
     }
 
     /**
+     * Adds listener and calls it when search changes
+     * @param {function} callback 
+     * @returns {CjsSearch}
+     */
+    addListener(callback) {
+        this.#listeners.push(callback);
+
+        return this;
+    }
+
+    /**
      * Sets the search location to provided value.
      * @param {string} search 
-     * @returns {SearchLocation}
+     * @returns {CjsSearch}
      */
     set(search) {
         const parsed = search.replace(new RegExp("/", "g"), "");
@@ -126,12 +155,12 @@ class CjsSearchLocation {
      * `https://domain.pl/channels`
      * 
      * ```js
-     * SearchLocation.add("9130148278934798234");
+     * Search.add("9130148278934798234");
      * ```
      * 
      * `https://domain.pl/channels/9130148278934798234`
      * @param {string} value 
-     * @returns {SearchLocation}
+     * @returns {CjsSearch}
      */
     add(value) {
         const parsed = value.replace(new RegExp("/", "g"), "");
@@ -148,12 +177,12 @@ class CjsSearchLocation {
      * 
      * `https://domain.pl/channels/9130148278934798234`
      * ```js
-     * SearchLocation.remove(2);
+     * Search.remove(2);
      * ```
      * `https://domain.pl/`
      * 
      * @param {number} count 
-     * @returns {SearchLocation}
+     * @returns {CjsSearch}
      */
     remove(count) {
         const split = this.search.split("/");
@@ -175,4 +204,4 @@ class CjsSearchLocation {
     }
 }
 
-const SearchLocation = new CjsSearchLocation();
+const Search = new CjsSearch();
