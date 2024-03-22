@@ -62,12 +62,21 @@ class CjsComponent extends CjsBuilderInterface {
      * @param {object} data 
      * @returns {string}
      */
-    render(data) {
+    render(data = {}) {
         const html = this._getHtml(data, this._onLoadData);
 
         this.#update(htmlToElement(html));
 
         return html;
+    }
+
+    /**
+     * Visualises component as HTMLElement
+     * @param {object} data 
+     * @returns {HTMLElement}
+     */
+    visualise(data = {}) {
+        return htmlToElement(this.render(data));
     }
 
     /**

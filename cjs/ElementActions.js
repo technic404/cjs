@@ -52,6 +52,14 @@ function onInput(f) {
 }
 
 /**
+ * Executes when changed the element
+ * @param {function(CjsEvent)} f
+ */
+function onChange(f) {
+    return functionMappings.add("change", (event, element, data) => { cjsEventFunction(f, event, element, data); });
+}
+
+/**
  * Executes when focused the element
  * @param {function(CjsEvent)} f
  */
