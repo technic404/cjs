@@ -38,6 +38,7 @@ class CjsLibrary {
         "builders/CjsComponent.js", 
         "builders/CjsPart.js", 
         "builders/CjsLayout.js", 
+        "builders/CjsComponentsCollection.js", 
         "builders/ComponentBuilder.js", 
         "FunctionMappings.js", 
         "listeners/ChangesObserverListener.js", 

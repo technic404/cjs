@@ -2,8 +2,6 @@ const CjsTakenAttributes = {
     component: [], part: []
 };
 
-
-
 /**
  * @class
  * @classdesc Base class representing a generic builder interface.

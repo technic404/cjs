@@ -70,8 +70,13 @@ class CjsSearch {
     /** @type {function()[]} */
     #listeners = [];
 
+    /** @type {number} */
+    length = 0;
+
     #update() {
         localStorage.setItem(this.#localStorageId, this.search);
+
+        this.length = this.search.split("/").filter(e => e.trim() !== "").length;
 
         this.#listeners.forEach(listener => listener());
 
@@ -89,7 +94,7 @@ class CjsSearch {
     }
 
     constructor() {
-        this.search = this.#getDesiredPart(window.location.href);
+        this.search = ""; //this.#getDesiredPart(window.location.href)
 
         this.#update();
     }
@@ -122,7 +127,7 @@ class CjsSearch {
      * @returns {CjsSearch}
      */
     set(search) {
-        const parsed = search.replace(new RegExp("/", "g"), "");
+        const parsed = search.charAt(0) === "/" ? search.slice(1) : search;
 
         this.search = parsed;
 

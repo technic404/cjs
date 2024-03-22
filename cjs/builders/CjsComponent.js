@@ -9,14 +9,21 @@
  */
 class CjsComponent extends CjsBuilderInterface {
 
-    /** @type {boolean} */
-    rerenderSearchCondition = false;
-
     /** @type {CjsForm[]} */
     forms = [];
 
-    #updateForms(element) {
+    /** @type {boolean} */
+    #rerenderOnSearchEnabled = false;
+
+    #update(element) {
         this.forms = Array.from(element.querySelectorAll("form")).map(form => new CjsForm(form));
+    }
+
+    /**
+     * @returns {CjsComponentsCollection}
+     */
+    get components() {
+        return new CjsComponentsCollection(document.body.querySelectorAll(`[${this.attribute}='']`));
     }
 
     /**
@@ -40,12 +47,12 @@ class CjsComponent extends CjsBuilderInterface {
         const isDocumentLoaded = document.readyState === 'complete';
 
         if((isDocumentLoaded && !ignoreReadyState) || elementExists) {
-            this.#updateForms(selector);
+            this.#update(selector);
 
             return selector;
         }
 
-        this.#updateForms(element);
+        this.#update(element);
 
         return element;
     }
@@ -58,7 +65,7 @@ class CjsComponent extends CjsBuilderInterface {
     render(data) {
         const html = this._getHtml(data, this._onLoadData);
 
-        this.#updateForms(htmlToElement(html));
+        this.#update(htmlToElement(html));
 
         return html;
     }
@@ -103,34 +110,25 @@ class CjsComponent extends CjsBuilderInterface {
         }, 2);
     }
 
-    /**
-     * 
-     * @param {boolean} condition 
-     * @returns {CjsComponent}
-     */
-    setSearchCondition(condition) {
-        this.rerenderSearchCondition = condition;
 
-        return this;
-    }
+    rerenderOnSearch(data = { useSmartRender: false }) {
+        Search.addListener(() => this.rerenderComponents(data));
 
-    rerenderOnSearch() {
-        Search.addListener(() => this.rerenderComponents());
+        this.#rerenderOnSearchEnabled = true;
 
         return this;
     }
 
     /**
      * 
+     * @param {{ useSmartRender: boolean }} data
      * @returns {CjsComponent}
      */
-    rerenderComponents() {
+    rerenderComponents(data = { useSmartRender: false }) {
         const components = Array.from(document.body.querySelectorAll(`[${this.attribute}]`));
         const element = htmlToElement(this._getHtml({}, this._onLoadData));
 
-        const useSmartReplace = true;
-
-        if(useSmartReplace) {
+        if(data.useSmartRender) {
             for(const component of components) {
                 /**
                  * 
@@ -220,6 +218,15 @@ class CjsComponent extends CjsBuilderInterface {
                         }
                     }
 
+                    if(parent.nodeType === Node.ELEMENT_NODE && newParent.nodeType === Node.ELEMENT_NODE) {
+                        if(parent.children.length > newParent.children.length) {
+                            const diff = parent.children.length - newParent.children.length;
+                            const childrenToRemove = Array.from(parent.children).slice(-1 * diff);
+    
+                            childrenToRemove.forEach(c => c.remove());
+                        }
+                    }
+
                     const childrenToAppend = newChildren.slice(children.length);
 
                     for(const child of childrenToAppend) {
@@ -251,14 +258,14 @@ class CjsComponent extends CjsBuilderInterface {
 
                 traverse(component, element);
 
-                this.#updateForms(component);
+                this.#update(component);
             }
         } else {
             for(const component of components) {
                 component.replaceWith(element);
             }
 
-            this.#updateForms(element);
+            this.#update(element);
         }
 
         return this;
