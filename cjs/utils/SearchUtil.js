@@ -100,7 +100,7 @@ class CjsSearch {
     }
 
     /**
-     * If display the actual search in the black box on the website.
+     * If display the actual debug search in the black box on the website.
      * @param {boolean} displayOnScreen 
      * @returns {CjsSearch}
      */
