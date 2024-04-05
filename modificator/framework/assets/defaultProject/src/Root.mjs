@@ -1,7 +1,7 @@
-import {MainLayout} from "./layouts/main/MainLayout.mjs";
+import {RootLayout} from "./layouts/root/RootLayout.mjs";
 
 Root.setDocumentData({
     title: "Example c.js project",
 });
 
-init(MainLayout)
+init(RootLayout)
