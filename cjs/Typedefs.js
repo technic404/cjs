@@ -46,7 +46,7 @@
  */
 
 /**
- * @typedef {Object} CjsGobalsOptions
+ * @typedef {Object} CjsGlobalsOptions
  * @property {CjsGlobalsMouse} mouse
  * @property {CjsGlobalsWindow} window
  */

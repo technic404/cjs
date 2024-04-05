@@ -1,6 +1,6 @@
 /**
  * Variable that stores global settings for website
- * @type {CjsGobalsOptions}
+ * @type {CjsGlobalsOptions}
  */
 const CjsGlobals = {
     mouse: {
