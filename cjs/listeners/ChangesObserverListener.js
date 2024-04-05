@@ -129,8 +129,6 @@ class ChangesObserverListener {
     execute(type, attribute, element) {
         if(!this.map.has(attribute)) return;
 
-        //const isPart = getAttributeStartingWith(element, CJS_PART_PREFIX).length > 0;
-        //const isComponent = getAttributeStartingWith(element, CJS_COMPONENT_PREFIX).length > 0;
         const isRegistered = this.executedFunctions.has(attribute);
 
         if(isRegistered) {
@@ -146,9 +144,7 @@ class ChangesObserverListener {
         const cjsEvent = new CjsEvent(
             new ChangesObserverEvent(element, new Date()),
             findParentThatHasAttribute(element, CJS_COMPONENT_PREFIX),
-            findParentThatHasAttribute(element, CJS_PART_PREFIX),
             element,
-            Object.assign({}, obj.data)
         );
 
         obj.action(cjsEvent);

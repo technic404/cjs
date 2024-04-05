@@ -197,8 +197,6 @@ class FunctionMappings {
         return true;
     }
 
-
-
     /**
      *
      * @param {HTMLElement} element
