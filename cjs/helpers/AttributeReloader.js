@@ -9,8 +9,6 @@ function reloadAttributes(html) {
     for (const child of [element, ...element.querySelectorAll("*")]) {
         const attributes = {
             component: getAttributeStartingWith(child, CJS_COMPONENT_PREFIX),
-            part: getAttributeStartingWith(child, CJS_PART_PREFIX),
-            partTextField: getAttributeStartingWith(child, CJS_PART_TEXT_FIELD_PREFIX),
             element: getAttributeStartingWith(child, CJS_ELEMENT_PREFIX),
             references: getAttributeStartingWith(child, CJS_REFERENCE_PREFIX)
         }

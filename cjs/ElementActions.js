@@ -3,14 +3,12 @@ class CjsEvent {
      *
      * @param {Event|ChangesObserverEvent} event
      * @param {HTMLElement} component nearest component html element
-     * @param {HTMLElement} part nearest part html element
      * @param {HTMLElement} source element to witch the event was applied
      */
-    constructor(event, component, part, source, data) {
+    constructor(event, component, source) {
         this.event = event;
         this.target = event.target;
         this.component = component;
-        this.part = part;
         this.source = source;
     }
 }
@@ -19,7 +17,6 @@ function cjsEventFunction(f, event, sourceElement) {
     f(new CjsEvent(
         event,
         findParentThatHasAttribute(sourceElement, CJS_COMPONENT_PREFIX),
-        findParentThatHasAttribute(sourceElement, CJS_PART_PREFIX),
         sourceElement,
     ));
 }
