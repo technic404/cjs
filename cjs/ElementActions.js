@@ -5,7 +5,6 @@ class CjsEvent {
      * @param {HTMLElement} component nearest component html element
      * @param {HTMLElement} part nearest part html element
      * @param {HTMLElement} source element to witch the event was applied
-     * @param {Object} data
      */
     constructor(event, component, part, source, data) {
         this.event = event;
@@ -13,17 +12,15 @@ class CjsEvent {
         this.component = component;
         this.part = part;
         this.source = source;
-        this.data = data;
     }
 }
 
-function cjsEventFunction(f, event, sourceElement, data) {
+function cjsEventFunction(f, event, sourceElement) {
     f(new CjsEvent(
         event,
         findParentThatHasAttribute(sourceElement, CJS_COMPONENT_PREFIX),
         findParentThatHasAttribute(sourceElement, CJS_PART_PREFIX),
         sourceElement,
-        data
     ));
 }
 
@@ -40,7 +37,7 @@ function off(...event) {
  * @param {function(CjsEvent)} f
  */
 function onClick(f) {
-    return functionMappings.add("click", (event, element, data) => { cjsEventFunction(f, event, element, data); });
+    return functionMappings.add("click", (event, element) => { cjsEventFunction(f, event, element); });
 }
 
 /**
@@ -48,7 +45,7 @@ function onClick(f) {
  * @param {function(CjsEvent)} f
  */
 function onInput(f) {
-    return functionMappings.add("input", (event, element, data) => { cjsEventFunction(f, event, element, data); });
+    return functionMappings.add("input", (event, element) => { cjsEventFunction(f, event, element); });
 }
 
 /**
@@ -56,7 +53,7 @@ function onInput(f) {
  * @param {function(CjsEvent)} f
  */
 function onChange(f) {
-    return functionMappings.add("change", (event, element, data) => { cjsEventFunction(f, event, element, data); });
+    return functionMappings.add("change", (event, element) => { cjsEventFunction(f, event, element); });
 }
 
 /**
@@ -64,7 +61,7 @@ function onChange(f) {
  * @param {function(CjsEvent)} f
  */
 function onFocus(f) {
-    return functionMappings.add("focus", (event, element, data) => { cjsEventFunction(f, event, element, data); });
+    return functionMappings.add("focus", (event, element) => { cjsEventFunction(f, event, element); });
 }
 
 /**
@@ -72,7 +69,7 @@ function onFocus(f) {
  * @param {function(CjsEvent)} f
  */
 function onFocusOut(f) {
-    return functionMappings.add("focusout", (event, element, data) => { cjsEventFunction(f, event, element, data); });
+    return functionMappings.add("focusout", (event, element) => { cjsEventFunction(f, event, element); });
 }
 
 /**
@@ -80,7 +77,7 @@ function onFocusOut(f) {
  * @param {function(CjsEvent)} f
  */
 function onMouseenter(f) {
-    return functionMappings.add("mouseenter", (event, element, data) => { cjsEventFunction(f, event, element, data); });
+    return functionMappings.add("mouseenter", (event, element) => { cjsEventFunction(f, event, element); });
 }
 
 /**
@@ -88,7 +85,7 @@ function onMouseenter(f) {
  * @param {function(CjsEvent)} f
  */
 function onMouseleave(f) {
-    return functionMappings.add("mouseleave", (event, element, data) => { cjsEventFunction(f, event, element, data); });
+    return functionMappings.add("mouseleave", (event, element) => { cjsEventFunction(f, event, element); });
 }
 
 /**
@@ -96,7 +93,7 @@ function onMouseleave(f) {
  * @param {function(CjsEvent)} f
  */
 function onDblclick(f) {
-    return functionMappings.add("dblclick", (event, element, data) => { cjsEventFunction(f, event, element, data); });
+    return functionMappings.add("dblclick", (event, element) => { cjsEventFunction(f, event, element); });
 }
 
 /**
@@ -104,11 +101,11 @@ function onDblclick(f) {
  * @param {function(CjsEvent)} f
  */
 function onOuterclick(f) {
-    return functionMappings.add("click", (event, element, data) => {
+    return functionMappings.add("click", (event, element) => {
         if (!document.body.contains(element)) return;
 
         if (element !== event.target && !element.contains(event.target)) {
-            cjsEventFunction(f, event, element, data);
+            cjsEventFunction(f, event, element);
         }
     }, {windowApplied: true, additionalName: 'outerclick'});
 }

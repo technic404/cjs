@@ -30,6 +30,7 @@ class CjsLibrary {
         "utils/public/CjsAnimationsUtil.js",
         "utils/public/CjsGlobalsUtil.js", 
         "utils/public/CjsWebSocket.js", 
+        "utils/public/CjsHandler.js", 
         "ElementActions.js", 
         "helpers/AttributeReloader.js", 
         "builders/HtmlElementBuilder.js", 
