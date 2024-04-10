@@ -122,18 +122,22 @@ class CjsComponent {
         return addAttributes(html, [
             this.attribute, onLoadAttribute.trim()
         ]);
-
-        return addAttributes(html);
     }
 
-    /** @type {CjsForm[]} */
-    forms = [];
+    /** @returns {CjsForm[]} */
+    get forms() {
+        const element = this.toElement();
+        const forms = Array.from(element.querySelectorAll("form"));
+
+        if(element.tagName === "FORM") forms.push(element);
+
+        return forms.map(form => new CjsForm(form));
+    }
 
     /** @type {boolean} */
     #rerenderOnSearchEnabled = false;
 
     #update(element) {
-        this.forms = Array.from(element.querySelectorAll("form")).map(form => new CjsForm(form));
     }
 
     /**
