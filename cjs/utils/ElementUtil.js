@@ -25,10 +25,6 @@ function htmlToElement(html) {
 
     template.innerHTML = html;
 
-    // if(template.content.children.length > 1) {
-    //     console.log(`${CJS_PRETTY_PREFIX_X}Element have to contain parent element on the top, wrap your code in container like div`, html);
-    // }
-
     return template.content.firstElementChild;
 }
 

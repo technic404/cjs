@@ -12,17 +12,14 @@ const CJS_STYLE_FILTERS_PREFIX = `${CJS_PREFIX}filters-`
 const CJS_STYLE_KEYFRAMES_PREFIX = `${CJS_PREFIX}keyframes-`
 const CJS_ROOT_CONTAINER_PREFIX = `${CJS_PREFIX}root-`;
 const CJS_COMPONENT_PREFIX = `${CJS_PREFIX}component-`
-const CJS_PART_PREFIX = `${CJS_PREFIX}part-`
-const CJS_PART_TEXT_FIELD_PREFIX = `${CJS_PREFIX}parttextfield-`
 const CJS_ELEMENT_PREFIX = `${CJS_PREFIX}element-`
 const CJS_ELEMENT_DISABLED_PREFIX = `${CJS_PREFIX}elementdisabled-`
 const CJS_OBSERVER_PREFIX = `${CJS_PREFIX}observer-`
-const CJS_REFERENCE_PREFIX = `${CJS_PREFIX}reference-`
 
 const CjsFrameworkEvents = { 
     /**
      * Executes when layout is being loaded to component
-     * @param {CjsLayout}
+     * @param {CjsLayout} layout
      */
     onLoadLayout: (layout) => {}
 }
