@@ -128,8 +128,9 @@ class CjsComponent {
     get forms() {
         const element = this.toElement();
         const forms = Array.from(element.querySelectorAll("form"));
+        const componentIsForm = element.tagName === "FORM"
 
-        if(element.tagName === "FORM") forms.push(element);
+        if(componentIsForm) forms.push(element);
 
         return forms.map(form => new CjsForm(form));
     }
