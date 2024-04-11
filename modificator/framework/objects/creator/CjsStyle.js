@@ -1,13 +1,18 @@
+const { cjsConfig } = require("../../../constants");
 const CjsElement = require("./CjsElement");
 
 class CjsStyle extends CjsElement {
     fileNameSuffix = ".css";
 
     getContent() {
-        const { pascalCase } = this.names;
+        const { camelStyle } = this.names;
         const content = [];
 
-        // content.push(`/* Style for ${pascalCase} */`);
+        if(cjsConfig.getUser().creator.autoAddClassNames) {
+            content.push(`.${camelStyle} {`);
+            content.push(`    `);
+            content.push(`}`);
+        }
 
         return content.join("\n");
     }
