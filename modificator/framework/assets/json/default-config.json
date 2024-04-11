@@ -5,7 +5,7 @@
         "autoSetTagNames": true,
         "includeDefaultText": true,
         "createWithSplitLines": true,
-        "includeTopEmptyLine": true,
+        "topEmptyLines": 1,
         "stringReturnPrefix": ""
     },
     "compiler": {

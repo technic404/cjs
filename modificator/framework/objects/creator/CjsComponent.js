@@ -1,9 +1,8 @@
-const { cjsConfig } = require("../../../constants");
+const { cjsConfig, htmlClosingTags } = require("../../../constants");
 const CjsElement = require("./CjsElement");
 
 class CjsComponent extends CjsElement {
     fileNameSuffix = ".mjs";
-    // fileNameSuffix = "Component.mjs";
 
     #imports = {
         handler: null,
@@ -27,20 +26,9 @@ class CjsComponent extends CjsElement {
         const content = [];
 
         const config = cjsConfig.getUser();
-        const tagNameTranslations = [
-            "abbr", "address", "area", "article", "aside", "audio", "base", "bdi", 
-            "bdo", "blackquote", "button", "canvas", "caption", "cite", "code", "col", 
-            "colgroup", "data", "datalist", "dd", "del", "details", "dfn", "dialog", 
-            "dl", "dt", "em", "embed", "fieldset", "figcaption", "figure", "footer", "form",
-            "h1", "h2", "h3", "h4", "h5", "h6", "header", "hgroup", "i", "iframe", "ins", "label", 
-            "legend", "li", "main", "mark", "menu", "nav", "ol", "optgroup", "option", "output", "p",
-            "param", "pre", "progress", "q", "script", "search", "section", "select", "small",
-            "span", "strong", "style", "summary", "sub", "table", "tbody", "td", "template",
-            "textarea", "tfoot", "th", "thead", "time", "title", "tr", "u", "ul", "video"
-        ];
 
         const { creator } = config;
-        const setHtmlTag = creator.autoSetTagNames && tagNameTranslations.includes(pascalCase.toLowerCase())
+        const setHtmlTag = creator.autoSetTagNames && htmlClosingTags.includes(pascalCase.toLowerCase())
         const tagName = setHtmlTag
             ? pascalCase.toLowerCase()
             : "div"
@@ -57,7 +45,7 @@ class CjsComponent extends CjsElement {
 
         content.push(`export const ${pascalCase} = new CjsComponent((data) => {`);
 
-        if(creator.includeTopEmptyLine) {
+        for(let i = 0; i < creator.topEmptyLines; i++) {
             content.push(`    `);
         }
 

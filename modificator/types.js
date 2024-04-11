@@ -19,7 +19,7 @@
  * @property {boolean} autoSetTagNames
  * @property {boolean} includeDefaultText
  * @property {boolean} createWithSplitLines
- * @property {boolean} includeTopEmptyLine
+ * @property {number} topEmptyLines
  * @property {string} stringReturnPrefix
  */
 

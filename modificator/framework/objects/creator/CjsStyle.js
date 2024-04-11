@@ -1,15 +1,22 @@
-const { cjsConfig } = require("../../../constants");
+const { cjsConfig, htmlClosingTags } = require("../../../constants");
 const CjsElement = require("./CjsElement");
 
 class CjsStyle extends CjsElement {
     fileNameSuffix = ".css";
 
     getContent() {
-        const { camelStyle } = this.names;
+        const { camelStyle, pascalCase } = this.names;
         const content = [];
 
-        if(cjsConfig.getUser().creator.autoAddClassNames) {
-            content.push(`.${camelStyle} {`);
+        const { autoAddClassNames, autoSetTagNames } = cjsConfig.getUser().creator;
+
+        if(autoAddClassNames || autoAddClassNames) {
+            if(autoSetTagNames && htmlClosingTags.includes(pascalCase.toLowerCase())) {
+                content.push(`${camelStyle.toLowerCase()} {`);
+            } else if(autoAddClassNames) {
+                content.push(`.${camelStyle} {`);
+            }
+
             content.push(`    `);
             content.push(`}`);
         }
