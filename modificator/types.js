@@ -2,6 +2,7 @@
  * @typedef {object} Config
  * @property {string} version
  * @property {CompilerConfig} compiler
+ * @property {CreatorConfig} creator
  */
 
 /**
@@ -10,6 +11,16 @@
  * @property {boolean} minifyScripts
  * @property {string} libraryPath
  * @property {number} tempWebserverPort
+ */
+
+/**
+ * @typedef {object} CreatorConfig
+ * @property {boolean} autoAddClassNames
+ * @property {boolean} autoSetTagNames
+ * @property {boolean} includeDefaultText
+ * @property {boolean} createWithSplittedLines
+ * @property {boolean} includeTopEmptyLine
+ * @property {string} stringReturnPrefix
  */
 
 /**

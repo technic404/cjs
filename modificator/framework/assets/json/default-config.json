@@ -1,5 +1,13 @@
 {
     "version": 1.0,
+    "creator": {
+        "autoAddClassNames": true,
+        "autoSetTagNames": true,
+        "includeDefaultText": true,
+        "createWithSplittedLines": true,
+        "includeTopEmptyLine": true,
+        "stringReturnPrefix": ""
+    },
     "compiler": {
         "output": {
             "index": {
