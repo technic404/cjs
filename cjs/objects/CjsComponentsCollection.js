@@ -70,7 +70,7 @@ class CjsComponentsCollection {
                 });
             },
             /**
-             * Removes class extept the provided element
+             * Removes class except the provided element
              * @param {string} token 
              * @param {HTMLElement} except 
              */

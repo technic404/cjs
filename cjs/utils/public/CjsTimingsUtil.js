@@ -1,5 +1,5 @@
 /**
- *
+ * Creates a void type promise that will stop a function by provided amount of time
  * @param {number} ms
  * @return {Promise<void>}
  */

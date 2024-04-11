@@ -49,6 +49,7 @@ class CjsRequest {
     #onEndCallback = function() {};
     #onErrorCallback = function() {};
     #onSuccessCallback = function() {};
+    #onProgressCallback = function() {};
 
     /**
      *
@@ -122,6 +123,23 @@ class CjsRequest {
     }
 
     /**
+     * 
+     * 
+     * 
+     * 
+     */
+
+    /**
+     * @param {(percentage: number, loaded: number, total: number, event: ProgressEvent<EventTarget>) => void} callback 
+     * @returns {CjsRequest}
+     */
+    onProgress(callback) {
+        this.#onProgressCallback = callback;
+
+        return this;
+    }
+
+    /**
      *
      * @return {Promise<CjsRequestResult>}
      */
@@ -164,6 +182,14 @@ class CjsRequest {
 
             return new CjsRequestResult(0, null, true)
         }
+
+        xhr.upload.onprogress = (e) => {
+            if (e.lengthComputable) {
+                var percentage = (e.loaded / e.total) * 100;
+
+                this.#onProgressCallback(percentage, e.loaded, e.total, e);
+            }
+        };
 
         if(bodyExists) {
             xhr.setRequestHeader("Content-Type", "application/json");
