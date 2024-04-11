@@ -10,18 +10,6 @@ class CjsComponent extends CjsElement {
     }
 
     /**
-     * Adds handler import statement to component content
-     * @returns {CjsComponent}
-     */
-    supplyHandlerImport() {
-        const { pascalCase } = this.names;
-
-        this.#imports.handler = `import {${pascalCase}Handler as Handler} from "./${pascalCase}Handler.mjs";`;
-
-        return this;
-    }
-
-    /**
      * Adds style import statement to component content
      * @returns {CjsComponent}
      */

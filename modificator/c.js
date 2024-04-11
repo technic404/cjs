@@ -30,11 +30,6 @@ const commands = {
                 console.log(`${Prefix}Successfully created Layout`)
             }
         },
-        part: (args, flags) => {
-            if(cjs.creator.create("part", args[0], flags)) {
-                console.log(`${Prefix}Successfully created Part`)
-            }
-        },
         rebuild: async (args) => {
             const option = args[0].toLowerCase()
             const match = {
