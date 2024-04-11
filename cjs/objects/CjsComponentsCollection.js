@@ -18,50 +18,89 @@ class CjsComponentsCollection {
     }
 
     /**
-     * 
-     * @param {string} className 
-     * @returns {CjsComponentsCollection}
+     * Sets the class name for all components
+     * @param {string} token
      */
-    addClass(className) {
-        this.#call((c) => c.classList.add(className));
-
-        return this;
+    set className(token) {
+        this.#call((c) => c.className = token);
     }
 
     /**
-     * 
-     * @param {string} className 
-     * @returns {CjsComponentsCollection}
+     * Returns the value of first component className
+     * @returns {string|null}
      */
-    removeClass(className) {
-        this.#call((c) => c.classList.remove(className));
+    get className() {
+        if(this.components.length === 0) return null;
 
-        return this;
-    }
-    
-    /**
-     * 
-     * @param {string} className 
-     * @returns {CjsComponentsCollection}
-     */
-    setClass(className) {
-        this.#call((c) => c.className = className);
-
-        return this;
+        return this.components[0].className;
     }
 
     /**
-     * Adds class to provided element and removes the class from every other component
-     * @param {HTMLElement} addTo 
-     * @param {string} className 
+     * Allows for manipulation of element's class content attribute as a set of whitespace-separated tokens through a DOMTokenList object.
      */
-    addRemoveClass(addTo, className) {
-        this.#call((c) => {
-            if(c === addTo) {
-                c.classList.add(className);
-            } else {
-                c.classList.remove(className);
-            }
-        })
+    get classList() {
+        return {
+            /**
+             * @param {...string} tokens 
+             */
+            add: (tokens) => this.#call((c) => c.classList.add(tokens)),
+            /**
+             * @param {...string} tokens 
+             */
+            remove: (...tokens) => this.#call((c) => c.classList.remove(tokens)),
+            /**
+             * @param {string} token 
+             */
+            contains: (token) => this.#call((c) => c.classList.contains(token)),
+            /**
+             * @param {string} token 
+             * @param {boolean} force
+             */
+            toggle: (token, force = false) => this.#call((c) => c.classList.toggle(token, force)),
+            /**
+             * Adds class except the provided element
+             * @param {string} token 
+             * @param {HTMLElement} except 
+             */
+            addExcept: (token, except) => {
+                this.#call((c) => {
+                    if(c === except) return;
+
+                    c.classList.add(token);
+                });
+            },
+            /**
+             * Removes class extept the provided element
+             * @param {string} token 
+             * @param {HTMLElement} except 
+             */
+            removeExcept: (token, except) => {
+                this.#call((c) => {
+                    if(c === except) return;
+
+                    c.classList.remove(token);
+                });
+            },
+            /**
+             * Adds class to provided element, removes class from every other component
+             * @param {string} token 
+             * @param {HTMLElement} only 
+             */
+            addOnlyRemoveOthers: (token, only) => {
+                this.#call((c) => {
+                    c.classList[c === only ? "add" : "remove"](token);
+                });
+            },
+            /**
+             * Removes class from provided element, adds class to every other component
+             * @param {string} token 
+             * @param {HTMLElement} only 
+             */
+            removeOnlyAddOthers: (token, only) => {
+                this.#call((c) => {
+                    c.classList[c === only ? "remove" : "add"](token);
+                });
+            },
+        }
     }
 }
