@@ -18,7 +18,7 @@
  * @property {boolean} autoAddClassNames
  * @property {boolean} autoSetTagNames
  * @property {boolean} includeDefaultText
- * @property {boolean} createWithSplittedLines
+ * @property {boolean} createWithSplitLines
  * @property {boolean} includeTopEmptyLine
  * @property {string} stringReturnPrefix
  */

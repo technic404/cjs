@@ -1,4 +1,5 @@
 const { cjsConfig } = require('../constants');
+const { PrefixError } = require('../defaults');
 const CjsCreator = require('./objects/CjsCreator');
 const CjsLibrary = require('./objects/CjsLibrary');
 const fs = require('fs');
@@ -29,6 +30,11 @@ class Cjs {
      * Creates an empty project with default files
      */
     initEmptyProject() {
+        if(fs.existsSync(`${this.#relative}/src`)) {
+            console.log(`${PrefixError}Project already exists in ./src, to init new empty project delete the ./src folder.`);
+            return;
+        }
+
         this.#config = cjsConfig.getUser();
 
         fs.writeFileSync("../c.js", this.library.getContent(false));

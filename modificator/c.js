@@ -2,6 +2,7 @@ const { cjs } = require("./lib");
 const { Prefix, PrefixError } = require("./defaults");
 const { getUsage, getArgumentsWithoutFlags, getFlags } = require("./framework/utils/cmd");
 const fs = require('fs');
+const { cjsConfig } = require("./constants");
 
 /**
  * @type {Object.<number, Object.<string, function(string[], Object.<string, string>)>>}
@@ -10,6 +11,7 @@ const commands = {
     1: {
         init: (args, flags) => {
             cjs.initEmptyProject(flags);
+            cjsConfig.create();
 
             console.log(`${Prefix}Created new empty project`)
         },
@@ -17,6 +19,9 @@ const commands = {
             await require("./compiler/main")("../src", "../compiled");
 
             console.log(`${Prefix}Project compiled successfully`);
+        },
+        config: () => {
+            cjsConfig.create();
         }
     },
     2: {

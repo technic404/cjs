@@ -1,6 +1,7 @@
 .idea
 .git
 /c.js
+/cjs.json
 /index.html
 /temp/
 /src/

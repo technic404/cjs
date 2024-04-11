@@ -2,6 +2,7 @@
 &yellow[1] &noneOne argument commands:
     &yellownode c.js &none[init] - Initialize the c.js project
     &yellownode c.js &none[compile] - Compile the c.js project
+    &yellownode c.js &none[config] - Create a config file
 
 &yellow[2] &noneTwo argument commands:
     &yellownode c.js &none[component] {ElementName} - Creates a component

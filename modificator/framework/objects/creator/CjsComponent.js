@@ -63,7 +63,7 @@ class CjsComponent extends CjsElement {
 
         content.push(`    return ${creator.stringReturnPrefix}\``);
 
-        if(creator.createWithSplittedLines) {
+        if(creator.createWithSplitLines) {
             content.push(`        <${tagName}${className}>`);
             content.push(`            ${defaultText}`);
             content.push(`        </${tagName}>`);

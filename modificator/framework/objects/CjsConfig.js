@@ -93,6 +93,13 @@ class CjsConfig {
     write(userRawConfig) {
         fs.writeFileSync(this.#Paths.UserConfig, JSON.stringify(userRawConfig, null, 4));
     }
+
+    /**
+     * Copy a default config to the user config path
+     */
+    create() {
+        fs.copyFileSync(this.#Paths.DefaultConfig, this.#Paths.UserConfig);
+    }
 }
 
 module.exports = CjsConfig;

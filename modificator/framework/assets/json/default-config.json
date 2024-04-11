@@ -4,7 +4,7 @@
         "autoAddClassNames": true,
         "autoSetTagNames": true,
         "includeDefaultText": true,
-        "createWithSplittedLines": true,
+        "createWithSplitLines": true,
         "includeTopEmptyLine": true,
         "stringReturnPrefix": ""
     },
