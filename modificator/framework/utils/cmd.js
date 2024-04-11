@@ -11,7 +11,13 @@ function getUsage() {
     return content;
 }
 
-function getFlags(args) {
+/**
+ * Retrieves flags from command, short (-f) and log (--flag)
+ * @param {string[]} args 
+ * @param {Object.<string, string>} mapping 
+ * @returns {Object.<string, string>}
+ */
+function getFlags(args, mapping) {
 	const flags = {};
   
 	for (let i = 2; i < args.length; i++) {
@@ -26,7 +32,7 @@ function getFlags(args) {
 			const shortFlags = arg.slice(1).split('');
 			shortFlags.forEach((shortFlag, index) => {
 				const nextArg = args[i + 1];
-				const key = shortFlag;
+				const key = shortFlag in mapping ? mapping[shortFlag] : shortFlag;
 	
 				if (nextArg && !nextArg.startsWith('-') && index === shortFlags.length - 1) {
 					flags[key] = nextArg;

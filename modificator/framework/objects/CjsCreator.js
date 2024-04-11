@@ -36,8 +36,6 @@ class CjsCreator {
             pascalCase: capitalizeFirst(name, true)
         };
 
-        // TODO FINISH CREATOR
-
         if(element === "component") {
             const hasLayoutFlag = "layout" in flags && flags.layout !== null;
             const path = hasLayoutFlag

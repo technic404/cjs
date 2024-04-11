@@ -1,6 +1,6 @@
 class CjsElement {
     /**
-     * @type {"Style.css"|"Component.mjs"}
+     * @type {".css"|".mjs"}
      */
     fileNameSuffix = "";
 

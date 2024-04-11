@@ -49,7 +49,9 @@ const commands = {
 }
 
 async function command() {
-    const flags = getFlags(process.argv);
+    const flags = getFlags(process.argv, {
+        l: "layout"
+    });
     const args = getArgumentsWithoutFlags(process.argv);
 
     if(!(args.length in commands)) return console.log(getUsage());
