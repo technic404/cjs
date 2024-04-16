@@ -52,7 +52,7 @@ const commands = {
 
             fs.writeFileSync(style.getFilePath(), `${selectors.map(selector => {
                 return `${selector} {\n    \n}`
-            }).join("\n")}`);
+            }).join("\n\n")}`);
         },
         component: (args, flags) => {
             if(cjs.creator.create("component", args[0], flags)) {
