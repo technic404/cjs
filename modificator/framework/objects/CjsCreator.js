@@ -4,6 +4,7 @@ const CjsComponent = require("./creator/CjsComponent");
 const fs = require('fs');
 const CjsStyle = require("./creator/CjsStyle");
 const CjsLayout = require("./creator/CjsLayout");
+const CjsNames = require("./CjsNames");
 
 class CjsCreator {
 
@@ -22,19 +23,7 @@ class CjsCreator {
      * @returns {CjsComponent|CjsLayout|null}
      */
     create(element, name, flags = {}) {
-        const hasWrongEnding = name.toLowerCase().endsWith(element);
-
-        if(hasWrongEnding) {
-            name = name.substring(0, name.length - element.length);
-        }
-
-        /**
-         * @type {import("../../types").CjsCreatorNames}
-         */
-        const names = {
-            camelStyle: capitalizeFirst(name, false),
-            pascalCase: capitalizeFirst(name, true)
-        };
+        const names = CjsNames.getNames(name, element);
 
         if(element === "component") {
             const hasLayoutFlag = "layout" in flags && flags.layout !== null;
