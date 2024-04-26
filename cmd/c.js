@@ -8,6 +8,7 @@ const { capitalizeFirst } = require("./framework/utils/string");
 const CjsNames = require("./framework/objects/CjsNames");
 const CjsComponent = require("./framework/objects/creator/CjsComponent");
 const CjsStyle = require("./framework/objects/creator/CjsStyle");
+const CjsFontFaces = require("./framework/objects/modifier/CjsFontFaces");
 
 /**
  * @type {Object.<number, Object.<string, function(string[], Object.<string, string>)>>}
@@ -27,7 +28,15 @@ const commands = {
         },
         config: () => {
             cjsConfig.create();
-        }
+        },
+        fontfaces: async (args, flags) => {
+            const fontFiles = CjsFontFaces.getFontFiles();
+            const isSuccess = CjsFontFaces.appendFontFaces(fontFiles);
+
+            if(!isSuccess) return;
+
+            console.log(`${Prefix}Successfully created font faces from ${fontFiles.length} files`);
+        },
     },
     2: {
         styler: async (args, flags) => {

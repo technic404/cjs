@@ -3,6 +3,7 @@
     &yellownode c.js &none[init] - Initialize the c.js project
     &yellownode c.js &none[compile] - Compile the c.js project
     &yellownode c.js &none[config] - Create a config file
+    &yellownode c.js &none[fontfaces] - Appends font faces from /assets/fonts to /assets/css/style.css
 
 &yellow[2] &noneTwo argument commands:
     &yellownode c.js &none[component] {ElementName} - Creates a component

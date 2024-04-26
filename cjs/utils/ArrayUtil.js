@@ -12,3 +12,13 @@ function flattenInfinite(arr) {
         }
     }, []);
 }
+
+/**
+ * Returns random array element
+ * @param {[]} array 
+ * @returns {any}
+ */
+function getRandomArrayElement(array) {
+    const randomIndex = Math.floor(Math.random() * array.length);
+    return array[randomIndex];
+}

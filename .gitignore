@@ -7,10 +7,11 @@
 /src/
 /node/
 /compiled/
-/modificator/node_modules
-/modificator/package-lock.json
-/modificator/compiler/src/server/public/temp/script.js
+/cmd/node_modules
+/cmd/package-lock.json
+/cmd/compiler/src/server/public/temp/script.js
 /pytania.json
 /logo.png
 /fitapp
 /php
+/remotecontrol
