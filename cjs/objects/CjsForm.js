@@ -20,9 +20,9 @@ class CjsForm {
         const data = {};
 
         for(let i = 0; i < elements.length; i++) {
-            const input = elements[i];
-            const name = input.getAttribute("name");
-            const value = input.getAttribute("type") === "checkbox" ? input.checked : input.value;
+            const element = elements[i];
+            const name = element.getAttribute("name");
+            const value = element.getAttribute("type") === "checkbox" ? element.checked : element.value;
             const key = name || i;
         
             data[key] = value;
