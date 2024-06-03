@@ -14,13 +14,15 @@ class CjsForm {
      * @returns {object}
      */
     serialize() {
+        const selects = Array.from(this.#element.querySelectorAll("select"));
         const inputs = Array.from(this.#element.querySelectorAll("input"));
+        const elements = selects.concat(inputs);
         const data = {};
 
-        for(let i = 0; i < inputs.length; i++) {
-            const input = inputs[i];
+        for(let i = 0; i < elements.length; i++) {
+            const input = elements[i];
             const name = input.getAttribute("name");
-            const value = input.value;
+            const value = input.getAttribute("type") === "checkbox" ? input.checked : input.value;
             const key = name || i;
         
             data[key] = value;
