@@ -62,6 +62,7 @@ class CjsLibrary {
         "Initializer.js",
         "utils/public/CjsShortcutsUtil.js",
         "plugins/text/CjsTypeWritePlugin.js",
+        "builders/CjsProgressBuilder.js",
     ]
 
     /**
