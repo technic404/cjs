@@ -88,15 +88,15 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
 
                 if(options.enableMultiSelector) {
                     if(!isSelectorNotClassOrId) {
-                        selectors.push(`${prefix} > * ${sel.trim()}`)
-                        selectors.push(`${prefix} > ${sel.trim()}`)
+                        selectors.push(`${prefix} > * ${sel.trim()}`);
+                        selectors.push(`${prefix} > ${sel.trim()}`);
                     } else {
                         // Selector like button[cjsAttribute] { ... }
                         const selectorTextSplit = selectorText.split(" ");
                         const firstTag = selectorTextSplit[0];
                         const restSelector = selectorTextSplit.slice(1).join(" ");
 
-                        selectors.push(`${firstTag}${prefix} ${restSelector}`)
+                        selectors.push(`${firstTag}${prefix} ${restSelector}`);
 
                     }
                 }
@@ -108,6 +108,9 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
                 const modifiedRule = `${modifiedSelector.join(", ")} { ${rule.style.cssText} }`;
 
                 newRules.push([modifiedRule]);
+
+                console.log(rule);
+                console.log(modifiedRule);
             })
 
             continue;
@@ -158,6 +161,8 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
 
             continue;
         }
+
+        console.log([rule.cssText]);
 
         newRules.push([rule.cssText]);
     }

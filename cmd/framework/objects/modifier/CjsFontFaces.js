@@ -40,6 +40,7 @@ const CjsFontFaces = {
         }
 
         const styleFile = "../src/assets/css/style.css";
+        const styleFileContent = fs.readFileSync(styleFile, { encoding: "utf-8" });
 
         fs.appendFileSync(styleFile, "\n");
 
@@ -49,7 +50,11 @@ const CjsFontFaces = {
 
             const fontFaceParts = [];
 
-            fontFaceParts.push(`@font-face { font-family: ${name}; src: url("../fonts/${name}${extension}"); }`);
+            const fontFaceText = `@font-face { font-family: ${name}; src: url("../fonts/${name}${extension}"); }`;
+
+            if(styleFileContent.includes(fontFaceText)) continue;
+
+            fontFaceParts.push(fontFaceText);
 
             fs.appendFileSync(styleFile, "\n" + fontFaceParts.join("\n"));
         }
