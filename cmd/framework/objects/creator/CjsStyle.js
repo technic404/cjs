@@ -14,9 +14,9 @@ class CjsStyle extends CjsElement {
             if(autoSetTagNames && htmlClosingTags.includes(pascalCase.toLowerCase())) {
                 content.push(`${camelStyle.toLowerCase()} {`);
             } else if(autoAddClassNames) {
-                content.push(`.${camelStyle} {`);
+                content.push(`.${camelStyle.toLowerCase()} {`);
             }
-
+            
             content.push(`    `);
             content.push(`}`);
         }
