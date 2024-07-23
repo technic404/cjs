@@ -46,11 +46,14 @@ const commands = {
                 ? `../src/layouts/${capitalizeFirst(flags.layout, false)}`
                 : `../src/${names.camelStyle}`
             const component = new CjsComponent(names, path);
+
+            if(!fs.existsSync(component.getFilePath())) return console.log(`${PrefixError}Component doesn't exists`)
+
             const content = fs.readFileSync(component.getFilePath(), { encoding: 'utf-8' });
             const match = content.match(/return\s+`([^`]+)`;/);
             const hasReturnStatement = match && match[1];
 
-            if(!hasReturnStatement) return console.log(`${PrefixError}Could not find the html return statement, unable to determinate styles`);
+            if(!hasReturnStatement) return console.log(`${PrefixError}Couldn't find the html return statement, unable to determinate styles`);
 
             const html = match[1].trim();
             const selectors = await CjsStyler.getSelectors(html);
