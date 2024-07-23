@@ -13,10 +13,12 @@ class CjsElement {
      * 
      * @param {import("../../../types").CjsCreatorNames} names 
      * @param {string} directory 
+     * @param {string} className
      */
-    constructor(names, directory) {
+    constructor(names, directory, className) {
         this.names = names;
         this.directory = directory;
+        this.className = className;
 
         /**
          * Path that includes real placement folder of the element files (ex. ./src/components or ./src/layouts)

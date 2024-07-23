@@ -34,7 +34,8 @@ class CjsComponent extends CjsElement {
             : "div"
 
         const className = !setHtmlTag && creator.autoAddClassNames
-            ? ` class="${pascalCase.toLowerCase()}"`
+            ? ` class="${this.className}"`
+            // ? ` class="${pascalCase.toLowerCase()}"`
             : ''
 
         const defaultText = creator.includeDefaultText

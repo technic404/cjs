@@ -1,4 +1,4 @@
-const { capitalizeFirst } = require("../utils/string");
+const { capitalizeFirst, getUpperCaseIndexes, isUpperCase } = require("../utils/string");
 const { PrefixError } = require("../../defaults");
 const CjsComponent = require("./creator/CjsComponent");
 const fs = require('fs');
@@ -30,8 +30,25 @@ class CjsCreator {
             const path = hasLayoutFlag
                 ? `../src/layouts/${capitalizeFirst(flags.layout, false)}`
                 : `../src/${names.camelStyle}`
-            const style = new CjsStyle(names, path + "/styles");
-            const component = new CjsComponent(names, path)
+
+            const { pascalCase } = names;
+            const upperCaseIndexes = getUpperCaseIndexes(pascalCase);
+
+            const isWholeUpper = upperCaseIndexes.length === pascalCase.length;
+            const className = isWholeUpper
+                ? pascalCase
+                : pascalCase.split("").map((char, index) => {
+                    const isFirst = index === 0;
+
+                    if(isUpperCase(char) && !isFirst) {
+                        return `-${char}`;
+                    }
+
+                    return char;
+                }).join("").toLowerCase();
+
+            const style = new CjsStyle(names, path + "/styles", className);
+            const component = new CjsComponent(names, path, className)
                 .supplyStyleImport();
 
             if(fs.existsSync(component.getFilePath())) {
