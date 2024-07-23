@@ -10,13 +10,14 @@ class CjsStyle extends CjsElement {
 
         const { autoAddClassNames, autoSetTagNames } = cjsConfig.getUser().creator;
 
-        if(autoAddClassNames || autoAddClassNames) {
+        if(autoAddClassNames || autoSetTagNames) {
             if(autoSetTagNames && htmlClosingTags.includes(pascalCase.toLowerCase())) {
                 content.push(`${camelStyle.toLowerCase()} {`);
-            } else if(autoAddClassNames) {
+            // } else if(autoAddClassNames) {
+            } else {
                 content.push(`.${camelStyle.toLowerCase()} {`);
             }
-            
+
             content.push(`    `);
             content.push(`}`);
         }
