@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { PrefixError } = require('../../../defaults');
+const { PrefixError, Prefix } = require('../../../defaults');
 
 const CjsFontFaces = {
     /** @return {string[]} */
@@ -29,37 +29,35 @@ const CjsFontFaces = {
     },
     /** 
      * @param {string[]} filePaths 
-     * @returns {boolean} if success
      */
     appendFontFaces: (filePaths) => {
         const noFontFiles = filePaths.length === 0;
 
         if(noFontFiles) {
-            console.log(`${PrefixError}No font files in ./src/assets/fonts`);
-            return false;
+            return console.log(`${PrefixError}No font files in ./src/assets/fonts`);
         }
 
         const styleFile = "../src/assets/css/style.css";
         const styleFileContent = fs.readFileSync(styleFile, { encoding: "utf-8" });
 
-        fs.appendFileSync(styleFile, "\n");
+        const endsWithNonEmptyLine = /(\r?\n)+$/.test(styleFile);
+
+        if(endsWithNonEmptyLine) fs.appendFileSync(styleFile, "\n");
+
+        console.log(`${Prefix}Successfully created font faces from files:`);
 
         for(const filePath of filePaths) {
             const extension = path.extname(filePath);
             const name = path.basename(filePath, extension);
 
-            const fontFaceParts = [];
-
             const fontFaceText = `@font-face { font-family: ${name}; src: url("../fonts/${name}${extension}"); }`;
 
             if(styleFileContent.includes(fontFaceText)) continue;
 
-            fontFaceParts.push(fontFaceText);
+            fs.appendFileSync(styleFile, fontFaceText + "\n");
 
-            fs.appendFileSync(styleFile, "\n" + fontFaceParts.join("\n"));
+            console.log(` - ${name}${extension}`);
         }
-
-        return true;
     }
 }
 
