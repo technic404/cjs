@@ -26,14 +26,12 @@ class CjsCreator {
         const names = CjsNames.getNames(name, element);
 
         if(element === "component") {
+            const { pascalCase } = names;
             const hasLayoutFlag = "layout" in flags && flags.layout !== null;
             const path = hasLayoutFlag
                 ? `../src/layouts/${capitalizeFirst(flags.layout, false)}`
                 : `../src/${names.camelStyle}`
-
-            const { pascalCase } = names;
             const upperCaseIndexes = getUpperCaseIndexes(pascalCase);
-
             const isWholeUpper = upperCaseIndexes.length === pascalCase.length;
             const className = isWholeUpper
                 ? pascalCase
