@@ -168,7 +168,7 @@ class CjsSearch {
      * @returns {CjsSearch}
      */
     add(value) {
-        const parsed = value.replace(new RegExp("/", "g"), "");
+        const parsed = `${value}`.replace(new RegExp("/", "g"), "");
 
         this.search += this.search.trim().length === 0 ? `${parsed}` : `/${parsed}`;
 

@@ -109,8 +109,8 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
 
                 newRules.push([modifiedRule]);
 
-                console.log(rule);
-                console.log(modifiedRule);
+                // console.log(rule);
+                // console.log(modifiedRule);
             })
 
             continue;
