@@ -67,7 +67,7 @@ class CjsSearch {
 
     #localStorageId = "cjsSearch";
 
-    /** @type {function()[]} */
+    /** @type {function({ search: string, parts: string[], length: number })[]} */
     #listeners = [];
 
     /** @type {number} */
@@ -76,9 +76,11 @@ class CjsSearch {
     #update() {
         localStorage.setItem(this.#localStorageId, this.search);
 
-        this.length = this.search.split("/").filter(e => e.trim() !== "").length;
+        const parts = this.search.split("/").filter(e => e.trim() !== "");
 
-        this.#listeners.forEach(listener => listener());
+        this.length = parts.length;
+
+        this.#listeners.forEach(listener => listener({ search: this.search, parts, length: this.length }));
 
         if(this.#displayOnScreen) {
             const debugBox = document.getElementById(this.#debugBoxId) === null 
@@ -112,10 +114,10 @@ class CjsSearch {
 
     /**
      * Adds listener and calls it when search changes
-     * @param {function} callback 
+     * @param {function({ search: string, parts: string[], length: number })} callback 
      * @returns {CjsSearch}
      */
-    addListener(callback) {
+    onChange(callback) {
         this.#listeners.push(callback);
 
         return this;
@@ -123,11 +125,15 @@ class CjsSearch {
 
     /**
      * Sets the search location to provided value.
-     * @param {string} search 
+     * @param {string} search
+     * @param {boolean} forceRerender if force rerenderOnSearch 
      * @returns {CjsSearch}
      */
-    set(search) {
+    set(search, forceRerender = false) {
         const parsed = search.charAt(0) === "/" ? search.slice(1) : search;
+        const notChanged = this.search === parsed;
+
+        if(notChanged && !forceRerender) return this;
 
         this.search = parsed;
 

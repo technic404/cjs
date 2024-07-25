@@ -247,7 +247,7 @@ class CjsComponent {
 
 
     rerenderOnSearch(data = { useSmartRender: false }) {
-        Search.addListener(() => this.rerenderComponents(data));
+        Search.onChange(() => this.rerenderComponents(data));
 
         this.#rerenderOnSearchEnabled = true;
 

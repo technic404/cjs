@@ -1,14 +1,21 @@
+const fs = require('fs');
+const readline = require('readline');
+
 const { cjs } = require("./lib");
 const { Prefix, PrefixError } = require("./defaults");
-const { getUsage, getArgumentsWithoutFlags, getFlags } = require("./framework/utils/cmd");
-const fs = require('fs');
 const { cjsConfig } = require("./constants");
-const CjsStyler = require("./framework/objects/modifier/CjsStyler");
+const { getUsage, getArgumentsWithoutFlags, getFlags } = require("./framework/utils/cmd");
 const { capitalizeFirst } = require("./framework/utils/string");
+const CjsStyler = require("./framework/objects/modifier/CjsStyler");
 const CjsNames = require("./framework/objects/CjsNames");
+const CjsFontFaces = require("./framework/objects/modifier/CjsFontFaces");
 const CjsComponent = require("./framework/objects/creator/CjsComponent");
 const CjsStyle = require("./framework/objects/creator/CjsStyle");
-const CjsFontFaces = require("./framework/objects/modifier/CjsFontFaces");
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
 
 /**
  * @type {Object.<number, Object.<string, function(string[], Object.<string, string>)>>}
@@ -69,12 +76,17 @@ const commands = {
             const selectors = await CjsStyler.getSelectors(html);
             const hasSelectors = selectors.length !== 0;
             const style = new CjsStyle(names, path + "/styles");
+            const writeContent = `${selectors.map(selector => { return `${selector} {\n    \n}` }).join("\n\n")}`;
+            const styleContent = fs.readFileSync(style.getFilePath(), { encoding: 'utf-8' });
+            const isStyleContentEmtpy = styleContent.trim() === "";
+            
+            if(!isStyleContentEmtpy && !("force" in flags)) {
+                return console.log(`${PrefixError}Style file is not empty, use flag --force or -f to overwrite it anyway.`);
+            }
 
             if(hasSelectors) console.log(`${Prefix}Successfully created selectors in style file`);
 
-            fs.writeFileSync(style.getFilePath(), `${selectors.map(selector => {
-                return `${selector} {\n    \n}`
-            }).join("\n\n")}`);
+            fs.writeFileSync(style.getFilePath(), writeContent);
         },
         component: (args, flags) => {
             if(cjs.creator.create("component", args[0], flags)) {
@@ -106,7 +118,8 @@ const commands = {
 
 async function command() {
     const flags = getFlags(process.argv, {
-        l: "layout"
+        l: "layout",
+        f: "force"
     });
     const args = getArgumentsWithoutFlags(process.argv);
 
