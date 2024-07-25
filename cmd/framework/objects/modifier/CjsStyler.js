@@ -94,7 +94,9 @@ const CjsStyler = {
             return array;
         })();
 
-        return selectors;
+        const noDuplicates = Array.from(new Set(...[selectors]));
+
+        return noDuplicates;
     }
 }
 
