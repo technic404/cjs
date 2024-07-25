@@ -39,11 +39,18 @@ const CjsStyler = {
 
         if(isSyntaxError) return [];
 
+        console.log(fixedXmlString);
+
         const result = await xml2js.parseStringPromise(fixedXmlString);
         const root = result.root;
 
+        console.log(root.div[0].section);
+
         const extract = (object) => {
             const tagName = Object.keys(object)[0];
+
+            console.log('tagName', tagName);
+
             const hasData = typeof object[tagName][0] === 'object'
             const attributes = object[tagName].length === 1 && hasData && "$" in object[tagName][0]
                     ? object[tagName][0]["$"]
@@ -55,11 +62,14 @@ const CjsStyler = {
                 for(const [key, value] of Object.entries(object[tagName][0])) {
                     if(key === "$" || key === "_") continue;
 
-                    const data = {};
+                    const data = { [key]: value };
+                    const dataTagName = Object.keys(data)[0];
 
-                    data[key] = value;
+                    for(const tagData of data[dataTagName]) {
+                        const temp = { [dataTagName]: [tagData] };
 
-                    children.push(extract(data));
+                        children.push(extract(temp));
+                    }
                 }
             }
 

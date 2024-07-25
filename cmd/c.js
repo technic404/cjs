@@ -49,8 +49,18 @@ const commands = {
 
             if(!fs.existsSync(component.getFilePath())) return console.log(`${PrefixError}Component doesn't exists`)
 
-            const content = fs.readFileSync(component.getFilePath(), { encoding: 'utf-8' });
-            const match = content.match(/return\s+`([^`]+)`;/);
+            /**
+             * @example
+             * <div ${onClick(() => console.log('Hi!'))}>Some content</div>
+             * // Will transform to:
+             * <div>Some content</div>
+             * @param {string} str 
+             * @returns {string}
+             */
+            const removeJsExpressions = (str) => str.replace(/\$\{[^}]+\}/g, '');
+
+            const content = removeJsExpressions(fs.readFileSync(component.getFilePath(), { encoding: 'utf-8' }));
+            const match = content.match(/return\s+`([\s\S]*?)`/);
             const hasReturnStatement = match && match[1];
 
             if(!hasReturnStatement) return console.log(`${PrefixError}Couldn't find the html return statement, unable to determinate styles`);
