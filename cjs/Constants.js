@@ -10,6 +10,7 @@ const CJS_PREFIX = "c_js-";
 const CJS_STYLE_PREFIX = `${CJS_PREFIX}style-`;
 const CJS_STYLE_FILTERS_PREFIX = `${CJS_PREFIX}filters-`
 const CJS_STYLE_KEYFRAMES_PREFIX = `${CJS_PREFIX}keyframes-`
+const CJS_STYLE_PLUGINS_PREFIX = `${CJS_PREFIX}plugins-`
 const CJS_ROOT_CONTAINER_PREFIX = `${CJS_PREFIX}root-`;
 const CJS_COMPONENT_PREFIX = `${CJS_PREFIX}component-`
 const CJS_ELEMENT_PREFIX = `${CJS_PREFIX}element-`
