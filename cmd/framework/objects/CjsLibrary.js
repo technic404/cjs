@@ -61,8 +61,11 @@ class CjsLibrary {
         "DocumentRoot.js", 
         "Initializer.js",
         "utils/public/CjsShortcutsUtil.js",
-        "plugins/text/CjsTypeWritePlugin.js",
-        "plugins/ripple/CjsRipplePlugin.js",
+        "plugins/CjsPlugin.js",
+        "plugins/modules/CjsNotificationPlugin.js",
+        "plugins/modules/CjsRipplePlugin.js",
+        "plugins/CjsPluginManager.js",
+        "plugins/notification/CjsNotificationPlugin.js",
         "builders/CjsProgressBuilder.js",
     ]
 

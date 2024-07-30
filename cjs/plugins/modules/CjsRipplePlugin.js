@@ -1,13 +1,9 @@
-class CjsRipplePlugin {
+class CjsRipplePlugin extends CjsPlugin {
     /** @type {string} Name of the attribute, to apply ripple effect */
     #attribute = 'ripple';
 
     /** @type {number} Animation time in ms */
     #animationTime = 400;
-    
-    constructor() {
-
-    }
 
     /**
      * Applies the effect, adds click listener to element
@@ -28,9 +24,7 @@ class CjsRipplePlugin {
 
     #addStyles() {
         const style = document.getElementById(CJS_STYLE_PLUGINS_PREFIX);
-
         const cssAnimationTime = `${this.#animationTime}ms`;
-
         const selectors = {
             [`[${this.#attribute}]`]: [
                 `cursor: pointer;`,
