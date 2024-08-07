@@ -21,7 +21,7 @@ class CjsElement {
         this.className = className;
 
         /**
-         * Path that includes real placement folder of the element files (ex. ./src/components or ./src/layouts)
+         * Path that includes real placement folder of the element files (ex. ./shoppinglist/components or ./shoppinglist/layouts)
          * @type {string}
          */
         this.semiAbsolutePath = this.directory.startsWith(this.#relativePathPrefix)

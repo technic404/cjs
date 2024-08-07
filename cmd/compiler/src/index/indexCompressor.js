@@ -28,7 +28,7 @@ class IndexCompressor {
         const extraHeadAssetsTags = [];
 
         assets.forEach(asset => {
-            const cuttedOffPath = asset.replaceAll("\\", "/").replace(assetsDirectory, "./src/assets");
+            const cuttedOffPath = asset.replaceAll("\\", "/").replace(assetsDirectory, "./shoppinglist/assets");
             if(asset.endsWith(".css")) {
                 extraHeadAssetsTags.push(
                     new Tag("link").addAttributes(new Attr("rel", "stylesheet"), new Attr("href", `${cuttedOffPath}?v=${getRandomCharacters(QUERY_PARAM_LENGTH)}`))

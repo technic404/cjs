@@ -1,19 +1,21 @@
 const CjsRipple = new CjsRipplePlugin();
 const CjsNotification = new CjsNotificationPlugin();
+const CjsScaleClick = new CjsScaleClickPlugin();
 
 const CjsPluginManager = {
     /**
      * 
-     * @param {{ ripple?: boolean, notification?: boolean }} plugins 
+     * @param {{ ripple?: boolean, notification?: boolean, scaleClick?: boolean }} plugins 
      */
     enable(plugins) {
         const mapping = {
             ripple: CjsRipple,
-            notification: CjsNotification
+            notification: CjsNotification,
+            scaleClick: CjsScaleClick
         }
         
         for(const [key, value] of Object.entries(plugins)) {
-            const parsedKey = key.toLowerCase().trim();
+            const parsedKey = key.trim();
 
             if(!(parsedKey in mapping)) continue;
 

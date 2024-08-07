@@ -48,7 +48,7 @@ export const Form = new CjsComponent((data) => {
     `;
 });
 
-Form.importStyle('./src/layouts/main/styles/Form.css');
+Form.importStyle('./shoppinglist/layouts/main/styles/Form.css');
 ```
 
 If we would like to simplify this, and remove the duplicated `<label>` tags, we could create a `Label` component.
@@ -62,7 +62,7 @@ export const Label = new CjsComponent((data) => {
     `;
 });
 
-Label.importStyle('./src/layouts/main/styles/Label.css');
+Label.importStyle('./shoppinglist/layouts/main/styles/Label.css');
 ```
 
 Now in `Form` component we can render the `Label` component.
@@ -79,7 +79,7 @@ export const Form = new CjsComponent((data) => {
     `;
 });
 
-Form.importStyle('./src/layouts/main/styles/Form.css');
+Form.importStyle('./shoppinglist/layouts/main/styles/Form.css');
 ```
 
 In that way we can simplify our code and remove the duplicates.<br>

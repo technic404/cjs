@@ -15,9 +15,9 @@ class JsCompressor {
     /**
      * If for example paths are:
      * 
-     * `..\src\requests\channels\ProductRequests.mjs`
+     * `..\shoppinglist\requests\channels\ProductRequests.mjs`
      * 
-     * `..\src\requests\AppRequests.mjs`
+     * `..\shoppinglist\requests\AppRequests.mjs`
      * 
      * The result will contain the cutted version like that
      * 

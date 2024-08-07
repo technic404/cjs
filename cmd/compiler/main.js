@@ -12,15 +12,15 @@ const { cjsConfig } = require('../constants');
  * 
  * In result the compiler creates files:
  * 
- * `script.js` - all script files from /src project folder
+ * `script.js` - all script files from /shoppinglist project folder
  * 
  * `cup.js` - compressed library cjs files
  * 
- * `style.css` - all styles from /src project folder
+ * `style.css` - all styles from /shoppinglist project folder
  * 
  * `index.html` - mail file that has linked script, cjs, style and propper meta tags
  * 
- * @param {string} input path of the /src folder
+ * @param {string} input path of the /shoppinglist folder
  * @param {string} output path of the folder containing compiled files
  */
 async function compile(input, output) {

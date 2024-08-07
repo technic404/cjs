@@ -21,7 +21,7 @@ function getRecursivelyDirectoryFiles(dir, filter = "") {
 }
 
 /**
- * Combines a path, so if path1 is "./src/components/target/Target.mjs" and path2 is "../../parts/somePart/SomeHandler.mjs" the resulted path will be "./src/parts/somePart/SomeHandler.mjs"
+ * Combines a path, so if path1 is "./shoppinglist/components/target/Target.mjs" and path2 is "../../parts/somePart/SomeHandler.mjs" the resulted path will be "./shoppinglist/parts/somePart/SomeHandler.mjs"
  * @param {String} path1
  * @param {String} path2
  * @returns {String}

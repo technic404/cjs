@@ -5,7 +5,7 @@ const { PrefixError, Prefix } = require('../../../defaults');
 const CjsFontFaces = {
     /** @return {string[]} */
     getFontFiles: () => {
-        const fontsDirectory = "../src/assets/fonts";
+        const fontsDirectory = "../shoppinglist/assets/fonts";
 
         /** @returns {string[]} */
         const recursive = (directory) => {
@@ -37,7 +37,7 @@ const CjsFontFaces = {
             return console.log(`${PrefixError}No font files in ./src/assets/fonts`);
         }
 
-        const styleFile = "../src/assets/css/style.css";
+        const styleFile = "../shoppinglist/assets/css/style.css";
         const styleFileContent = fs.readFileSync(styleFile, { encoding: "utf-8" });
 
         const endsWithNonEmptyLine = /(\r?\n)+$/.test(styleFile);

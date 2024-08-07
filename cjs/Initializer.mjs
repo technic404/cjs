@@ -1,4 +1,4 @@
-import {MainLayout} from "../src/layouts/main/MainLayout.mjs";
+import {MainLayout} from "../shoppinglist/layouts/main/MainLayout.mjs";
 
 /**
  *
