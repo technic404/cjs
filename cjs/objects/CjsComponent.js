@@ -208,7 +208,7 @@ class CjsComponent {
     /**
     * Sets data for component and reload the old component occurrence
     * @param {object} data information that should be inserted to component
-    * @returns {CjsBuilderInterface}
+    * @returns {CjsComponent}
     */
     setData(data) {
         const isObject = (any) => { return any instanceof Object; }
@@ -246,6 +246,11 @@ class CjsComponent {
     }
 
 
+    /**
+     * Redenders all components this type when search changed
+     * @param {{ useSmartRender: boolean }} data 
+     * @returns {CjsComponent}
+     */
     rerenderOnSearch(data = { useSmartRender: false }) {
         Search.onChange(() => this.rerenderComponents(data));
 
@@ -255,6 +260,7 @@ class CjsComponent {
     }
 
     /**
+     * Redenders all components this type
      * @param {object} data
      * @param {{ useSmartRender: boolean }} options
      * @returns {CjsComponent}
@@ -445,7 +451,7 @@ class CjsComponent {
     /**
      * Sets default data, so if there is no values in original data, the missing values will be replaced with defaults
      * @param {object} data 
-     * @returns {CjsBuilderInterface}
+     * @returns {CjsComponent}
      */
     setDefaultData(data) {
         const isObject = (any) => { return any instanceof Object; }
