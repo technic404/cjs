@@ -7,7 +7,7 @@ function onOuterclick(f) {
         if (!document.body.contains(source)) return;
 
         if (source !== event.target && !source.contains(event.target)) {
-            cjsEventFunction(f, event, source);
+            // f(f, event, source);
         }
         
         f(new CjsEvent(e, s));

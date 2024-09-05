@@ -255,15 +255,15 @@ class CjsComponent {
     }
 
     /**
-     * 
-     * @param {{ useSmartRender: boolean }} data
+     * @param {object} data
+     * @param {{ useSmartRender: boolean }} options
      * @returns {CjsComponent}
      */
-    rerenderComponents(data = { useSmartRender: false }) {
+    rerenderComponents(data = {}, options = { useSmartRender: false }) {
         const components = Array.from(document.body.querySelectorAll(`[${this.attribute}]`));
-        const element = htmlToElement(this._getHtml({}, this._onLoadData));
+        const element = htmlToElement(this._getHtml(data, this._onLoadData));
 
-        if(data.useSmartRender) {
+        if(options.useSmartRender) {
             for(const component of components) {
                 /**
                  * 
