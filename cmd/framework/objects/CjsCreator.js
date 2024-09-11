@@ -67,7 +67,7 @@ class CjsCreator {
         }
 
         if(element === "layout") {
-            const path = `../src/layouts/${names.camelStyle}`;
+            const path = `../src/layouts/${names.camelStyle.toLowerCase()}`;
             const layout = new CjsLayout(names, path);
 
             if(fs.existsSync(layout.getFilePath())) {
