@@ -37,7 +37,10 @@ class Cjs {
 
         this.#config = cjsConfig.getUser();
 
-        fs.writeFileSync("../c.js", this.library.getContent(false));
+        if(this.library.hasSourceFolder()) {
+            fs.writeFileSync("../c.js", this.library.getContent(false));
+        }
+        
         fs.cpSync("./framework/assets/defaultProject", this.#relative, { recursive: true });
     }
 }

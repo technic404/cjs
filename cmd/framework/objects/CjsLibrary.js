@@ -87,6 +87,16 @@ class CjsLibrary {
     }
 
     /**
+     * Determinates if the framework source folder exists
+     * @returns {boolean}
+     */
+    hasSourceFolder() {
+        const libraryPath = this.#relative + this.#config.compiler.libraryPath;
+
+        return fs.existsSync(libraryPath);
+    }
+
+    /**
      * Prepares minified / unminified library content
      * @param {boolean} minifyScripts second param that determinates if script should be minified, by default is true but may be usefull when inniting a project so the jsdocs of library are kept
      * @returns {string} merged content of library folder / file
