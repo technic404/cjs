@@ -93,23 +93,6 @@ Mentioned command will create:
 1. The main component file `{Component name}.mjs` (and also include basic component creation structure).
 2. Style file under the `styles/${Component name}.css`.
 
-#### Component properties
-`🟪` `constructor(data : object, layoutData : object)` `▶` `CjsComponent`
-`🟦` `forms` `▶` `CjsForm[]` - Provides forms existing in component
-`🟦` `components` `▶` `CjsComponentsCollection` - Provides all components existing in DOM
-`🟨` `toElement(ignoreReadyState : boolean)` `▶` `HTMLElement` - Provides component element as HTMLElement
-`🟨` `render(data : object)` `▶` `string` - Renders the html string from provided data
-`🟨` `visualise(data : object)` `▶` `HTMLElement` - Visualises component as HTMLElement
-`🟨` `setData(data : object)` `▶` `CjsComponent` - Sets data for component and reload the old component occurrence
-`🟨` `loadLayout(layout : CjsLayout)` `▶` `void` - Loads layout inside the selected component
-`🟨` `rerenderOnSearch(data : object)` `▶` `CjsComponent` - Redenders all components this type when search changed
-`🟨` `rerenderComponents(data : object, options : object)` `▶` `CjsComponent` - Redenders all components this type
-`🟨` `onLoad(callback : function)` `▶` `void` - Set function that will be executed when element is loaded on website
-`🟨` `importStyle(path : string, options : object)` `▶` `void` - Imports style to element from specified file
-`🟨` `setDefaultData(data : object)` `▶` `CjsComponent` - Sets default data, so if there is no values in original data, the missing values will be replaced with defaults
-`🟨` `querySelector(selectors : string)` `▶` `HTMLElement|Element|null` - Returns the first element that is a descendant of node that matches selectors.
-`🟨` `querySelectorAll(selectors : string)` `▶` `HTMLElement[]|Element[]` - Returns all element descendants of node that match selectors.
-
 ### Layouts
 Layouts are containing components in specific scheme, that interferes with rendering.<br>
 Let's look at example layout.
