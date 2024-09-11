@@ -25,7 +25,7 @@ index.html
 - `/c.js` - CJS library file
 - `/index.html` - root html file
 - `/src/` - main project source directory
-- `/src/assets` - assets directory, when images, videos, fonts and other resources can be stored
+- `/src/assets` - assets directory, where images, videos, fonts and other resources can be stored
 - `/src/layouts` - contains the layouts of the project
 - `/src/layouts/{Layout name}` - includes root layout, components and styles
 - `/src/layouts/{Layout name}/styles` - styles of the components
