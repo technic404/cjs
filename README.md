@@ -8,15 +8,15 @@ src
 │
 └───assets
 │   └───css
-│   └───images
+│   └───fonts
 │
 └───layouts
-│   └───main
+│   └───root
 │   │   └───styles
 │   │   │   │   Container.css
 │   │   │
 │   │   │   Container.mjs
-│   │   │   MainLayout.mjs
+│   │   │   RootLayout.mjs
 c.js
 index.html
 ```
