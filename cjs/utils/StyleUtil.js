@@ -96,7 +96,11 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
                         const firstTag = selectorTextSplit[0];
                         const restSelector = selectorTextSplit.slice(1).join(" ");
 
-                        selectors.push(`${firstTag}${prefix} ${restSelector}`);
+                        // like button:before or button::before
+
+                        const colonSelector = firstTag.includes(":") ? firstTag.slice(firstTag.indexOf(":")) : "";
+
+                        selectors.push(`${firstTag.replace(colonSelector, "")}${prefix}${colonSelector} ${restSelector}`);
 
                     }
                 }
