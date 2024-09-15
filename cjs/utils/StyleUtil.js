@@ -153,9 +153,6 @@ async function addUniqueKeyframes(keyframesRules, rules) {
 async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRules: true, encodeKeyframes: true, enableMultiSelector: true }) {
     const rules = readRules(cssText);
 
-    console.log(rules);
-    
-
     let newRules = [];
     let keyframesRules = [];
 
@@ -213,12 +210,8 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
         // }
 
         if (options.prefixStyleRules) {
-            console.log('yy');
-            
             if(selector.startsWith(":")) {
                 newRules.push([fullCssText]);
-                console.log('starting with :', cssText);
-                
                 continue;
             }
 
