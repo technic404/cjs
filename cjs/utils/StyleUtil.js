@@ -273,10 +273,7 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
 
         newRules.push([cssText]);
     }
-
-    console.log(newRules);
     
-
     const parsedRules = await addUniqueKeyframes(keyframesRules, newRules);
 
     return parsedRules.map(e => e[0]).join('\n');
