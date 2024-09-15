@@ -1,6 +1,93 @@
 const CjsRunnableStyleWatcher = new Map();
 
 /**
+ * Css parser that splits selectors and its css contents
+ * @param {string} css 
+ * @returns {Object.<string, string>}
+ */
+function readRules(css) {
+    const rules = {};
+    const splitted = css.split("");
+    let isBracketOpened = false;
+    let isCommentOpened = false;
+    let isStringOpened = false;
+    let stringOpeningChar = '';
+    let nestedBrackets = 0;
+    let skipChars = 0;
+    let tempText = '';
+    let selector = '';
+
+    const replaceNewLines = (str) => { return str.replaceAll("\n", ""); }
+    
+    for(let i = 0; i < splitted.length; i++) {
+        const char = splitted[i];
+        const nextChar = splitted.length > i + 1 ? splitted[i + 1] : null;
+        
+        if(skipChars > 0) {
+            skipChars--;
+            continue;
+        }
+
+        if(char === "*" && nextChar === "/" && isCommentOpened) {
+            isCommentOpened = false;
+            skipChars = 1;
+            continue;
+        } 
+
+        if(isCommentOpened) continue;
+
+        if(isStringOpened && char === stringOpeningChar) {
+            isStringOpened = false;
+            stringOpeningChar = '';
+            tempText += char;
+            continue;
+        }
+
+        if((char === "\"" || char === "'") && !isStringOpened) {
+            isStringOpened = true;
+            stringOpeningChar = char;
+        }
+
+        if((char === "/" && nextChar === "*") && !isStringOpened) {
+            isCommentOpened = true;
+            continue;
+        }
+        
+        if(char === '{' && !isBracketOpened && !isStringOpened) {
+            isBracketOpened = true;
+            selector = replaceNewLines(tempText);
+            tempText = '';
+
+            if(!(selector in rules)) rules[selector] = '';
+            
+            continue;
+        }
+
+        if(!isBracketOpened) { tempText += char; continue; }
+        
+        if(char === '{' && isBracketOpened && !isStringOpened) { nestedBrackets++; }
+
+        if(char === '}' && nestedBrackets > 0 && !isStringOpened) {
+            nestedBrackets--;
+            tempText += char;
+            continue;
+        }
+
+        if(char === '}' && nestedBrackets === 0 && !isStringOpened) {
+            rules[selector] = replaceNewLines(tempText);
+            selector = '';
+            tempText = '';
+            isBracketOpened = false;
+            continue;
+        }
+
+        tempText += char;
+    }
+
+    return rules;
+}
+
+/**
  *
  * @param {string} cssRuleText
  * @return {Promise<CSSRule>}
@@ -64,77 +151,23 @@ async function addUniqueKeyframes(keyframesRules, rules) {
  * @return {Promise<string>}
  */
 async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRules: true, encodeKeyframes: true, enableMultiSelector: true }) {
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(cssText);
+    const rules = readRules(cssText);
 
-    let cssRules = Array.from(sheet.cssRules);
+    console.log(rules);
+    
 
     let newRules = [];
     let keyframesRules = [];
 
-    for (let rule of cssRules) {
-        if (rule instanceof CSSStyleRule && options.prefixStyleRules) {
-            const selectorText = rule.selectorText;
+    for (const [selector, cssText] of Object.entries(rules)) {
+        const fullCssText = `${selector} { ${cssText} }`;
+        const isMediaRule = selector.startsWith("@media");
+        
+        // const isKeyFrameRule = selector.startsWith("@keyframes");
 
-            if(selectorText.startsWith(":")) {
-                newRules.push([rule.cssText]);
-                continue;
-            }
-
-            const modifiedSelectors = selectorText.split(',').map(sel => {
-                const selectorFirstChar = sel.trim().substring(0, 1);
-                const isSelectorNotClassOrId = selectorFirstChar !== "." && selectorFirstChar !== "#";
-                const selectors = [`${prefix}${(isSelectorNotClassOrId ? ` `: '')}${sel.trim()}`];
-
-                if(options.enableMultiSelector) {
-                    if(!isSelectorNotClassOrId) {
-                        selectors.push(`${prefix} > * ${sel.trim()}`);
-                        selectors.push(`${prefix} > ${sel.trim()}`);
-                    } else {
-                        // Selector like button[cjsAttribute] { ... }
-                        const selectorTextSplit = selectorText.split(" ");
-                        const firstTag = selectorTextSplit[0];
-                        const rawRestSelector = selectorTextSplit.slice(1).join(" ");
-
-                        // like button:before or button::before
-                        const colonSelector = firstTag.includes(":") ? firstTag.slice(firstTag.indexOf(":")) : "";
-                        const parsedFirstTag = firstTag.replace(colonSelector, "");
-                        const restSelector = `${colonSelector} ${rawRestSelector}`;
-
-                        // like button:before, button:after
-                        const commaSeparatedRemainingSelectors = restSelector.split(",").map(e => e.trim()).slice(1);
-                        const commaSeparatedSelectors = restSelector.includes(",") ? commaSeparatedRemainingSelectors.map(e => {
-                            const parts = [`${parsedFirstTag}${prefix}`, `${e.replace(parsedFirstTag, "")}`];
-                            const createSpacing = !parts[1].startsWith(":");
-
-                            return parts.join(createSpacing ? " " : "");
-                        }) : "";
-
-                        if(restSelector.includes(",")) {
-                            selectors.push(`${parsedFirstTag}${prefix}${restSelector.replace(commaSeparatedRemainingSelectors, commaSeparatedSelectors)}`);
-                        } else {
-                            selectors.push(`${parsedFirstTag}${prefix}${restSelector}`);
-                        }
-                    }
-                }
-
-                return selectors;
-            });
-
-            modifiedSelectors.forEach(modifiedSelector => {
-                const modifiedRule = `${modifiedSelector.join(", ")} { ${rule.style.cssText} }`;
-
-                newRules.push([modifiedRule]);
-
-                // console.log(rule);
-                // console.log(modifiedRule);
-            })
-
-            continue;
-        }
-
-        if(rule instanceof CSSMediaRule) {
+        if(isMediaRule) {
             const parsedRules = [];
+            const rule = parseCSSRule(fullCssText);
 
             Array.from(rule.cssRules).forEach(cssRule => {
                 const selectorText = cssRule.selectorText;
@@ -167,22 +200,82 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
             continue;
         }
 
-        if (rule instanceof CSSKeyframesRule && options.encodeKeyframes) {
-            const animationName = rule.name;
-            const newAnimationName = `${getRandomCharacters(CJS_ID_LENGTH)}-_${animationName}`;
+        // if (isKeyFrameRule && options.encodeKeyframes) {
+        //     const animationName = selector.replace("@keyframes").trim();
+        //     const newAnimationName = `${getRandomCharacters(CJS_ID_LENGTH)}-_${animationName}`;
 
-            rule.name = newAnimationName;
+        //     rule.name = newAnimationName;
 
-            keyframesRules.push({ rule: rule, originalAnimationName: animationName });
-            newRules.push([rule.cssText]);
+        //     keyframesRules.push({ rule: rule, originalAnimationName: animationName });
+        //     newRules.push([rule.cssText]);
+
+        //     continue;
+        // }
+
+        if (options.prefixStyleRules) {
+            console.log('yy');
+            
+            if(selector.startsWith(":")) {
+                newRules.push([fullCssText]);
+                console.log('starting with :', cssText);
+                
+                continue;
+            }
+
+            const modifiedSelectors = selector.split(',').map(sel => {
+                const selectorFirstChar = sel.trim().substring(0, 1);
+                const isSelectorNotClassOrId = selectorFirstChar !== "." && selectorFirstChar !== "#";
+                const selectors = [`${prefix}${(isSelectorNotClassOrId ? ` `: '')}${sel.trim()}`];
+
+                if(options.enableMultiSelector) {
+                    if(!isSelectorNotClassOrId) {
+                        selectors.push(`${prefix} > * ${sel.trim()}`);
+                        selectors.push(`${prefix} > ${sel.trim()}`);
+                    } else {
+                        // Selector like button[cjsAttribute] { ... }
+                        const selectorTextSplit = selector.split(" ");
+                        const firstTag = selectorTextSplit[0];
+                        const rawRestSelector = selectorTextSplit.slice(1).join(" ");
+
+                        // like button:before or button::before
+                        const colonSelector = firstTag.includes(":") ? firstTag.slice(firstTag.indexOf(":")) : "";
+                        const parsedFirstTag = firstTag.replace(colonSelector, "");
+                        const restSelector = `${colonSelector} ${rawRestSelector}`;
+
+                        // like button:before, button:after
+                        const commaSeparatedRemainingSelectors = restSelector.split(",").map(e => e.trim()).slice(1);
+                        const commaSeparatedSelectors = restSelector.includes(",") ? commaSeparatedRemainingSelectors.map(e => {
+                            const parts = [`${parsedFirstTag}${prefix}`, `${e.replace(parsedFirstTag, "")}`];
+                            const createSpacing = !parts[1].startsWith(":");
+
+                            return parts.join(createSpacing ? " " : "");
+                        }) : "";
+
+                        if(restSelector.includes(",")) {
+                            selectors.push(`${parsedFirstTag}${prefix}${restSelector.replace(commaSeparatedRemainingSelectors, commaSeparatedSelectors)}`);
+                        } else {
+                            selectors.push(`${parsedFirstTag}${prefix}${restSelector}`);
+                        }
+                    }
+                }
+
+                return selectors;
+            });
+
+            modifiedSelectors.forEach(modifiedSelector => {
+                const modifiedRule = `${modifiedSelector.join(", ")} { ${cssText} }`;
+
+                newRules.push([modifiedRule]);
+            })
 
             continue;
         }
 
-        console.log([rule.cssText]);
-
-        newRules.push([rule.cssText]);
+        newRules.push([cssText]);
     }
+
+    console.log(newRules);
+    
 
     const parsedRules = await addUniqueKeyframes(keyframesRules, newRules);
 
