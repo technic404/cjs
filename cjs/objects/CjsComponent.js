@@ -1,7 +1,3 @@
-const CjsTakenAttributes = {
-    components: []
-};
-
 /**
  * @class
  * @classdesc Class for creating a Component used for styling in website
@@ -23,28 +19,6 @@ class CjsComponent {
      * Callback that is called when element is loaded into website
      */
     #onLoadCallback = function() {};
-
-    /**
-     * Generated unique attribute for certain element type
-     */
-    #generateAttribute() {
-        const takenAttributes = CjsTakenAttributes.components;
-
-        /**
-         * Determinates if do next iteration for searching non duplicated attribute
-         * @returns {boolean} 
-         */
-        const next = () => {
-            const doesNotHaveAttribute = this.attribute === null;
-            const attributeIsTaken = takenAttributes.includes(this.attribute);
-
-            return doesNotHaveAttribute || attributeIsTaken;
-        }
-
-        while (next()) {
-            this.attribute = `${CJS_COMPONENT_PREFIX}${getRandomCharacters(CJS_ID_LENGTH)}`;
-        }
-    }
 
     /**
      * Returns data that will be passed to html
@@ -158,7 +132,7 @@ class CjsComponent {
         this.defaultData = {};
         this.preSetData = {};
 
-        this.#generateAttribute();
+        this.attribute = Cjs.generateAttribute(CJS_COMPONENT_PREFIX, CjsTakenAttributes.components);
     }
 
     /**

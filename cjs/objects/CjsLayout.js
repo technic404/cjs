@@ -13,12 +13,17 @@ class CjsLayout {
         active: null
     }
 
+    /** @type {string} attribute identifier of layout */
+    attribute;
+
     /**
      * 
      * @param {CjsComponent|CjsLayout[][]} elements 
      */
     constructor(elements) {
         this.elements = elements;
+
+        this.attribute = Cjs.generateAttribute(CJS_LAYOUT_PREFIX, CjsTakenAttributes.layouts);
     }
 
     /**
@@ -202,11 +207,21 @@ class CjsLayout {
     }
 
     /**
+     * Finds layout in the DOM by query selector
+     * @returns {HTMLElement}
+     */
+    getElement() {
+        return document.body.querySelector(`[${this.attribute}]`);
+    }
+
+    /**
      * Creates the HTMLElement from other layouts and components inside layout
      * @returns {HTMLElement} layout element
      */
     toElement() {
         const container = document.createElement("div");
+
+        container.setAttribute(this.attribute, "");
 
         /**
          * 
