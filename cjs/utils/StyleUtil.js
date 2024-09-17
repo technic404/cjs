@@ -101,48 +101,6 @@ async function parseCSSRule(cssRuleText) {
     }))
 }
 
-async function addUniqueKeyframes(keyframesRules, rules) {
-    let newRules = [...rules];
-
-    for(const keyframesRule of keyframesRules) {
-        const { rule, originalAnimationName } = keyframesRule;
-
-        for(const newRuleObject of newRules) {
-            const newRule = newRuleObject[0];
-
-            if(newRule.startsWith('@') && !newRule.startsWith('@media')) continue; // @keyframes
-
-            let parsed = await parseCSSRule(newRule);
-
-            const targetStyles = (parsed instanceof CSSMediaRule ? Array.from(parsed.cssRules) : [parsed]);
-
-            targetStyles.forEach(cssRule => {
-                const style = cssRule.style;
-
-                if(style.animationName !== originalAnimationName) {
-                    if(style.animation === "") return;
-
-                    let split = style.animation.split(" ");
-
-                    if(split[0] !== originalAnimationName) return;
-
-                    split[0] = rule.name;
-
-                    style.animation = split.join(" ");
-                } else {
-                    style.animationName = rule.name;
-                }
-            })
-
-            newRules = newRules.filter(e => e[0] !== newRule);
-
-            newRules.push([parsed.cssText]);
-        }
-    }
-
-    return newRules;
-}
-
 /**
  *
  * @param {string} cssText
@@ -154,13 +112,11 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
     const rules = readRules(cssText);
 
     let newRules = [];
-    let keyframesRules = [];
 
     for (const [selector, cssText] of Object.entries(rules)) {
         const fullCssText = `${selector} { ${cssText} }`;
         const isMediaRule = selector.startsWith("@media");
-        
-        // const isKeyFrameRule = selector.startsWith("@keyframes");
+        const isKeyFrameRule = selector.startsWith("@keyframes");
 
         if(isMediaRule) {
             const parsedRules = [];
@@ -197,17 +153,12 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
             continue;
         }
 
-        // if (isKeyFrameRule && options.encodeKeyframes) {
-        //     const animationName = selector.replace("@keyframes").trim();
-        //     const newAnimationName = `${getRandomCharacters(CJS_ID_LENGTH)}-_${animationName}`;
+        if (isKeyFrameRule) {
+            const fullCssText = `${selector} { ${cssText} }`;
 
-        //     rule.name = newAnimationName;
-
-        //     keyframesRules.push({ rule: rule, originalAnimationName: animationName });
-        //     newRules.push([rule.cssText]);
-
-        //     continue;
-        // }
+            newRules.push([fullCssText]);
+            continue;
+        }
 
         if (options.prefixStyleRules) {
             if(selector.startsWith(":")) {
@@ -266,10 +217,8 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
 
         newRules.push([cssText]);
     }
-    
-    const parsedRules = await addUniqueKeyframes(keyframesRules, newRules);
 
-    return parsedRules.map(e => e[0]).join('\n');
+    return newRules.map(e => e[0]).join('\n');
 }
 
 /**
