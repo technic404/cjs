@@ -186,6 +186,11 @@ const mutationCallback = function(mutationsList, observer) {
                             // Find the short class name (compressed name) for style
                             const runnableDetailsData = CjsRunnableDetails.style.map.get(runnableStyleWatcherData.path);
 
+                            if(!CjsRunnableDetails.style.map.has(runnableStyleWatcherData.path)){
+                                console.log(`${CJS_PRETTY_PREFIX_X}Could not found the ${runnableStyleWatcherData.path} style file`)
+                                return;
+                            }
+
                             // Find real elements with that attribute
                             const documentChild = document.querySelectorAll(`[${attribute.name}='']`);
     
