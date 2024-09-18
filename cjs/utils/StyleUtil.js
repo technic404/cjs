@@ -89,20 +89,6 @@ function readRules(css) {
 
 /**
  *
- * @param {string} cssRuleText
- * @return {Promise<CSSRule>}
- */
-async function parseCSSRule(cssRuleText) {
-    return await new Promise(((resolve, reject) => {
-        const styleSheet = new CSSStyleSheet();
-        styleSheet.insertRule(cssRuleText);
-
-        return resolve(styleSheet.cssRules[0]);
-    }))
-}
-
-/**
- *
  * @param {string} cssText
  * @param {string} prefix
  * @param {CjsStyleImportOptions} options
@@ -113,112 +99,95 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
 
     let newRules = [];
 
-    for (const [selector, cssText] of Object.entries(rules)) {
+    const getModifiedRules = (selector, cssText) => {
         const fullCssText = `${selector} { ${cssText} }`;
+
+        if(selector.startsWith(":")) return [fullCssText];
+
+        return selector.split(',').map(sel => {
+            const selectorFirstChar = sel.trim().substring(0, 1);
+            const isSelectorClassOrId = selectorFirstChar === "." || selectorFirstChar === "#";
+            const selectors = [`${prefix}${(isSelectorClassOrId ? '': ' ')}${sel.trim()}`];
+
+            if(isSelectorClassOrId) {
+                // selectors.push(`${prefix} > * ${sel.trim()}`);
+                // selectors.push(`${prefix} > ${sel.trim()}`);
+            } else {
+                // Selector like button[cjsAttribute] { ... }
+                const selectorTextSplit = selector.split(" ");
+                const firstTag = selectorTextSplit[0];
+                const rawRestSelector = selectorTextSplit.slice(1).join(" ");
+
+                // like button:before or button::before
+                const colonSelector = firstTag.includes(":") ? firstTag.slice(firstTag.indexOf(":")) : "";
+                const parsedFirstTag = firstTag.replace(colonSelector, "");
+                const restSelector = `${colonSelector} ${rawRestSelector}`;
+
+                // like button:before, button:after
+                const commaSeparatedRemainingSelectors = restSelector.split(",").map(e => e.trim()).slice(1);
+                const commaSeparatedSelectors = restSelector.includes(",") ? commaSeparatedRemainingSelectors.map(e => {
+                    const parts = [`${parsedFirstTag}${prefix}`, `${e.replace(parsedFirstTag, "")}`];
+                    const createSpacing = !parts[1].startsWith(":");
+
+                    return parts.join(createSpacing ? " " : "");
+                }) : "";
+
+                if(restSelector.includes(",")) {
+                    selectors.push(`${parsedFirstTag}${prefix}${restSelector.replace(commaSeparatedRemainingSelectors, commaSeparatedSelectors)}`);
+                } else {
+                    selectors.push(`${parsedFirstTag}${prefix}${restSelector}`);
+                }
+            }
+
+            return selectors;
+        })
+            .map(selectors => `${selectors.join(", ")} { ${cssText} }`)
+            .flat();
+    }
+
+    for (const [selector, cssText] of Object.entries(rules)) {
         const isMediaRule = selector.startsWith("@media");
         const isKeyFrameRule = selector.startsWith("@keyframes");
 
         if(isMediaRule) {
-            const parsedRules = [];
-            const rule = parseCSSRule(fullCssText);
+            const modifiedRulesInside = (() => {
+                const rules = readRules(cssText);
+                const newRules = [];
 
-            Array.from(rule.cssRules).forEach(cssRule => {
-                const selectorText = cssRule.selectorText;
+                for(const [selector, cssText] of Object.entries(rules)) {
+                    const modifiedRules = getModifiedRules(selector, cssText);
 
-                const modifiedSelectors = selectorText.split(',').map(sel => {
-                    const selectorFirstChar = sel.trim().substring(0, 1);
-                    const isSelectorNotClassOrId = selectorFirstChar !== "." && selectorFirstChar !== "#";
-                    const selectors = [`${prefix}${(isSelectorNotClassOrId ? ` `: '')}${sel.trim()}`];
+                    newRules.push(...modifiedRules);
+                }
 
-                    if(options.enableMultiSelector) {
-                        if(!isSelectorNotClassOrId) {
-                            selectors.push(`${prefix} > * ${sel.trim()}`)
-                        }
-                    }
+                return newRules;
+            })();
 
-                    return selectors;
-                });
+            const modifiedMedia = `${selector} { ${modifiedRulesInside.join("\n")} }`;
 
-                modifiedSelectors.forEach(modifiedSelector => {
-                    const modifiedRule = `${modifiedSelector.join(", ")} { ${cssRule.cssText.replace(selectorText, "").replace("{", "").replace("}", "")} }`;
-
-                    parsedRules.push(modifiedRule);
-                });
-            });
-
-            const conditionText = rule.conditionText;
-
-            newRules.push([`@media ${conditionText} { ${parsedRules.join("\n")} }`, parsedRules]);
-
+            newRules.push(modifiedMedia);
             continue;
         }
 
         if (isKeyFrameRule) {
             const fullCssText = `${selector} { ${cssText} }`;
 
-            newRules.push([fullCssText]);
+            newRules.push(fullCssText);
             continue;
         }
 
         if (options.prefixStyleRules) {
-            if(selector.startsWith(":")) {
-                newRules.push([fullCssText]);
-                continue;
-            }
+            const modifiedRules = getModifiedRules(selector, cssText);
 
-            const modifiedSelectors = selector.split(',').map(sel => {
-                const selectorFirstChar = sel.trim().substring(0, 1);
-                const isSelectorNotClassOrId = selectorFirstChar !== "." && selectorFirstChar !== "#";
-                const selectors = [`${prefix}${(isSelectorNotClassOrId ? ` `: '')}${sel.trim()}`];
-
-                if(options.enableMultiSelector) {
-                    if(!isSelectorNotClassOrId) {
-                        selectors.push(`${prefix} > * ${sel.trim()}`);
-                        selectors.push(`${prefix} > ${sel.trim()}`);
-                    } else {
-                        // Selector like button[cjsAttribute] { ... }
-                        const selectorTextSplit = selector.split(" ");
-                        const firstTag = selectorTextSplit[0];
-                        const rawRestSelector = selectorTextSplit.slice(1).join(" ");
-
-                        // like button:before or button::before
-                        const colonSelector = firstTag.includes(":") ? firstTag.slice(firstTag.indexOf(":")) : "";
-                        const parsedFirstTag = firstTag.replace(colonSelector, "");
-                        const restSelector = `${colonSelector} ${rawRestSelector}`;
-
-                        // like button:before, button:after
-                        const commaSeparatedRemainingSelectors = restSelector.split(",").map(e => e.trim()).slice(1);
-                        const commaSeparatedSelectors = restSelector.includes(",") ? commaSeparatedRemainingSelectors.map(e => {
-                            const parts = [`${parsedFirstTag}${prefix}`, `${e.replace(parsedFirstTag, "")}`];
-                            const createSpacing = !parts[1].startsWith(":");
-
-                            return parts.join(createSpacing ? " " : "");
-                        }) : "";
-
-                        if(restSelector.includes(",")) {
-                            selectors.push(`${parsedFirstTag}${prefix}${restSelector.replace(commaSeparatedRemainingSelectors, commaSeparatedSelectors)}`);
-                        } else {
-                            selectors.push(`${parsedFirstTag}${prefix}${restSelector}`);
-                        }
-                    }
-                }
-
-                return selectors;
-            });
-
-            modifiedSelectors.forEach(modifiedSelector => {
-                const modifiedRule = `${modifiedSelector.join(", ")} { ${cssText} }`;
-
-                newRules.push([modifiedRule]);
-            })
+            newRules.push(...modifiedRules);
 
             continue;
         }
 
-        newRules.push([cssText]);
+        newRules.push(cssText);
     }
 
-    return newRules.map(e => e[0]).join('\n');
+    return newRules.join('\n') + "\n";
 }
 
 /**
