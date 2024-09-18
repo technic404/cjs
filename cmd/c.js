@@ -29,7 +29,7 @@ const commands = {
             console.log(`${Prefix}Created new empty project`)
         },
         compile: async () => {
-            await require("./compiler/main")("../src", "../compiled");
+            await require("./compiler/Compiler").compile("../src", "../compiled");
 
             console.log(`${Prefix}Project compiled successfully`);
         },

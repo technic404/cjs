@@ -1,54 +1,14 @@
-const path = require('path');
 const fs = require('fs');
-const { getRandomCharacters, cutOffTextFromString, insertTextAtIndex, removeTooManyNewLines } = require("../utils/stringUtil");
-const { getRecursivelyDirectoryFiles, getCombinedPath, slashesToBackslashes } = require('../utils/fileUtil');
-const { getParsedContent, getExports, getImports, getIdentifiers } = require('./jsParser');
-const { PrefixError, Colors } = require('../../../defaults');
+const path = require('path');
+const Constants = require("../Constants");
+const ECMAModuleHelper = require('./ECMAModuleHelper');
+const { getRecursivelyDirectoryFiles, slashesToBackslashes, getCombinedPath } = require("./utils/fileUtil");
+const { getRandomCharacters, cutOffTextFromString, insertTextAtIndex, removeTooManyNewLines } = require("./utils/stringUtil");
+const { PrefixError, Colors } = require('../../defaults');
 
-class JsCompressor {
-    constructor(inputDirectory) {
-        this.inputDirectory = inputDirectory
-        this.exportVarName = "__export";
-        this.moduleSetterPrefix = "__init_";
-    }
-
-    /**
-     * If for example paths are:
-     * 
-     * `..\shoppinglist\requests\channels\ProductRequests.mjs`
-     * 
-     * `..\shoppinglist\requests\AppRequests.mjs`
-     * 
-     * The result will contain the cutted version like that
-     * 
-     * `channels\ProductRequests.mjs`, `AppRequests.mjs`
-     * 
-     * @param {string} path1 
-     * @param {string} path2 
-     * @returns {{ path1: string, path2: string }}
-     */
-    #cutOffFirstRepeatedPath = (path1, path2) => {
-        const minLength = Math.min(path1.length, path2.length);
-        let commonIndex = 0;
-    
-        for (let i = 0; i < minLength; i++) {
-            if (path1[i] !== path2[i]) break;
-
-            commonIndex++;
-        }
-    
-        if (commonIndex > 0) {
-            const remainingPath1 = path1.substring(commonIndex);
-            const remainingPath2 = path2.substring(commonIndex);
-    
-            return { path1: remainingPath1, path2: remainingPath2 };
-        } else {
-            return { path1, path2 };
-        }
-    }
-
-    async getData() {
-        const directory = this.inputDirectory;
+const JavaScriptMerger = {
+    getWorkerData(input) {
+        const directory = input;
         const files = getRecursivelyDirectoryFiles(directory, ".mjs");
         const map = new Map(); // fileUrl, functionName
         let mergedContent = ``;
@@ -56,7 +16,7 @@ class JsCompressor {
         for (const file of files) {
             const fileMethodName = getRandomCharacters(16);
             const namings = {
-                setUpFunctionName: `${this.moduleSetterPrefix}${path.basename(file).replace(".mjs", "")}${fileMethodName}`,
+                setUpFunctionName: `${Constants.ModuleSetterPrefix}${path.basename(file).replace(".mjs", "")}${fileMethodName}`,
                 varName: path.basename(file).replace(".mjs", "") + fileMethodName,
             };
     
@@ -74,20 +34,20 @@ class JsCompressor {
             // Append compressor prefix
             const fileStartLogic = {
                 checkIfInitialized: `    if(Object.keys(${namings.varName}).length > 0) return ${namings.varName};`,
-                exportStatement: `    const ${this.exportVarName} = {};`,
+                exportStatement: `    const ${Constants.ExportVariableName} = {};`,
             };
     
             mergedContent += `const ${namings.setUpFunctionName} = () => {\n${fileStartLogic.checkIfInitialized}\n\n${fileStartLogic.exportStatement}\n\n`;
     
             // File content
             const content = fs.readFileSync(file, { encoding: "utf-8" });
-            let parsed = getParsedContent(content);
+            let parsed = ECMAModuleHelper.getParsedContent(content);
     
             // File exports, supported exports -> export const variableName = "variableValue"; or export {variable1, variable2};
-            let exports = getExports(parsed);
+            let exports = ECMAModuleHelper.getExports(parsed);
     
             // File imports, supported imports -> import { SomeFile } from "./path/to/SomeFile.mjs";
-            let imports = getImports(parsed);
+            let imports = ECMAModuleHelper.getImports(parsed);
     
             while (exports.length !== 0) {
                 const element = exports[0];
@@ -122,7 +82,7 @@ class JsCompressor {
                 // example: __export["myFunction"] = function myFunction ...
                 const transformation = {
                     real: `${element.varName} ${element.name}`,
-                    transformed: `${this.exportVarName}["${element.name}"]`,
+                    transformed: `${Constants.ExportVariableName}["${element.name}"]`,
                 };
     
                 // When the case is:
@@ -184,10 +144,6 @@ class JsCompressor {
                             `${transformation.transformed} = ${transformation.real}`
                         );
                     }
-
-                    
-
-                        
                 } else if (isMultiExport) {
                     // Contains names of the exported elements
                     // export { variable1, function1, class1 }
@@ -200,7 +156,7 @@ class JsCompressor {
                         parsed = insertTextAtIndex(
                             parsed,
                             element.exportKeywordStart,
-                            `${this.exportVarName}["${exportedVar}"] = ${exportedVar}\n    `
+                            `${Constants.ExportVariableName}["${exportedVar}"] = ${exportedVar}\n    `
                         );
                     });
                 } else {
@@ -216,7 +172,7 @@ class JsCompressor {
                 }
     
                 // Update exports
-                exports = getExports(parsed);
+                exports = ECMAModuleHelper.getExports(parsed);
             }
     
             while (Object.keys(imports).length !== 0) {
@@ -226,9 +182,17 @@ class JsCompressor {
                 const directoryWithBackslashes = slashesToBackslashes(directory);
                 const parsedImportPath = slashesToBackslashes((importPath.startsWith(directoryWithBackslashes) ? "" : `${directoryWithBackslashes}\\`) + importPath);
 
-                const cuttedOffPaths = this.#cutOffFirstRepeatedPath(file, importPath);
+                const notExistingImportedFile = !fs.existsSync(parsedImportPath);
+
+                if(notExistingImportedFile) {
+                    console.log(`${PrefixError}In ${file} there is an unknown import ${[parsedImportPath]}`);
+                    process.exit();
+                }
+
+                const cuttedOffPaths = ECMAModuleHelper.cutOffFirstRepeatedPath(file, importPath);
+                
                 const isCircularDependency = Object.keys(
-                        getImports(
+                        ECMAModuleHelper.getImports(
                             fs.readFileSync(parsedImportPath, { encoding: 'utf-8' })
                         )
                     ).filter(e => {
@@ -251,6 +215,7 @@ class JsCompressor {
 
                 if (!map.has(parsedImportPath)) {
                     console.log(`${PrefixError}Cannot detect import path ${Colors.red}${importPath}${Colors.none} in file ${Colors.red}${file}${Colors.none}`);
+                    process.exit();
                 }
     
                 /**
@@ -278,7 +243,7 @@ class JsCompressor {
     
                     if (isEmptyImport) return;
     
-                    let identifiers = getIdentifiers(parsed, element.name.target);
+                    let identifiers = ECMAModuleHelper.getIdentifiers(parsed, element.name.target);
     
                     while (identifiers.length !== 0) {
                         const insertText = `(${namings.setUpFunctionName}().${element.name.source})`;
@@ -295,17 +260,17 @@ class JsCompressor {
                             insertText
                         );
     
-                        identifiers = getIdentifiers(parsed, element.name.target);
+                        identifiers = ECMAModuleHelper.getIdentifiers(parsed, element.name.target);
                     }
                 });
     
                 // Update imports
-                imports = getImports(parsed);
+                imports = ECMAModuleHelper.getImports(parsed);
             }
     
             const fileEndLogic = {
-                initVariable: `    ${namings.varName} = ${this.exportVarName};`,
-                returnExportVariable: `   return ${this.exportVarName};`,
+                initVariable: `    ${namings.varName} = ${Constants.ExportVariableName};`,
+                returnExportVariable: `   return ${Constants.ExportVariableName};`,
                 closeScope: `}`,
             };
     
@@ -317,13 +282,14 @@ class JsCompressor {
 
         const parsedDirectory = (
             (directory.startsWith("./") || directory.startsWith(".\\") ? directory.replace("./", "").replace(".\\") : directory)
-            + `\\layouts\\root\\RootLayout.mjs`
+            + Constants.RootLayoutPath
         ).replaceAll("/", `\\`)
 
         const mainNamings = map.get(parsedDirectory);
 
         mergedContent += `\n${mainNamings.setUpFunctionName}();`
-        mergedContent += `\ninit(${mainNamings.varName}.MainLayout)`
+        mergedContent += `\ninit(${mainNamings.varName}.${path.basename(Constants.RootLayoutPath).split(".")[0]})`
+        
 
         return {
             content: mergedContent,
@@ -332,4 +298,4 @@ class JsCompressor {
     }
 }
 
-module.exports = JsCompressor;
+module.exports = JavaScriptMerger;
