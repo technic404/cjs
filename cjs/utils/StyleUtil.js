@@ -109,10 +109,7 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
             const isSelectorClassOrId = selectorFirstChar === "." || selectorFirstChar === "#";
             const selectors = [`${prefix}${(isSelectorClassOrId ? '': ' ')}${sel.trim()}`];
 
-            if(isSelectorClassOrId) {
-                // selectors.push(`${prefix} > * ${sel.trim()}`);
-                // selectors.push(`${prefix} > ${sel.trim()}`);
-            } else {
+            if(!isSelectorClassOrId) {
                 // Selector like button[cjsAttribute] { ... }
                 const selectorTextSplit = selector.split(" ");
                 const firstTag = selectorTextSplit[0];
