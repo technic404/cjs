@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-:: Prompt the user for input
+:: Prompt for input
 set /p userInput="Enter version number: "
 
 :: Remove the build folder if it exists, then create a new one
@@ -18,7 +18,7 @@ if exist build\cmd\node_modules (
     rd /s /q build\cmd\node_modules
 )
 
-:: Remove the ./build/cmd/package-lock.json file (suppress output)
+:: Remove the ./build/cmd/package-lock.json file
 if exist build\cmd\package-lock.json (
     del /q build\cmd\package-lock.json 
 )
