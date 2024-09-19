@@ -88,23 +88,45 @@ class CjsLibrary {
         return isFile ? "file" : "directory";
     }
 
+    #getSourceFolderPath() {
+        return this.#relative + this.#config.compiler.libraryPath;
+    }
+
+    #getCompiledFilePath() {
+        return this.#relative + "c.js";
+    }
+
     /**
      * Determinates if the framework source folder exists
      * @returns {boolean}
      */
     hasSourceFolder() {
-        const libraryPath = this.#relative + this.#config.compiler.libraryPath;
+        return fs.existsSync(this.#getSourceFolderPath());
+    }
 
-        return fs.existsSync(libraryPath);
+    /**
+     * Determinates if the framework compiled library file exists
+     * @returns {boolean}
+     */
+    hasCompiledFile() {
+        return fs.existsSync(this.#getCompiledFilePath());
+    }
+
+    /**
+     * Returns content of the framework compiled library file
+     * @returns {boolean}
+     */
+    getCompiledFileContent() {
+        return fs.readFileSync(this.#getCompiledFilePath(), { encoding: 'utf-8' });
     }
 
     /**
      * Prepares minified / unminified library content
      * @param {boolean} minifyScripts second param that determinates if script should be minified, by default is true but may be usefull when inniting a project so the jsdocs of library are kept
-     * @returns {string} merged content of library folder / file
+     * @returns {string} merged content of library folder
      */
     getContent(minifyScripts = true) {
-        const libraryPath = this.#relative + this.#config.compiler.libraryPath;
+        const libraryPath = this.#getSourceFolderPath();
 
         let content = this.getType() === "file" 
             ? fs.readFileSync(libraryPath, { encoding: 'utf-8' })
