@@ -136,6 +136,17 @@ class CjsComponent {
     }
 
     /**
+     * Determinates if component exists in DOM
+     * @returns {boolean}
+     */
+    exists() {
+        const selector = document.body.querySelector(`[${this.attribute}=""]`);
+        const elementExists = selector !== null;
+
+        return elementExists;
+    }
+
+    /**
      * Provides component element as HTMLElement
      * @param {boolean} ignoreReadyState 
      * @returns {HTMLElement}
