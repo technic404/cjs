@@ -112,9 +112,6 @@ class CjsComponent {
     /** @type {boolean} */
     #rerenderOnSearchEnabled = false;
 
-    #update(element) {
-    }
-
     /**
      * @returns {CjsComponentsCollection}
      */
@@ -147,23 +144,27 @@ class CjsComponent {
     }
 
     /**
-     * Provides component element as HTMLElement
+     * Creates a component as an new instance of HTMLElement that doesn't exists in DOM
+     * @returns {HTMLElement}
+     */
+    toVirtualElement() {
+        return htmlToElement(this._getHtml(this._getData(this.preSetData), this._onLoadData));
+    }
+
+    /**
+     * Provides component element as HTMLElement, could be a new instance if not exists in DOM, but also could return existing component in DOM
      * @param {boolean} ignoreReadyState 
      * @returns {HTMLElement}
      */
     toElement(ignoreReadyState = false) {
-        const element = htmlToElement(this._getHtml(this._getData(this.preSetData), this._onLoadData));
+        const element = this.toVirtualElement();
         const selector = document.body.querySelector(`[${this.attribute}=""]`);
         const elementExists = selector !== null;
         const isDocumentLoaded = document.readyState === 'complete';
 
         if((isDocumentLoaded && !ignoreReadyState) || elementExists) {
-            this.#update(selector);
-
             return selector;
         }
-
-        this.#update(element);
 
         return element;
     }
@@ -175,8 +176,6 @@ class CjsComponent {
      */
     render(data = {}) {
         const html = this._getHtml(data, this._onLoadData);
-
-        this.#update(htmlToElement(html));
 
         return html;
     }
@@ -224,7 +223,7 @@ class CjsComponent {
         for(const layout of layouts) {
             element.insertAdjacentElement(`beforeend`, layout.toElement());
 
-            // timeout because of addEventListener overlaping
+            // Timeout because of addEventListener overlaping
             setTimeout(() => {
                 layout._executeOnLoad();
 
@@ -386,15 +385,11 @@ class CjsComponent {
                 }
 
                 traverse(component, element);
-
-                this.#update(component);
             }
         } else {
             for(const component of components) {
                 component.replaceWith(element);
             }
-
-            this.#update(element);
         }
 
         return this;

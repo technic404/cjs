@@ -232,29 +232,37 @@ class CjsLayout {
         const walk = (elements, parentLayoutData) => {
             const componentInArray = elements instanceof Array;
 
-            if(!componentInArray) return console.log(`${CJS_PRETTY_PREFIX_X}Layout have wrong pattern, component should be in array`)
+            if(!componentInArray) {
+                console.log(`${CJS_PRETTY_PREFIX_X}Layout have wrong pattern, component should be in array`);
+
+                return document.createElement(`cjslayouterror`);
+            }
 
             const noComponents = elements.length === 0;
 
-            if(noComponents) return console.log(`${CJS_PRETTY_PREFIX_X}Layout have an empty component space`);
+            if(noComponents) {
+                console.log(`${CJS_PRETTY_PREFIX_X}Layout have an empty component space`);
+
+                return document.createElement(`cjslayouterror`);
+            }
 
             const layoutElement = elements[0];
             const isLayout = layoutElement instanceof CjsLayout
 
             if(isLayout) return layoutElement.toElement();
 
-            const isComopnent = layoutElement instanceof CjsComponent;
+            const isComponent = layoutElement instanceof CjsComponent;
 
-            if(!isComopnent) {
-                console.log(`${CJS_PRETTY_PREFIX_X}The passed element inside layout is not CjsComponent and CjsLayout, expected CjsComponent or CjsLayout`)
+            if(!isComponent) {
+                console.log(`${CJS_PRETTY_PREFIX_X}The passed element inside layout is not CjsComponent and CjsLayout, expected CjsComponent or CjsLayout`);
 
-                return document.createElement(`cjslayouterror`)
+                return document.createElement(`cjslayouterror`);
             }
             
             /**
              * @type {CjsComponent}
              */
-            const component = layoutElement._setOnLoadData(parentLayoutData).toElement(true).cloneNode(true);
+            const component = layoutElement._setOnLoadData(parentLayoutData).toVirtualElement();
             const hasParentAndChild = elements.length === 2;
 
             if(hasParentAndChild) {
