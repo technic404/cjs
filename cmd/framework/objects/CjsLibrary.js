@@ -1,5 +1,6 @@
 const UglifyJS = require("uglify-js");
 const fs = require('fs');
+const { PrefixError } = require("../../defaults");
 
 class CjsLibrary {
 
@@ -9,6 +10,7 @@ class CjsLibrary {
     /** @type {string} Relative path to values set in config */
     #relative;
 
+    /** @type {string[]} List of framework source files */
     #scriptsOrder = [
         "utils/ConsoleColorsUtil.js", 
         "Constants.js", 
@@ -36,7 +38,6 @@ class CjsLibrary {
         "objects/CjsEvent.js", 
         "objects/CjsForm.js", 
         "objects/CjsComponent.js", 
-        "objects/CjsPart.js", 
         "objects/CjsLayout.js", 
         "objects/CjsComponentsCollection.js", 
         "events/common/ChangeEvent.js", 
@@ -59,7 +60,6 @@ class CjsLibrary {
         "events/Off.js", 
         "FunctionMappings.js", 
         "listeners/ChangesObserverListener.js", 
-        "helpers/ReferenceHelper.js", 
         "DocumentRoot.js", 
         "Initializer.js",
         "utils/public/CjsShortcutsUtil.js",
@@ -68,12 +68,10 @@ class CjsLibrary {
         "plugins/modules/CjsRipplePlugin.js",
         "plugins/modules/CjsScaleClickPlugin.js",
         "plugins/CjsPluginManager.js",
-        "plugins/notification/CjsNotificationPlugin.js",
         "builders/CjsProgressBuilder.js",
     ]
 
     /**
-     * 
      * @param {string} relative 
      * @param {import('../../types').Config} config 
      */
@@ -82,16 +80,24 @@ class CjsLibrary {
         this.#config = config;
     }
 
+    /**
+     * Provides path of the library source folder (usually used on framework development)
+     * @returns {string}
+     */
+    #getSourceFolderPath() {
+        return this.#relative + this.#config.compiler.libraryPath;
+    }
+
     getType() {
         const isFile = fs.statSync(this.#relative + this.#config.compiler.libraryPath).isFile();
         
         return isFile ? "file" : "directory";
     }
 
-    #getSourceFolderPath() {
-        return this.#relative + this.#config.compiler.libraryPath;
-    }
-
+    /**
+     * Provides path of the compiled library file
+     * @returns {string}
+     */
     #getCompiledFilePath() {
         return this.#relative + "c.js";
     }
@@ -127,25 +133,29 @@ class CjsLibrary {
      */
     getContent(minifyScripts = true) {
         const libraryPath = this.#getSourceFolderPath();
-
-        let content = this.getType() === "file" 
-            ? fs.readFileSync(libraryPath, { encoding: 'utf-8' })
-            : "";
-
-        if(content.length === 0) {
-            for(const path of this.#scriptsOrder) {
+        const content = this.hasSourceFolder()
+            ? this.#scriptsOrder.map(path => {
                 const fullPath = `${libraryPath}/${path}`;
+                const pathExists = fs.existsSync(fullPath);
     
-                if(!fs.existsSync(fullPath)) continue;
-    
-                content += fs.readFileSync(fullPath, { encoding: 'utf-8' }) + "\n";
-            }
+                if(!pathExists) {
+                    console.log(`${PrefixError}The framework source file "${fullPath}" does not exists`);
+                    return;
+                }
+
+                return fs.readFileSync(fullPath, { encoding: 'utf-8' });
+            }).join("\n")
+            : this.getCompiledFileContent()
+
+        if(!this.hasCompiledFile() && !this.hasSourceFolder()) {
+            console.log(`${PrefixError}Couldn't find the framework source folder or the compiled library file`);
+            return null;
         }
 
-        return (this.#config.compiler.minifyScripts && minifyScripts
+        return this.#config.compiler.minifyScripts && minifyScripts
             ? UglifyJS.minify(content).code
             : content
-        );
+        ;
     }
 }
 

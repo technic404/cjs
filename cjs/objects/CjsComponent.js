@@ -203,20 +203,23 @@ class CjsComponent {
 
     /**
      * Loads layout inside the selected component
-     * @param {CjsLayout} layout
+     * @param {CjsLayout} layouts
      */
-    loadLayout(layout) {
+    loadLayout(...layouts) {
         const element = this.toElement();
 
         element.innerHTML = ``;
-        element.insertAdjacentElement(`beforeend`, layout.toElement());
 
-        // timeout because of addEventListener overlaping
-        setTimeout(() => { 
-            layout._executeOnLoad();
+        for(const layout of layouts) {
+            element.insertAdjacentElement(`beforeend`, layout.toElement());
 
-            CjsFrameworkEvents.onLoadLayout(layout);
-        }, 2);
+            // timeout because of addEventListener overlaping
+            setTimeout(() => {
+                layout._executeOnLoad();
+
+                CjsFrameworkEvents.onLoadLayout(layout);
+            }, 2);
+        }
     }
 
 

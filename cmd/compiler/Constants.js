@@ -1,6 +1,8 @@
 const Constants = {
     LibraryFileName: "c.js",
     ScriptFileName: "worker.js",
+    StyleFileName: "style.css",
+    IndexFileName: "index.html",
     RootLayoutPath: "\\layouts\\root\\RootLayout.mjs",
     RootLayoutName: "RootLayout.mjs",
     ModuleSetterPrefix: "__init_",

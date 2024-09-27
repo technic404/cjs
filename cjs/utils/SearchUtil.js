@@ -29,7 +29,7 @@ class CjsSearch {
     #createDebugBox() {
         const element = htmlToElement(`
             <div style="
-                position: absolute;
+                position: fixed;
                 bottom: 20px;
                 right: 20px;
                 background: #000000;
