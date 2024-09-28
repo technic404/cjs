@@ -285,11 +285,26 @@ const JavaScriptMerger = {
             + Constants.RootLayoutPath
         ).replaceAll("/", `\\`)
 
-        const mainNamings = map.get(parsedDirectory);
+        const getParsedPath = (suffix) => {
+            return (
+                directory.startsWith("./") || directory.startsWith(".\\")
+                 ? directory.replace("./", "").replace(".\\") 
+                 : directory
+                
+                 + suffix
+            ).replaceAll("/", `\\`)
+        }
 
-        mergedContent += `\n${mainNamings.setUpFunctionName}();`
-        mergedContent += `\ninit(${mainNamings.varName}.${path.basename(Constants.RootLayoutPath).split(".")[0]})`
-        
+        const rootModulePath = getParsedPath(Constants.RootFilePath);
+
+        if(!map.has(rootModulePath)) {
+            console.log(`${PrefixError}Can't find the ./src/Root.mjs file, it's required to properly run and init the project`);
+            process.exit();
+        }
+
+        const rootModule = map.get(rootModulePath);
+
+        mergedContent += `\n${rootModule.setUpFunctionName}()`;
 
         return {
             content: mergedContent,

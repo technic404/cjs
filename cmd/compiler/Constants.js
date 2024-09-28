@@ -4,6 +4,7 @@ const Constants = {
     StyleFileName: "style.css",
     IndexFileName: "index.html",
     RootLayoutPath: "\\layouts\\root\\RootLayout.mjs",
+    RootFilePath: "\\Root.mjs",
     RootLayoutName: "RootLayout.mjs",
     ModuleSetterPrefix: "__init_",
     ExportVariableName: "__export",
