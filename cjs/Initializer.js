@@ -1,5 +1,5 @@
 /**
- *
+ * Inits a webpage by a provided layout scheme
  * @param {CjsLayout} layout
  */
 function init(layout) {
