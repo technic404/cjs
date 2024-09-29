@@ -5,6 +5,7 @@ const ECMAModuleHelper = require('./ECMAModuleHelper');
 const { getRecursivelyDirectoryFiles, slashesToBackslashes, getCombinedPath } = require("./utils/fileUtil");
 const { getRandomCharacters, cutOffTextFromString, insertTextAtIndex, removeTooManyNewLines } = require("./utils/stringUtil");
 const { PrefixError, Colors } = require('../../defaults');
+const IndexHeadReader = require('./IndexHeadReader');
 
 const JavaScriptMerger = {
     getWorkerData(input) {
@@ -280,11 +281,6 @@ const JavaScriptMerger = {
             mergedContent += `\n\n${fileEndLogic.initVariable}\n\n${fileEndLogic.returnExportVariable}\n${fileEndLogic.closeScope}\n`;
         }
 
-        const parsedDirectory = (
-            (directory.startsWith("./") || directory.startsWith(".\\") ? directory.replace("./", "").replace(".\\") : directory)
-            + Constants.RootLayoutPath
-        ).replaceAll("/", `\\`)
-
         const getParsedPath = (suffix) => {
             return (
                 directory.startsWith("./") || directory.startsWith(".\\")
@@ -295,16 +291,20 @@ const JavaScriptMerger = {
             ).replaceAll("/", `\\`)
         }
 
-        const rootModulePath = getParsedPath(Constants.RootFilePath);
+        const ECMAScriptsSources = IndexHeadReader.getECMAScriptsSources(fs.readFileSync("../index.html", { encoding: 'utf-8' }));
+        
+        for(const modulePath of ECMAScriptsSources) {
+            const moduleParsedPath = getParsedPath(modulePath.startsWith("src/") ? modulePath.slice(3) : modulePath);
 
-        if(!map.has(rootModulePath)) {
-            console.log(`${PrefixError}Can't find the ./src/Root.mjs file, it's required to properly run and init the project`);
-            process.exit();
+            if(!map.has(moduleParsedPath)) {
+                console.log(`${PrefixError}Can't find the ${modulePath}, ${moduleParsedPath} file`);
+                process.exit();
+            }
+
+            const moduleData = map.get(moduleParsedPath);
+
+            mergedContent += `\n${moduleData.setUpFunctionName}();`;
         }
-
-        const rootModule = map.get(rootModulePath);
-
-        mergedContent += `\n${rootModule.setUpFunctionName}()`;
 
         return {
             content: mergedContent,
