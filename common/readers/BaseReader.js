@@ -5,15 +5,18 @@
  */
 class BaseReader {
     comment = {
-        enabled: true,
+        multipleLineEnabled: true,
         opening: "<!--",
         closing: "-->",
-        ignoreInString: false,
+        ignoreInString: true,
+        singleLineEnabled: false,
+        singleLine: "//"
     }
 
     loop = {
         comment: {
-            opened: false,
+            multipleLineOpened: false,
+            singleLineOpened: false
         },
         string: {
             openingChar: "",
@@ -70,7 +73,7 @@ class BaseReader {
      * Everything from example above will be included
      * Other scenario when comment in string check is disabled, then this div will be readen like this:
      * @example <div attr="Hello"></div>
-     * @param {(char: string) => void} callback 
+     * @param {(char: string, matchNextChars: (string) => boolean) => void} callback 
      * @returns {string}
      */
     _read(callback = () => {}) {
@@ -86,13 +89,19 @@ class BaseReader {
                 continue;
             }
 
-            if(comment.enabled && this._matchNextChars(comment.closing, splitted.slice(i)) && loop.comment.opened) {
-                loop.comment.opened = false;
+            if(comment.multipleLineEnabled && this._matchNextChars(comment.closing, splitted.slice(i)) && loop.comment.multipleLineOpened) {
+                loop.comment.multipleLineOpened = false;
                 loop.skipChars = comment.closing.length - 1;
                 continue;
             }
 
-            if(loop.comment.opened) continue;
+            if(comment.singleLineEnabled && loop.comment.singleLineOpened && this._matchNextChars("\n", splitted.slice(i))) {
+                loop.comment.singleLineOpened = false;
+                loop.skipChars = 1;
+                continue;
+            }
+
+            if(loop.comment.multipleLineOpened || loop.comment.singleLineOpened) continue;
 
             if(loop.string.opened && loop.char === loop.string.openingChar) {
                 loop.string.opened = false;
@@ -106,20 +115,35 @@ class BaseReader {
                 loop.string.openingChar = loop.char;
             }
 
-            if(comment.enabled && this._matchNextChars(comment.opening, splitted.slice(i))) {
-                if(loop.string.opened && comment.ignoreInString) {
+            if(comment.singleLineEnabled && this._matchNextChars(comment.singleLine, splitted.slice(i)) && !loop.string.opened) {
+                loop.comment.singleLineOpened = true;
+                continue;
+            }
+
+            if(comment.multipleLineEnabled && this._matchNextChars(comment.opening, splitted.slice(i))) {
+                if(loop.string.multipleLineOpened && comment.ignoreInString) {
                     text += loop.char;
                     continue;
                 }
 
-                loop.comment.opened = true;
+                loop.comment.multipleLineOpened = true;
                 continue;
             }
 
             text += loop.char;
         }
 
-        for(const char of text.split("")) callback(char);
+        const textSplit = text.split("");
+        
+        for(let i = 0; i < textSplit.length; i++) {
+            const char = textSplit[i];
+
+            callback(char, (toMatch) => {
+                if(toMatch === undefined) return false;
+
+                return this._matchNextChars(toMatch, textSplit.slice(i));
+            });
+        }
 
         return text;
     }

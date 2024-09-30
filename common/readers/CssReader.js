@@ -2,18 +2,19 @@ const BaseReader = require("./BaseReader");
 
 class CssReader extends BaseReader {
     comment = {
-        enabled: true,
+        multipleLineEnabled: true,
         opening: "/*",
         closing: "*/",
         ignoreInString: true,
+        singleLineEnabled: false,
     }
 
     /**
      * Css text
-     * @param {string} source 
+     * @param {string} css 
      */
-    constructor(source) {
-        super(source);
+    constructor(css) {
+        super(css);
     }
 
     /**

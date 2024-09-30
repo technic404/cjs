@@ -10,6 +10,12 @@ class CjsLibrary {
     /** @type {string} Relative path to values set in config */
     #relative;
 
+    /** @type {string[]} List of scripts to include in library file from common files folder */
+    #commonScripts = [
+        "readers/BaseReader.js",
+        "readers/CssReader.js"
+    ]
+
     /** @type {string[]} List of framework source files */
     #scriptsOrder = [
         "utils/ConsoleColorsUtil.js", 
@@ -88,6 +94,14 @@ class CjsLibrary {
         return this.#relative + this.#config.compiler.libraryPath;
     }
 
+    /**
+     * Provides path of the common folder path
+     * @returns {string}
+     */
+    #getCommonFolderPath() {
+        return this.#relative + this.#config.compiler.commonPath;
+    }
+
     getType() {
         const isFile = fs.statSync(this.#relative + this.#config.compiler.libraryPath).isFile();
         
@@ -108,6 +122,14 @@ class CjsLibrary {
      */
     hasSourceFolder() {
         return fs.existsSync(this.#getSourceFolderPath());
+    }
+
+    /**
+     * Determinates if the common folder exists
+     * @returns {boolean}
+     */
+    hasCommonFolder() {
+        return fs.existsSync(this.#getCommonFolderPath());
     }
 
     /**
@@ -133,17 +155,25 @@ class CjsLibrary {
      */
     getContent(minifyScripts = true) {
         const libraryPath = this.#getSourceFolderPath();
+        const commonPath = this.#getCommonFolderPath();
         const content = this.hasSourceFolder()
-            ? this.#scriptsOrder.map(path => {
-                const fullPath = `${libraryPath}/${path}`;
-                const pathExists = fs.existsSync(fullPath);
+            ? (
+                this.hasCommonFolder()
+                ? this.#commonScripts.map(path => `${commonPath}/${path}`)
+                : []
+            )
+            .concat(
+                this.#scriptsOrder.map(path => `${libraryPath}/${path}`)
+            )
+            .map(path => {
+                const pathExists = fs.existsSync(path);
     
                 if(!pathExists) {
-                    console.log(`${PrefixError}The framework source file "${fullPath}" does not exists`);
+                    console.log(`${PrefixError}The framework source file "${path}" does not exists`);
                     return;
                 }
 
-                return fs.readFileSync(fullPath, { encoding: 'utf-8' });
+                return fs.readFileSync(path, { encoding: 'utf-8' });
             }).join("\n")
             : this.getCompiledFileContent()
 

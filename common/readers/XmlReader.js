@@ -2,10 +2,11 @@ const BaseReader = require("./BaseReader");
 
 class XmlReader extends BaseReader {
     comment = {
-        enabled: true,
+        multipleLineEnabled: true,
         opening: "<!--",
         closing: "-->",
         ignoreInString: true,
+        singleLineEnabled: true,
     }
 
     /**
