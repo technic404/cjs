@@ -173,7 +173,10 @@ class CjsLibrary {
                     return;
                 }
 
-                return fs.readFileSync(path, { encoding: 'utf-8' });
+                return fs.readFileSync(path, { encoding: 'utf-8' })
+                    .split('\n')
+                    .filter(line => !line.trim().startsWith('/** @DeleteOnJsFormat */')) // Filter out lines starting with the comment
+                    .join('\n');
             }).join("\n")
             : this.getCompiledFileContent()
 
