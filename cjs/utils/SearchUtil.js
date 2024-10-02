@@ -102,6 +102,26 @@ class CjsSearch {
     }
 
     /**
+     * Checks if search text in function param, matches the actual search
+     * @example
+     * // Actual search: dashboard/users
+     * ✔ equals("dashboard/users"); // true
+     * ✔ equals("/dashboard/users"); // true
+     * ✘ equals("/dashboard/users/"); // false
+     * ✘ equals("dashboard"); // false
+     * ✘ equals("/dashboard"); // false
+     * @param {string} text 
+     * @returns {boolean}
+     */
+    equals(text) {
+        if(text === this.search) return true;
+
+        const parsed = text.charAt(0) === "/" ? text.slice(1) : text;
+
+        return this.search === parsed;
+    }
+
+    /**
      * If display the actual debug search in the black box on the website.
      * @param {boolean} displayOnScreen 
      * @returns {CjsSearch}
