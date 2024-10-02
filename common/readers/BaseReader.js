@@ -48,20 +48,42 @@ class BaseReader {
      * Checks if string chars is one by one next chars in the array
      * @param {string} toMatch 
      * @param {[]} array 
+     * @param {boolean} logNext 
      * @returns {boolean}
      */
-    _matchNextChars(toMatch, array) {
-        const nextCommentChars = toMatch.split("");
-        for(let j = 0; j < nextCommentChars.length; j++) {
-            const nextCommentChar = nextCommentChars[j];
+    _matchNextChars(toMatch, array, logNext = false) {
+        const chars = toMatch.split("");
+
+        if(logNext) console.log(`Comparsion: "${toMatch}" with "${array.slice(0, toMatch.length).join("")}"`);
+
+        const charByChar = [];
+
+        const logCharByChar = () => {
+            if(!logNext) return;
+
+            console.log("Char by char comparsion:", charByChar.map(e => `"${e.matchChar}" ${e.matchChar === e.arrayChar ? "==" : "!="} "${e.arrayChar}"`).join(", "));
+        }
+
+        for(let j = 0; j < chars.length; j++) {
+            const char = chars[j];
             const nextStringCharIndex = j;
 
-            if(this._isOutOfBounds(array, nextStringCharIndex)) return false;
+            if(this._isOutOfBounds(array, nextStringCharIndex)) {
+                logCharByChar();
+                return false;
+            }
 
             const nextStringChar = array[nextStringCharIndex];
 
-            if(nextStringChar !== nextCommentChar) return false;
+            charByChar.push({ matchChar: char, arrayChar: nextStringChar });
+
+            if(nextStringChar !== char) {
+                logCharByChar();
+                return false;
+            }
         }
+
+        logCharByChar();
 
         return true;
     }
@@ -73,7 +95,7 @@ class BaseReader {
      * Everything from example above will be included
      * Other scenario when comment in string check is disabled, then this div will be readen like this:
      * @example <div attr="Hello"></div>
-     * @param {(char: string, matchNextChars: (string) => boolean) => void} callback 
+     * @param {(char: string, matchNextChars: (text: string, logNext?: boolean) => boolean) => void} callback 
      * @returns {string}
      */
     _read(callback = () => {}) {
@@ -138,10 +160,10 @@ class BaseReader {
         for(let i = 0; i < textSplit.length; i++) {
             const char = textSplit[i];
 
-            callback(char, (toMatch) => {
+            callback(char, i, (toMatch, logNext = false) => {
                 if(toMatch === undefined) return false;
 
-                return this._matchNextChars(toMatch, textSplit.slice(i));
+                return this._matchNextChars(toMatch, textSplit.slice(i), logNext);
             });
         }
 
@@ -149,4 +171,4 @@ class BaseReader {
     }
 }
 
-module.exports = BaseReader;
+/** @DeleteOnJsFormat */ module.exports = BaseReader;

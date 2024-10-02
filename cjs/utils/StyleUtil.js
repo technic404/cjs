@@ -1,93 +1,6 @@
 const CjsRunnableStyleWatcher = new Map();
 
 /**
- * Css parser that splits selectors and its css contents
- * @param {string} css 
- * @returns {Object.<string, string>}
- */
-function readRules(css) {
-    const rules = {};
-    const splitted = css.split("");
-    let isBracketOpened = false;
-    let isCommentOpened = false;
-    let isStringOpened = false;
-    let stringOpeningChar = '';
-    let nestedBrackets = 0;
-    let skipChars = 0;
-    let tempText = '';
-    let selector = '';
-
-    const replaceNewLines = (str) => { return str.replaceAll("\n", ""); }
-    
-    for(let i = 0; i < splitted.length; i++) {
-        const char = splitted[i];
-        const nextChar = splitted.length > i + 1 ? splitted[i + 1] : null;
-        
-        if(skipChars > 0) {
-            skipChars--;
-            continue;
-        }
-
-        if(char === "*" && nextChar === "/" && isCommentOpened) {
-            isCommentOpened = false;
-            skipChars = 1;
-            continue;
-        } 
-
-        if(isCommentOpened) continue;
-
-        if(isStringOpened && char === stringOpeningChar) {
-            isStringOpened = false;
-            stringOpeningChar = '';
-            tempText += char;
-            continue;
-        }
-
-        if((char === "\"" || char === "'") && !isStringOpened) {
-            isStringOpened = true;
-            stringOpeningChar = char;
-        }
-
-        if((char === "/" && nextChar === "*") && !isStringOpened) {
-            isCommentOpened = true;
-            continue;
-        }
-        
-        if(char === '{' && !isBracketOpened && !isStringOpened) {
-            isBracketOpened = true;
-            selector = replaceNewLines(tempText);
-            tempText = '';
-
-            if(!(selector in rules)) rules[selector] = '';
-            
-            continue;
-        }
-
-        if(!isBracketOpened) { tempText += char; continue; }
-        
-        if(char === '{' && isBracketOpened && !isStringOpened) { nestedBrackets++; }
-
-        if(char === '}' && nestedBrackets > 0 && !isStringOpened) {
-            nestedBrackets--;
-            tempText += char;
-            continue;
-        }
-
-        if(char === '}' && nestedBrackets === 0 && !isStringOpened) {
-            rules[selector] = replaceNewLines(tempText);
-            selector = '';
-            tempText = '';
-            isBracketOpened = false;
-            continue;
-        }
-
-        tempText += char;
-    }
-
-    return rules;
-}
-
-/**
  *
  * @param {string} cssText
  * @param {string} prefix
@@ -95,7 +8,7 @@ function readRules(css) {
  * @return {Promise<string>}
  */
 async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRules: true, encodeKeyframes: true, enableMultiSelector: true }) {
-    const rules = readRules(cssText);
+    const rules = new CssReader(cssText).read();
 
     let newRules = [];
 
@@ -148,7 +61,7 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
 
         if(isMediaRule) {
             const modifiedRulesInside = (() => {
-                const rules = readRules(cssText);
+                const rules = new CssReader(cssText).read();
                 const newRules = [];
 
                 for(const [selector, cssText] of Object.entries(rules)) {

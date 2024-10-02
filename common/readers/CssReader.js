@@ -1,4 +1,4 @@
-const BaseReader = require("./BaseReader");
+/** @DeleteOnJsFormat */ const BaseReader = require("./BaseReader");
 
 class CssReader extends BaseReader {
     comment = {
@@ -69,4 +69,4 @@ class CssReader extends BaseReader {
     }
 }
 
-module.exports = CssReader;
+/** @DeleteOnJsFormat */ module.exports = CssReader;

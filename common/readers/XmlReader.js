@@ -1,4 +1,4 @@
-const BaseReader = require("./BaseReader");
+/** @DeleteOnJsFormat */ const BaseReader = require("./BaseReader");
 
 class XmlReader extends BaseReader {
     comment = {
@@ -159,4 +159,4 @@ class XmlReader extends BaseReader {
     }
 }
 
-module.exports = XmlReader;
+/** @DeleteOnJsFormat */ module.exports = XmlReader;
