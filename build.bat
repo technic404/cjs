@@ -26,6 +26,9 @@ if exist build\cmd\package-lock.json (
 :: Copy c.js to ./build/c.js
 copy c.js build\c.js >nul
 
+:: Copy install.bat to ./build/install.bat
+copy install.bat build\install.bat >nul
+
 :: Create a zip archive with the contents of the build folder
 powershell Compress-Archive -Path build\* -DestinationPath "build\cjs-v%userInput%.zip" -Force
 
