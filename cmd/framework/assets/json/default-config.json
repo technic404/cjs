@@ -12,9 +12,11 @@
         "output": {
             "index": {
                 "title": "New project!",
+                "shortTitle": "Project!",
                 "icon": null,
                 "description": "Default website description",
                 "themeColor": "#ffffff",
+                "backgroundColor": "#000000",
                 "author": null,
                 "keywords": [],
                 "robots": ["index", "follow"],
@@ -32,7 +34,6 @@
         },
         "minifyScripts": true,
         "libraryPath": "./cjs",
-        "commonPath": "./common",
-        "tempWebserverPort": 7412
+        "commonPath": "./common"
     }
 }

@@ -112,6 +112,7 @@ const IndexCreator = {
                 new Tag("meta").addAttributes(new Attr("charset", "UTF-8")),
                 new Tag("meta").addAttributes(new Attr("name", "viewport"), new Attr("content", "width=device-width, initial-scale=1.0")),
                 
+                new Tag("meta").addAttributes(new Attr("http-equiv", "Content-Type"), new Attr("content", "text/html; charset=utf-8")),
                 new Tag("meta").addAttributes(new Attr("http-equiv", "Cache-Control"), new Attr("content", "no-store, no-cache, must-revalidate")),
                 new Tag("meta").addAttributes(new Attr("http-equiv", "Pragma"), new Attr("content", "no-cache")),
                 new Tag("meta").addAttributes(new Attr("http-equiv", "Expires"), new Attr("content", "0")),
@@ -123,6 +124,7 @@ const IndexCreator = {
                 new Tag(null),
                 
                 (config.icon !== null ? new Tag("link").addAttributes(new Attr("rel", "icon"), new Attr("href", config.icon)) : null),
+                (config.icon !== null ? new Tag("link").addAttributes(new Attr("rel", "apple-touch-icon"), new Attr("href", config.icon)) : null),
                 
                 new Tag("meta").addAttributes(new Attr("name", "description"), new Attr("content", config.description)),
                 new Tag("meta").addAttributes(new Attr("name", "theme-color"), new Attr("content", config.themeColor)),

@@ -7,6 +7,7 @@ const StyleCreator = require('./src/StyleCreator');
 const { cjs } = require('../lib');
 const { cjsConfig } = require('../constants');
 const { PrefixError } = require('../defaults');
+const ManifestCreator = require('./src/ManifestCreator');
 
 const Compiler = {
     compile: (input, output) => {
@@ -23,9 +24,11 @@ const Compiler = {
         const workerData = JavaScriptMerger.getWorkerData(input);
         const scriptContent = workerData.content;
         const outputFolderExists = fs.existsSync(output);
+        const manifestContent = ManifestCreator.getContent();
 
         if(!outputFolderExists) fs.mkdirSync(output, { recursive: true });
 
+        fs.writeFileSync(`${output}/manifest.json`, manifestContent);
         fs.writeFileSync(`${output}/${Constants.StyleFileName}`, styleContent);
         fs.writeFileSync(`${output}/${Constants.IndexFileName}`, IndexCreator.getHtml(input, styleMap));
         fs.writeFileSync(`${output}/${Constants.LibraryFileName}`, cjs.library.getContent());

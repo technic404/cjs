@@ -52,6 +52,8 @@ class BaseReader {
      * @returns {boolean}
      */
     _matchNextChars(toMatch, array, logNext = false) {
+        if(toMatch === undefined) return false;
+
         const chars = toMatch.split("");
 
         if(logNext) console.log(`Comparsion: "${toMatch}" with "${array.slice(0, toMatch.length).join("")}"`);

@@ -11,7 +11,6 @@
  * @property {boolean} minifyScripts
  * @property {string} libraryPath
  * @property {string} commonPath
- * @property {number} tempWebserverPort
  */
 
 /**
@@ -32,9 +31,11 @@
 /**
  * @typedef {object} IndexTagsConfig
  * @property {string} [title] website title
+ * @property {string} [shortTitle] website short title
  * @property {string} [icon] website icon
  * @property {string} [description] website description
  * @property {string} [themeColor] hex color of website
+ * @property {string} [backgroundColor] hex background color of website
  * @property {string} [author] creator of website
  * @property {string[]} [keywords] tags of website
  * @property {string[]} [robots] instruction to robots about website crawling
