@@ -1,6 +1,4 @@
 const fs = require('fs');
-const readline = require('readline');
-
 const { cjs } = require("./lib");
 const { Prefix, PrefixError } = require("./defaults");
 const { cjsConfig } = require("./constants");
@@ -11,11 +9,6 @@ const CjsNames = require("./framework/objects/CjsNames");
 const CjsFontFaces = require("./framework/objects/modifier/CjsFontFaces");
 const CjsComponent = require("./framework/objects/creator/CjsComponent");
 const CjsStyle = require("./framework/objects/creator/CjsStyle");
-
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
 
 /**
  * @type {Object.<number, Object.<string, function(string[], Object.<string, string>)>>}
@@ -29,7 +22,9 @@ const commands = {
             console.log(`${Prefix}Created new empty project`)
         },
         compile: async () => {
-            await require("./compiler/Compiler").compile("../src", "../compiled");
+            const Compiler = await require("./compiler/Compiler");
+
+            await Compiler.compile("../src", "../compiled");
 
             console.log(`${Prefix}Project compiled successfully`);
         },

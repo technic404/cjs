@@ -123,13 +123,6 @@ class CjsRequest {
     }
 
     /**
-     * 
-     * 
-     * 
-     * 
-     */
-
-    /**
      * @param {(percentage: number, loaded: number, total: number, event: ProgressEvent<EventTarget>) => void} callback 
      * @returns {CjsRequest}
      */

@@ -21,10 +21,10 @@ function getRecursivelyDirectoryFiles(dir, filter = "") {
 }
 
 /**
- * Combines a path, so if path1 is "./shoppinglist/components/target/Target.mjs" and path2 is "../../parts/somePart/SomeHandler.mjs" the resulted path will be "./shoppinglist/parts/somePart/SomeHandler.mjs"
- * @param {String} path1
- * @param {String} path2
- * @returns {String}
+ * Combines a path, so if path1 is "./src/components/target/Target.mjs" and path2 is "../../parts/somePart/SomeHandler.mjs" the resulted path will be "./src/parts/somePart/SomeHandler.mjs"
+ * @param {string} path1
+ * @param {string} path2
+ * @returns {string}
  */
 function getCombinedPath(path1, path2) {
 	const splits = {
@@ -52,16 +52,24 @@ function getCombinedPath(path1, path2) {
 }
 
 /**
- * 
- * @param {String} str 
- * @returns {String}
+ * @param {string} str 
+ * @returns {string}
  */
 function slashesToBackslashes(str) {
 	return str.replace(/\//g, "\\");
 }
 
+/**
+ * @param {string} str 
+ * @returns {string}
+ */
+function backslashesToSlashes(str) {
+	return str.replace(/\\/g, '/');
+}
+
 module.exports = {
     getRecursivelyDirectoryFiles,
 	getCombinedPath,
-	slashesToBackslashes
+	slashesToBackslashes,
+	backslashesToSlashes
 }

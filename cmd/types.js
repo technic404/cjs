@@ -11,6 +11,7 @@
  * @property {boolean} minifyScripts
  * @property {string} libraryPath
  * @property {string} commonPath
+ * @property {number} tempWebServerPort
  */
 
 /**

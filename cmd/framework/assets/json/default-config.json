@@ -34,6 +34,7 @@
         },
         "minifyScripts": true,
         "libraryPath": "./cjs",
-        "commonPath": "./common"
+        "commonPath": "./common",
+        "tempWebServerPort": 49152
     }
 }

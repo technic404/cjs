@@ -11,13 +11,23 @@ class CjsRunnable {
         this.data = CjsRunnableDetails;
     }
 
+    isCompiled() {
+        return "compiled" in this.data && this.data.compiled;
+    }
+
+    getTempWebServerPort() {
+        return this.data.tempWebServerPort;
+    }
+
     hasStyle() { return ("style" in this.data) }
+    
     isStyleValid() {
         return (
             this.hasStyle() &&
             ("map" in this.data.style)
         )
     }
+
     validateStyle() {
         if(!("map" in this.data.style)) {
             console.log(`${CJS_PRETTY_PREFIX_X}Map is not present in runnable style configuration`)

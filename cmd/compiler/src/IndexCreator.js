@@ -81,7 +81,14 @@ const IndexCreator = {
 
         const config = cjsConfig.getUser().compiler.output.index;
         const stringMap = JSON.stringify(Array.from(styleData.entries()).map(e => { return [e[0].replace("../", "./"), e[1] ] }));
-        const runnableScript = `const CjsRunnableDetails = { style: { map: new Map(${stringMap}) } };`;
+        const runnableScript = 
+        `const CjsRunnableDetails = {
+            compiled: true,
+            tempWebServerPort: ${cjsConfig.getUser().compiler.tempWebServerPort},
+            style: { 
+                map: new Map(${stringMap})
+            }
+        };`;
         const assetsDirectory = `${input}/assets`;
         const assets = getRecursivelyDirectoryFiles(assetsDirectory);
         const extraHeadAssetsTags = [];
