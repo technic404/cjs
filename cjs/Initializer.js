@@ -30,8 +30,6 @@ function init(layout) {
         console.log(`${CJS_PRETTY_PREFIX_V}Website loaded in ${Colors.Green}${new Date().getTime() - loadStartMs} ms${Colors.None}.`);
 
         if(cjsRunnable.isCompiled()) {
-            console.log(`http://localhost:${cjsRunnable.getTempWebServerPort()}/content`);
-            
             new CjsRequest(`http://localhost:${cjsRunnable.getTempWebServerPort()}/content`, "post")
                 .setBody({ 
                     html: document.body.innerHTML, 
