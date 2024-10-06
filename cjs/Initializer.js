@@ -3,25 +3,25 @@
  * @param {CjsLayout} layout
  */
 function init(layout) {
-    const sleep = async (ms) => await new Promise((res) => { setTimeout(() => { res() }, 10) });
+    const sleep = async (ms) => await new Promise((res) => { setTimeout(() => { res() }, ms) });
 
     const loadStartMs = new Date().getTime();
 
     document.head.appendChild(document.createComment("Styles"));
 
     document.addEventListener('DOMContentLoaded', async (e) => {
-        await sleep(3); // avoid conflict between ChangesObserver
+        await sleep(10); // avoid conflict between ChangesObserver
 
         /* Cjs body root */
         const container = createContainer(CJS_ROOT_CONTAINER_PREFIX);
-        const mainLayoutElement = layout.toElement();
+        const rootLayoutElement = layout.toElement();
 
         container.innerHTML = ``;
-        container.insertAdjacentElement(`beforeend`, mainLayoutElement);
+        container.insertAdjacentElement(`beforeend`, rootLayoutElement);
 
         layout._executeOnLoad();
 
-        functionMappings.applyBodyMappings(); // loaded only on init of MainLayout
+        functionMappings.applyBodyMappings(); // loaded only on init of RootLayout
 
         console.log(`${CJS_PRETTY_PREFIX_V}Website loaded in ${Colors.Green}${new Date().getTime() - loadStartMs} ms${Colors.None}.`)
     });
