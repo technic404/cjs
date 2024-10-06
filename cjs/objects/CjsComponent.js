@@ -5,20 +5,17 @@
  * You can use that element to set the website layout and flow.
  */
 class CjsComponent {
-    /**
-     * @type {string} attribute that indicated the element on the website
-     */
+    /** @type {string} attribute that indicated the element on the website */
     attribute = null;
     
-    /**
-     * @type {object}
-     */
+    /** @type {object} */
     _onLoadData = {};
 
-    /**
-     * Callback that is called when element is loaded into website
-     */
+    /** Callback that is called when element is loaded into website */
     #onLoadCallback = function() {};
+
+    /** @type {{ offset: number, maxHeight: number }} Auto fills height of the component to window height if set */
+    #fillHeightData;
 
     /**
      * Returns data that will be passed to html
@@ -91,7 +88,7 @@ class CjsComponent {
             return firstElementChild.outerHTML;
         }
 
-        const onLoadAttribute = changesObserver.listen("add", () => this.#onLoadCallback(this._onLoadData));
+        const onLoadAttribute = changesObserver.listen("add", () => this._executeOnLoad(this._onLoadData));
 
         return addAttributes(html, [
             this.attribute, onLoadAttribute.trim()
@@ -141,6 +138,17 @@ class CjsComponent {
         const elementExists = selector !== null;
 
         return elementExists;
+    }
+
+    /**
+     * Auto fills height of the component to window height
+     * @param {number} offset determinates the offsets
+     */
+    fillHeight(offset = 0, maxHeight = undefined) {
+        this.#fillHeightData = {
+            offset,
+            maxHeight
+        };
     }
 
     /**
@@ -420,6 +428,16 @@ class CjsComponent {
      */
     _executeOnLoad(data) {
         this.#onLoadCallback(data);
+        
+        if(this.#fillHeightData !== undefined) {
+            const { maxHeight, offset } = this.#fillHeightData;
+            const element = this.toElement();
+            const resize = () => element.style.height = `${window.innerHeight > maxHeight ? maxHeight : window.innerHeight + offset}px`;
+
+            resize();
+
+            window.addEventListener('resize', resize);
+        }
     }
 
     /**
