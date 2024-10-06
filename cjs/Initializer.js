@@ -10,6 +10,10 @@ function init(layout) {
     document.head.appendChild(document.createComment("Styles"));
 
     document.addEventListener('DOMContentLoaded', async (e) => {
+        if(document.getElementById(CJS_ROOT_CONTAINER_PREFIX) !== null) {
+            document.getElementById(CJS_ROOT_CONTAINER_PREFIX).remove();
+        }
+        
         await sleep(10); // avoid conflict between ChangesObserver
 
         /* Cjs body root */
