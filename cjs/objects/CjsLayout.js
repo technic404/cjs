@@ -17,7 +17,6 @@ class CjsLayout {
     attribute;
 
     /**
-     * 
      * @param {CjsComponent|CjsLayout[][]} elements 
      */
     constructor(elements) {

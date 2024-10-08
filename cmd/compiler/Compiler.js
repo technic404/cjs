@@ -40,6 +40,8 @@ const Compiler = {
         );
 
         fs.cpSync(`${input}/assets`, `${output}/src/assets`, { recursive: true });
+
+        
         
         const tws = new TempWebServer(output);
         const promise = tws.listenOn("post", "/content");
