@@ -10,9 +10,11 @@ const { cjsConfig } = require('../constants');
 const { PrefixError, PrefixGreen, Colors } = require('../defaults');
 const { openUrl } = require('./src/utils/BrowserUtil');
 const TempWebServer = require('./src/TempWebServer');
+const PagesCreator = require('./src/PagesCreator');
 
 const Compiler = {
     compile: async (input, output) => {
+        return console.log(PagesCreator.getInitHtmlContent(input, "blahblahblah"));
         const inputFolderExists = fs.existsSync(input);
 
         if(!inputFolderExists) {
@@ -41,6 +43,7 @@ const Compiler = {
 
         fs.cpSync(`${input}/assets`, `${output}/src/assets`, { recursive: true });
 
+        
         
         
         const tws = new TempWebServer(output);

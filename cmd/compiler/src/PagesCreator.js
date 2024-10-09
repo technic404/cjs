@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { PrefixError } = require('../../defaults');
-const { getRecursivelyDirectoryFiles } = require('./utils/fileUtil');
+const { getRecursivelyDirectoryFiles, backslashesToSlashes } = require('./utils/fileUtil');
 
 const PagesCreator = {
     /**
@@ -26,15 +26,27 @@ const PagesCreator = {
             return base.substring(0, base.lastIndexOf('.')) || base;
         }
         
-        return paths.map(path => {
-            return `
-            init(${getBasename(path)});
-            new CjsRequest("${tempWebServerAddress}/content", "post")
-            .setBody({
+        return `
+        const CjsInitPages = {
+            ${paths.map((path, index) => {
+                const basename = getBasename(path);
+                const isLast = index + 1 >= paths.length;
 
-            })
-            ` 
-        });        
+                return `
+                    ${index}: () => {
+                        init(${basename});
+                        new CjsRequest("${tempWebServerAddress}/content", "post")
+                        .setBody({
+                            route: \`${backslashesToSlashes(path).replace("../src/pages/", "").replace(`${basename}.mjs`, `\${${basename}.basename}`)}\`,
+                            html: document.body.innerHTML
+                        })
+                        ${!isLast ? `.onEnd(() => CjsInitPages[${index}]())` : ``}
+                        .doRequest();
+                    }
+                ` 
+            }).join(",\n")}
+        }
+        `     
     }
 }
 
