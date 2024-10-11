@@ -43,7 +43,7 @@ const PagesCreator = {
                         ${!isLast ? `.onEnd(() => CjsInitPages[${index}]())` : ``}
                         .doRequest();
                     }
-                ` 
+                `
             }).join(",\n")}
         }
         `     
