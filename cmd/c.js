@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { cjs } = require("./lib");
-const { Prefix, PrefixError } = require("./defaults");
+const { Prefix, PrefixError, Colors } = require("./defaults");
 const { cjsConfig } = require("./constants");
 const { getUsage, getArgumentsWithoutFlags, getFlags } = require("./framework/utils/cmd");
 const { capitalizeFirst } = require("./framework/utils/string");
@@ -13,7 +13,7 @@ const CjsStyle = require("./framework/objects/creator/CjsStyle");
 /**
  * @type {Object.<number, Object.<string, function(string[], Object.<string, string>)>>}
  */
-const commands = {
+const CjsCommands = {
     1: {
         init: (args, flags) => {
             cjs.initEmptyProject(flags);
@@ -108,7 +108,27 @@ const commands = {
 
             console.log(`${Prefix}Successfully rebuilded ${option}`);
         }
-    }
+    },
+    "2+": {
+        component: (args, flags) => {
+            for(const arg of args) {
+                const result = cjs.creator.create("component", arg, flags);
+
+                if(result) {
+                    console.log(`${Prefix}Successfully created ${Colors.yellow}${result.names.pascalCase}${Colors.none} component`);
+                }
+            }
+        },
+        layout: (args, flags) => {
+            for(const arg of args) {
+                const result = cjs.creator.create("layout", arg, flags);
+
+                if(result) {
+                    console.log(`${Prefix}Successfully created ${Colors.yellow}${result.names.pascalCase}${Colors.none} layout`);
+                }
+            }
+        },
+    },
 }
 
 async function command() {
@@ -117,15 +137,32 @@ async function command() {
         f: "force"
     });
     const args = getArgumentsWithoutFlags(process.argv);
+    const argsLength = args.length;
+    const argsLengthMatch = argsLength in CjsCommands;
+    
 
-    if(!(args.length in commands)) return console.log(getUsage());
+    if(!argsLengthMatch) {
+        const argsPlus = argsLength + "+";
+        const commands = CjsCommands[argsPlus];
+        const argsPlusMatch = argsPlus in commands;
 
-    const commandsArgsCategory = commands[args.length];
-    const firstCommand = args[0];
+        if(!argsPlusMatch) return console.log(getUsage());
 
-    if(!(firstCommand in commandsArgsCategory)) return console.log(getUsage());
+        const dynamicCommands = commands[argsPlus];
+        const dynamicCommandExists = commandName in dynamicCommands;
 
-    await commandsArgsCategory[firstCommand](args.slice(1), flags);
+        if(!dynamicCommandExists) return console.log(getUsage());
+
+        await commands[commandName](args.slice(1), flags);
+    }
+
+    const commands = CjsCommands[argsLength];
+    const commandName = args[0];
+    const commandExists = commandName in commands;
+
+    if(!commandExists) return console.log(getUsage());
+
+    await commands[commandName](args.slice(1), flags);
 
     process.exit();
 }
