@@ -35,6 +35,7 @@
  * @property {string} [title] website title
  * @property {string} [shortTitle] website short title
  * @property {string} [icon] website icon
+ * @property {string} [cover] website cover image
  * @property {string} [description] website description
  * @property {string} [themeColor] hex color of website
  * @property {string} [backgroundColor] hex background color of website

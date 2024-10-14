@@ -109,7 +109,20 @@ const IndexCreator = {
                 );
                 return;
             }
-        })
+        });
+
+        /**
+         * Checks if object exists with specific condition, then returns it or passes null
+         * @param {*} object 
+         * @param {boolean} extraCondition 
+         * @returns {*|null}
+         */
+        const exists = (object, extraCondition = true) => {
+            if(object !== null && object !== undefined && extraCondition) return object;
+            if(Array.isArray(object) && object.length > 0 && extraCondition) return object;
+
+            return null;
+        }
 
         return createHtmlStructure({
             htmlAttributes: [
@@ -130,26 +143,27 @@ const IndexCreator = {
                 
                 new Tag(null),
                 
-                (config.icon !== null ? new Tag("link").addAttributes(new Attr("rel", "icon"), new Attr("href", config.icon)) : null),
-                (config.icon !== null ? new Tag("link").addAttributes(new Attr("rel", "apple-touch-icon"), new Attr("href", config.icon)) : null),
-                
+                exists(config.icon, new Tag("link").addAttributes(new Attr("rel", "icon"), new Attr("href", config.icon))),
+                exists(config.icon, new Tag("link").addAttributes(new Attr("rel", "apple-touch-icon"), new Attr("href", config.icon))),
+
                 new Tag("meta").addAttributes(new Attr("name", "description"), new Attr("content", config.description)),
                 new Tag("meta").addAttributes(new Attr("name", "theme-color"), new Attr("content", config.themeColor)),
 
-                (config.author !== null ? new Tag("meta").addAttributes(new Attr("name", "author"), new Attr("content", config.author)) : null),
-                (config.keywords.length > 0 ? new Tag("meta").addAttributes(new Attr("name", "keywords"), new Attr("content", config.keywords.join(", "))) : null),
-                (config.robots.length > 0 ? new Tag("meta").addAttributes(new Attr("name", "robots"), new Attr("content", config.robots.join(", "))) : null),
-                (config.socialMedia.title !== null ? new Tag("meta").addAttributes(new Attr("property", "og:title"), new Attr("content", config.socialMedia.title)) : null),
-                (config.socialMedia.description !== null ? new Tag("meta").addAttributes(new Attr("property", "og:description"), new Attr("content", config.socialMedia.description)) : null),
-                (config.socialMedia.image !== null ? new Tag("meta").addAttributes(new Attr("property", "og:image"), new Attr("content", config.socialMedia.image)) : null),
-                (config.socialMedia.url !== null ? new Tag("meta").addAttributes(new Attr("property", "og:url"), new Attr("content", config.socialMedia.url)) : null),
-                
+                exists(config.author, new Tag("meta").addAttributes(new Attr("name", "author"), new Attr("content", config.author))),
+                exists(config.keywords, new Tag("meta").addAttributes(new Attr("name", "keywords"), new Attr("content", config.keywords.join(", ")))),
+                exists(config.robots, new Tag("meta").addAttributes(new Attr("name", "robots"), new Attr("content", config.robots.join(", ")))),
+                exists(config.socialMedia.title, new Tag("meta").addAttributes(new Attr("property", "og:title"), new Attr("content", config.socialMedia.title))),
+                exists(config.socialMedia.description, new Tag("meta").addAttributes(new Attr("property", "og:description"), new Attr("content", config.socialMedia.description))),
+                exists(config.socialMedia.image, new Tag("meta").addAttributes(new Attr("property", "og:image"), new Attr("content", config.socialMedia.image))),
+                exists(config.socialMedia.url, new Tag("meta").addAttributes(new Attr("property", "og:url"), new Attr("content", config.socialMedia.url))),
+                exists(config.cover, new Tag("link").addAttributes(new Attr("property", "og:image"), new Attr("content", config.cover))),
+
                 new Tag(null),
                 
-                (config.socialMedia.twitter.card !== null && config.socialMedia.twitter.enabled ? new Tag("meta").addAttributes(new Attr("name", "twitter:card"), new Attr("content", config.socialMedia.twitter.card)) : null),
-                (config.socialMedia.title !== null && config.socialMedia.twitter.enabled ? new Tag("meta").addAttributes(new Attr("name", "twitter:title"), new Attr("content", config.socialMedia.title)) : null),
-                (config.socialMedia.description !== null && config.socialMedia.twitter.enabled ? new Tag("meta").addAttributes(new Attr("name", "twitter:description"), new Attr("content", config.socialMedia.description)) : null),
-                (config.socialMedia.image !== null && config.socialMedia.twitter.enabled ? new Tag("meta").addAttributes(new Attr("name", "twitter:image"), new Attr("content", config.socialMedia.description)) : null),
+                exists(config.socialMedia.twitter.card, config.socialMedia.twitter.enabled, new Tag("meta").addAttributes(new Attr("name", "twitter:card"), new Attr("content", config.socialMedia.twitter.card))),
+                exists(config.socialMedia.title, config.socialMedia.twitter.enabled, new Tag("meta").addAttributes(new Attr("name", "twitter:title"), new Attr("content", config.socialMedia.title))),
+                exists(config.socialMedia.description, config.socialMedia.twitter.enabled, new Tag("meta").addAttributes(new Attr("name", "twitter:description"), new Attr("content", config.socialMedia.description))),
+                exists(config.socialMedia.image, config.socialMedia.twitter.enabled, new Tag("meta").addAttributes(new Attr("name", "twitter:image"), new Attr("content", config.socialMedia.description))),
                 
                 new Tag(null),
 

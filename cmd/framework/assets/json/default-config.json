@@ -15,6 +15,7 @@
                 "title": "New project!",
                 "shortTitle": "Project!",
                 "icon": null,
+                "cover": null,
                 "description": "Default website description",
                 "themeColor": "#ffffff",
                 "backgroundColor": "#000000",
