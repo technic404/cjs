@@ -113,7 +113,7 @@ const IndexCreator = {
 
         return createHtmlStructure({
             htmlAttributes: [
-                { name: "lang", value: "en" }
+                { name: "lang", value: config.lang }
             ],
             head: [
                 new Tag("meta").addAttributes(new Attr("charset", "UTF-8")),

@@ -11,6 +11,7 @@
     "compiler": {
         "output": {
             "index": {
+                "lang": "en",
                 "title": "New project!",
                 "shortTitle": "Project!",
                 "icon": null,

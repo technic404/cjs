@@ -31,6 +31,7 @@
 
 /**
  * @typedef {object} IndexTagsConfig
+ * @property {string} [lang] website language
  * @property {string} [title] website title
  * @property {string} [shortTitle] website short title
  * @property {string} [icon] website icon
