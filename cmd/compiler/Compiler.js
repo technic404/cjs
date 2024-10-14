@@ -14,7 +14,7 @@ const PagesCreator = require('./src/PagesCreator');
 
 const Compiler = {
     compile: async (input, output) => {
-        return console.log(PagesCreator.getInitHtmlContent(input, "blahblahblah"));
+        // return console.log(PagesCreator.getInitHtmlContent(input, "blahblahblah"));
         const inputFolderExists = fs.existsSync(input);
 
         if(!inputFolderExists) {
@@ -30,8 +30,9 @@ const Compiler = {
         const outputFolderExists = fs.existsSync(output);
         const manifestContent = ManifestCreator.getContent();
 
-        if(!outputFolderExists) fs.mkdirSync(output, { recursive: true });
+        if(outputFolderExists) fs.rmSync(output, { recursive: true, force: true });
 
+        fs.mkdirSync(output, { recursive: true });
         fs.writeFileSync(`${output}/manifest.json`, manifestContent);
         fs.writeFileSync(`${output}/${Constants.StyleFileName}`, styleContent);
         fs.writeFileSync(`${output}/${Constants.IndexFileName}`, IndexCreator.getHtml(input, styleMap));
@@ -43,9 +44,6 @@ const Compiler = {
 
         fs.cpSync(`${input}/assets`, `${output}/src/assets`, { recursive: true });
 
-        
-        
-        
         const tws = new TempWebServer(output);
         const promise = tws.listenOn("post", "/content");
 
@@ -77,6 +75,7 @@ const Compiler = {
                 filesProgressed++;
 
                 if(filesProgressed >= filesToProgress) {
+                    tws.close();
                     res();
                 }
             });
