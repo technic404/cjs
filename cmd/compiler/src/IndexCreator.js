@@ -30,7 +30,7 @@ function createHtmlStructure(data) {
             html += `        <!-- -->\n`;
             continue;
         }
-
+        
         const isNonClosingTag = ["meta", "link"].includes(tagName.toLowerCase());
         const attributes = ("attributes" in tag ? tag.attributes : []);
         const parsedAttributes = attributes.length > 0 ? " " + attributes.map(e => {
@@ -114,12 +114,12 @@ const IndexCreator = {
         /**
          * Checks if object exists with specific condition, then returns it or passes null
          * @param {*} object 
-         * @param {boolean} extraCondition 
+         * @param {Tag} toReturn 
          * @returns {*|null}
          */
-        const exists = (object, extraCondition = true) => {
-            if(object !== null && object !== undefined && extraCondition) return object;
-            if(Array.isArray(object) && object.length > 0 && extraCondition) return object;
+        const exists = (object, toReturn) => {
+            if(object !== null && object !== undefined) return toReturn;
+            if(Array.isArray(object) && object.length > 0) return toReturn;
 
             return null;
         }
@@ -160,10 +160,13 @@ const IndexCreator = {
 
                 new Tag(null),
                 
-                exists(config.socialMedia.twitter.card, config.socialMedia.twitter.enabled, new Tag("meta").addAttributes(new Attr("name", "twitter:card"), new Attr("content", config.socialMedia.twitter.card))),
-                exists(config.socialMedia.title, config.socialMedia.twitter.enabled, new Tag("meta").addAttributes(new Attr("name", "twitter:title"), new Attr("content", config.socialMedia.title))),
-                exists(config.socialMedia.description, config.socialMedia.twitter.enabled, new Tag("meta").addAttributes(new Attr("name", "twitter:description"), new Attr("content", config.socialMedia.description))),
-                exists(config.socialMedia.image, config.socialMedia.twitter.enabled, new Tag("meta").addAttributes(new Attr("name", "twitter:image"), new Attr("content", config.socialMedia.description))),
+                ...(config.socialMedia.twitter.enabled ? [
+                    exists(config.socialMedia.twitter.card, new Tag("meta").addAttributes(new Attr("name", "twitter:card"), new Attr("content", config.socialMedia.twitter.card))),
+                    exists(config.socialMedia.title, new Tag("meta").addAttributes(new Attr("name", "twitter:title"), new Attr("content", config.socialMedia.title))),
+                    exists(config.socialMedia.description, new Tag("meta").addAttributes(new Attr("name", "twitter:description"), new Attr("content", config.socialMedia.description))),
+                    exists(config.socialMedia.image, new Tag("meta").addAttributes(new Attr("name", "twitter:image"), new Attr("content", config.socialMedia.description))),
+                   
+                ] : []),
                 
                 new Tag(null),
 

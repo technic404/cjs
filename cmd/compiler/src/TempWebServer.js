@@ -19,6 +19,9 @@ class TempWebServer {
     /** @type {(url: string) => void} */
     #onLoad = () => {};
 
+    /** @type {string} address of the web server */
+    address = `http://localhost:${this.#port}`;
+
     /**
      * @param {string} directory containing the website assets
      */
@@ -39,8 +42,7 @@ class TempWebServer {
         }
 
         this.#server = this.#app.listen(this.#port, async () => {
-            this.#onLoad(`http://localhost:${this.#port}`);
-            
+            this.#onLoad(this.address);
         });
     }
 

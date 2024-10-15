@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const IndexCreator = require('./src/IndexCreator');
 const Constants = require('./Constants');
 const UglifyJS = require("uglify-js");
@@ -11,10 +12,10 @@ const { PrefixError, PrefixGreen, Colors } = require('../defaults');
 const { openUrl } = require('./src/utils/BrowserUtil');
 const TempWebServer = require('./src/TempWebServer');
 const PagesCreator = require('./src/PagesCreator');
+const { getRandomCharacters } = require('./src/utils/stringUtil');
 
 const Compiler = {
     compile: async (input, output) => {
-        // return console.log(PagesCreator.getInitHtmlContent(input, "blahblahblah"));
         const inputFolderExists = fs.existsSync(input);
 
         if(!inputFolderExists) {
@@ -27,6 +28,7 @@ const Compiler = {
         const styleMap = styleData.map;
         const workerData = JavaScriptMerger.getWorkerData(input);
         const scriptContent = workerData.content;
+        const workerMap = workerData.map;
         const outputFolderExists = fs.existsSync(output);
         const manifestContent = ManifestCreator.getContent();
 
@@ -45,15 +47,35 @@ const Compiler = {
         fs.cpSync(`${input}/assets`, `${output}/src/assets`, { recursive: true });
 
         const tws = new TempWebServer(output);
+        const cjsCompilerFileName = `cjscompiler-${getRandomCharacters(8)}.html`;
+
+        fs.writeFileSync(
+            `${output}/${cjsCompilerFileName}`, 
+            `<html>
+                <head>
+                    <script src="c.js"></script>
+                    <script>
+                        function createSearchEngineFiles() {
+                            ${PagesCreator.getInitHtmlContentScript(input, tws.address, workerMap)}
+                        }
+                    </script>
+                    <script defer src="worker.js" onload="createSearchEngineFiles();"></script>
+                </head>
+                <body>
+                </body>
+            </html>`
+        );
+
         const promise = tws.listenOn("post", "/content");
 
         let filesToProgress = tws.htmlRoutes.length;
         let filesProgressed = 0;
 
         tws.onLoad((url) => {
-            for(const htmlRoute of tws.htmlRoutes) {
-                openUrl(url + htmlRoute);
-            }
+            openUrl(`${url}/${cjsCompilerFileName}`);
+            // for(const htmlRoute of tws.htmlRoutes) {
+            //     openUrl(url + htmlRoute);
+            // }
         });
 
         return new Promise((res) => {
@@ -61,6 +83,10 @@ const Compiler = {
                 console.log(`${PrefixGreen}Creating engine search content for ${Colors.green}${data.body.route}${Colors.none} (${filesProgressed + 1}/${filesToProgress})`);
               
                 const filePath = `${output}/${data.body.route}`;
+                const directory = path.dirname(filePath);
+
+                if(!fs.existsSync(directory)) fs.mkdirSync(directory, { recursive: true });
+
                 const content = fs.readFileSync(filePath, { encoding: 'utf-8' });
                 const newFileContent = [];
 

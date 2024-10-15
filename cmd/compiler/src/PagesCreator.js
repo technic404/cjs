@@ -18,7 +18,7 @@ const PagesCreator = {
 
         return getRecursivelyDirectoryFiles(pagesDirectory, ".mjs");
     },
-    getInitHtmlContent(srcDirectory, tempWebServerAddress) {
+    getInitHtmlContentScript(srcDirectory, tempWebServerAddress, workerMap) {
         const paths = this.getPageFilesPaths(srcDirectory);
         const getBasename = (filename) => {
             const base = filename.split(/[\\/]/).pop();
@@ -28,24 +28,27 @@ const PagesCreator = {
         
         return `
         const CjsInitPages = {
-            ${paths.map((path, index) => {
-                const basename = getBasename(path);
-                const isLast = index + 1 >= paths.length;
+        ${paths.map((path, index) => {
+            const basename = getBasename(path);
+            const isLast = index + 1 >= paths.length;
+            const layoutCompiledName = workerMap.get(path).setUpFunctionName;
 
-                return `
-                    ${index}: () => {
-                        init(${basename});
-                        new CjsRequest("${tempWebServerAddress}/content", "post")
-                        .setBody({
-                            route: \`${backslashesToSlashes(path).replace("../src/pages/", "").replace(`${basename}.mjs`, `\${${basename}.basename}`)}\`,
-                            html: document.body.innerHTML
-                        })
-                        ${!isLast ? `.onEnd(() => CjsInitPages[${index}]())` : ``}
-                        .doRequest();
-                    }
-                `
-            }).join(",\n")}
-        }
+            return `
+                ${index}: () => {
+                    init(${layoutCompiledName}().${basename});
+                    new CjsRequest("${tempWebServerAddress}/content", "post")
+                    .setBody({
+                        route: \`${backslashesToSlashes(path).replace("../src/pages/", "").replace(`${basename}.mjs`, `\${${layoutCompiledName}().${basename}.basename}`)}\`,
+                        html: document.body.innerHTML
+                    })
+                    ${!isLast ? `.onEnd(() => CjsInitPages[${index + 1}]())` : `.onEnd(() => window.close())`}
+                    .doRequest();
+                }
+            `
+        }).join(",\n")}
+        };
+
+        CjsInitPages[0]();
         `     
     }
 }
