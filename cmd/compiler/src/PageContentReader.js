@@ -2,7 +2,7 @@ const fs = require('fs');
 const { PrefixError } = require('../../defaults');
 const { getRecursivelyDirectoryFiles, backslashesToSlashes } = require('./utils/fileUtil');
 
-const PagesCreator = {
+const PageContentReader = {
     /**
      * Returns .mjs file paths from /src/pages
      * @param {string} srcDirectory 
@@ -34,23 +34,29 @@ const PagesCreator = {
             const layoutCompiledName = workerMap.get(path).setUpFunctionName;
 
             return `
-                ${index}: () => {
-                    init(${layoutCompiledName}().${basename});
+                ${index}: async () => {
+                    await init(${layoutCompiledName}().${basename});
+                    
                     new CjsRequest("${tempWebServerAddress}/content", "post")
                     .setBody({
                         route: \`${backslashesToSlashes(path).replace("../src/pages/", "").replace(`${basename}.mjs`, `\${${layoutCompiledName}().${basename}.basename}`)}\`,
-                        html: document.body.innerHTML
+                        html: document.body.innerHTML,
+                        progressed: {
+                            count: ${index + 1},
+                            total: ${paths.length},
+                            isLast: ${isLast}
+                        }
                     })
-                    ${!isLast ? `.onEnd(() => CjsInitPages[${index + 1}]())` : `.onEnd(() => window.close())`}
+                    ${!isLast ? `.onEnd(() => CjsInitPages[${index + 1}]())` : `.onEnd(() => window.close()  )`}
                     .doRequest();
                 }
             `
         }).join(",\n")}
         };
 
-        CjsInitPages[0]();
-        `     
+        sleep(100).then(() => CjsInitPages[0]());
+        `;
     }
 }
 
-module.exports = PagesCreator;
+module.exports = PageContentReader;

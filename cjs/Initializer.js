@@ -1,46 +1,53 @@
+
 /**
  * Inits a webpage by a provided layout scheme
- * @param {CjsLayout} layout
+ * @param {CjsLayout|CjsPage} layout
  */
-function init(layout) {
+async function init(layout) {
+    if(!(layout instanceof CjsLayout) && !(layout instanceof CjsPage)) {
+        return console.log(`${CJS_PRETTY_PREFIX_X}Provided element in init() method is not CjsLayout or CjsPage`);
+    }
+
     const sleep = async (ms) => await new Promise((res) => { setTimeout(() => { res() }, ms) });
     const loadStartMs = new Date().getTime();
 
-    document.head.appendChild(document.createComment("Styles"));
+    const removeRootIfExists = () => {
+        const element = document.getElementById(CJS_ROOT_CONTAINER_PREFIX);
 
-    document.addEventListener('DOMContentLoaded', async (e) => {
-        if(document.getElementById(CJS_ROOT_CONTAINER_PREFIX) !== null) {
-            document.getElementById(CJS_ROOT_CONTAINER_PREFIX).remove();
+        if(element !== null) {
+            element.remove();
+            return;
         }
+
+        document.head.appendChild(document.createComment("Styles"));
+    }
+
+    const loadLayout = async () => {
+        removeRootIfExists();
 
         await sleep(10); // avoid conflict between ChangesObserver
 
         /* Cjs body root */
         const container = createContainer(CJS_ROOT_CONTAINER_PREFIX);
-        const rootLayoutElement = layout.toElement();
+        const layoutElement = layout.toElement();
 
         container.innerHTML = ``;
-        container.insertAdjacentElement(`beforeend`, rootLayoutElement);
+        container.insertAdjacentElement(`beforeend`, layoutElement);
 
         layout._executeOnLoad();
 
         functionMappings.applyBodyMappings(); // loaded only on init of RootLayout
 
         console.log(`${CJS_PRETTY_PREFIX_V}Website loaded in ${Colors.Green}${new Date().getTime() - loadStartMs} ms${Colors.None}.`);
+    }
 
-        if(cjsRunnable.isCompiled()) {
-            new CjsRequest(`http://localhost:${cjsRunnable.getTempWebServerPort()}/content`, "post")
-                .setBody({ 
-                    html: document.body.innerHTML, 
-                    route: (() => {
-                        const url = new URL(window.location.href);
-                        const pathname = url.pathname;
-                        
-                        return pathname.startsWith("/") ? pathname.substring(1) : pathname;
-                    })()
-                })
-                .doRequest();
-        }
+    if(CjsGlobals.window.DOMContentLoaded) {
+        await loadLayout();
+        return;
+    }
+
+    document.addEventListener('DOMContentLoaded', async (e) => {
+        await loadLayout();
     });
 }
 

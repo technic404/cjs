@@ -67,16 +67,16 @@ class TempWebServer {
      * Creates listetning endpoint, that when called will return request details
      * @param {"post"|"get"|"delete"|"options"|"patch"} method 
      * @param {string} endpoint 
-     * @returns {Promise<{ body: object, query: Object.<string, string>, headers: Object.<string, string> }>}
+     * @param {{ body: object, query: Object.<string, string>, headers: Object.<string, string> } callback
      */
-    async listenOn(method, endpoint) {
-        return await new Promise((res, rej) => {
-            this.#app[method](endpoint, (req, _) => {
-                res({
-                    body: req.body,
-                    query: req.query,
-                    headers: req.headers
-                });
+    listenOn(method, endpoint, callback) {
+        this.#app[method](endpoint, (req, res) => {
+            res.sendStatus(200);
+            
+            callback({
+                body: req.body,
+                query: req.query,
+                headers: req.headers
             });
         });
     }

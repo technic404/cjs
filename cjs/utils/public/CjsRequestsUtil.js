@@ -220,9 +220,9 @@ class CjsRequest {
                     (xhr.status === 0)
                 );
 
-                this.#onEndCallback(requestResult);
-
                 if(xhr.readyState !== 4) return;
+
+                this.#onEndCallback(requestResult);
 
                 if(!requestResult.isError()) {
                     this.#onSuccessCallback(requestResult);
