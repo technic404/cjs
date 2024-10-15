@@ -4,7 +4,6 @@
  */
 function init(layout) {
     const sleep = async (ms) => await new Promise((res) => { setTimeout(() => { res() }, ms) });
-
     const loadStartMs = new Date().getTime();
 
     document.head.appendChild(document.createComment("Styles"));
