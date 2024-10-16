@@ -30,7 +30,7 @@ class CjsCreator {
             const hasLayoutFlag = "layout" in flags && flags.layout !== null;
             const path = hasLayoutFlag
                 ? `../src/layouts/${capitalizeFirst(flags.layout, false)}`
-                : `../src/${names.camelStyle}`
+                : `../src/components`
             const upperCaseIndexes = getUpperCaseIndexes(pascalCase);
             const isWholeUpper = upperCaseIndexes.length === pascalCase.length;
             const className = isWholeUpper
