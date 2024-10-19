@@ -28,12 +28,14 @@ class PageCreator extends HtmlCreator {
     }
 
     /**
+     * @param {string} route
      * @param {string} input ./src directory
      * @param {Map} styleData of files import
      */
-    constructor(input, styleData) {
+    constructor(route, input, styleData) {
         super();
 
+        this.route = route;
         this.input = input;
         this.styleData = styleData;
     }
@@ -91,11 +93,11 @@ class PageCreator extends HtmlCreator {
     }
 
     getHtml() {
-        const config = cjsConfig.getUser().compiler.output.index;
+        const config = cjsConfig.getUser().compiler.output[this.route];
 
         return this._getHtml({
             htmlAttributes: [
-                { name: "lang", value: config.lang }
+                this.#exists(config.lang, { name: "lang", value: config.lang })
             ],
             head: [
                 new Tag("meta").addAttributes(new Attr("charset", "UTF-8")),
@@ -108,15 +110,15 @@ class PageCreator extends HtmlCreator {
                 
                 new Tag(null),
                 
-                new Tag("title").setText(config.title),
+                this.#exists(config.title, new Tag("title").setText(config.title)),
                 
                 new Tag(null),
                 
                 this.#exists(config.icon, new Tag("link").addAttributes(new Attr("rel", "icon"), new Attr("href", config.icon))),
                 this.#exists(config.icon, new Tag("link").addAttributes(new Attr("rel", "apple-touch-icon"), new Attr("href", config.icon))),
 
-                new Tag("meta").addAttributes(new Attr("name", "description"), new Attr("content", config.description)),
-                new Tag("meta").addAttributes(new Attr("name", "theme-color"), new Attr("content", config.themeColor)),
+                this.#exists(config.description, new Tag("meta").addAttributes(new Attr("name", "description"), new Attr("content", config.description))),
+                this.#exists(config.themeColor, new Tag("meta").addAttributes(new Attr("name", "theme-color"), new Attr("content", config.themeColor))),
 
                 this.#exists(config.author, new Tag("meta").addAttributes(new Attr("name", "author"), new Attr("content", config.author))),
                 this.#exists(config.keywords, new Tag("meta").addAttributes(new Attr("name", "keywords"), new Attr("content", config.keywords.join(", ")))),

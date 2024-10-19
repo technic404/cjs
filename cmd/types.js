@@ -25,8 +25,7 @@
  */
 
 /**
- * @typedef {object} CompilerOutputConfig
- * @property {IndexTagsConfig} index
+ * @typedef {Object.<string, IndexTagsConfig>} CompilerOutputConfig
  */
 
 /**

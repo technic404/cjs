@@ -34,7 +34,7 @@ const Compiler = {
 
         if(outputFolderExists) fs.rmSync(output, { recursive: true, force: true });
         
-        const indexPage = new PageCreator(input, styleMap);
+        const indexPage = new PageCreator("index", input, styleMap);
 
         fs.mkdirSync(output, { recursive: true });
         fs.writeFileSync(`${output}/manifest.json`, manifestContent);
@@ -88,7 +88,7 @@ const Compiler = {
     
                 if(!fs.existsSync(directory)) fs.mkdirSync(directory, { recursive: true });
     
-                const pageCreator = new PageCreator(input, styleMap)
+                const pageCreator = new PageCreator(body.route, input, styleMap)
                     .setBodyContent(body.html.replaceAll("    ", "").replaceAll("\n", ""));
     
                 fs.writeFileSync(filePath, pageCreator.getHtml());
