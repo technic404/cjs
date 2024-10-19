@@ -71,11 +71,11 @@ class PageCreator extends HtmlCreator {
     _getAssetsTags() {
         const assetsDirectory = `${this.input}/assets`;
         const assetModifiers = {
-            "css": (path) => new Tag("link").addAttributes(
+            ".css": (path) => new Tag("link").addAttributes(
                 new Attr("rel", "stylesheet"), 
                 new Attr("href", `${path}?v=${getRandomCharacters(this.#QUERY_ID_HASH_LENGTH)}`)
             ),
-            "js": (path) => new Tag("script").addAttributes(
+            ".js": (path) => new Tag("script").addAttributes(
                 new Attr("src", `${path}?v=${getRandomCharacters(this.#QUERY_ID_HASH_LENGTH)}`)
             )
         }

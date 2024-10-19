@@ -3,5 +3,5 @@
  * @param {function(CjsEvent)} f
  */
 function onLoad(f) {
-    return changesObserver.listen("add", f);
+    return mutationListener.listen("add", f);
 }

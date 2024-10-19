@@ -50,10 +50,10 @@ const Compiler = {
 
         const tws = new TempWebServer(output);
         const cjsCompilerFileName = `cjscompiler-${getRandomCharacters(8)}.html`;
+        const cjsCompilerFilePath = `${output}/${cjsCompilerFileName}`;
 
-        fs.writeFileSync(
-            `${output}/${cjsCompilerFileName}`, 
-    /*html*/`<html>
+        fs.writeFileSync(cjsCompilerFilePath, `
+            <html>
                 <head>
                     <script src="c.js"></script>
                     <script>
@@ -96,6 +96,7 @@ const Compiler = {
                 if(progressed.isLast) {
                     tws.close();
                     resolve();
+                    fs.rmSync(cjsCompilerFilePath);
                 }
             }));
         });
