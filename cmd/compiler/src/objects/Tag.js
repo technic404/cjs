@@ -3,7 +3,7 @@ const Attr = require("./Attr");
 class Tag {
     /**
      * 
-     * @param {String} tagName 
+     * @param {string} tagName 
      */
     constructor(tagName) {
         this.tagName = tagName;
@@ -14,7 +14,7 @@ class Tag {
     /**
      * Adds attributes to element
      * @param {Attr} tagAttributes 
-     * @returns {IndexTag}
+     * @returns {Tag}
      */
     addAttributes(...tagAttributes) {
         this.attributes = this.attributes.concat(tagAttributes);
@@ -24,8 +24,8 @@ class Tag {
 
     /**
      * Sets inner text into element
-     * @param {String} text 
-     * @returns {IndexTag}
+     * @param {string} text 
+     * @returns {Tag}
      */
     setText(text) {
         this.text = text;

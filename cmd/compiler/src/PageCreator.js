@@ -69,6 +69,104 @@ class PageCreator extends HtmlCreator {
     }
 
     /**
+     * @param {import("../../types").Preload[]} preloads
+     * @returns {Tag[]}
+     */
+    _getPrealoads(preloads) {
+        const tags = [];
+        const fileTypes = {
+            image: ["jpg", "jpeg", "png", "gif", "webp", "svg", "avif", "ico"],
+            script: ["js", "mjs"],
+            style: ["css"],
+            font: ["woff2", "woff", "ttf", "otf", "eot"],
+            fetch: ["json", "xml", "txt"],
+            document: ["html", "xhtml", "htm"],
+            object: ["swf", "pdf"],
+            video: ["mp4", "webm"],
+            track: ["vtt", "srt"],
+            audio: ["mp3", "wav", "ogg", "m4a"]
+        }
+        const mapping = {
+            /**
+             * @param {string} href 
+             * @returns {string}
+             */
+            as: (href) => {
+                for(const [fileType, extensions] of Object.entries(fileTypes)) {
+                    const extensionsMatch = extensions.map(e => `.${e}`).includes(path.extname(href));
+
+                    if(extensionsMatch) return fileType;
+                }
+            },
+            /**
+             * @param {string} href file source
+             * @param {string} as file type
+             * @returns {string}
+             */
+            type: (href, as) => {
+                const unCommonTypes = {
+                    script: (ext) => "application/javascript",
+                    style: (ext) => "text/css",
+                    fetch: (ext) => {
+                        if(["json", "xml"].includes(ext)) return `application/${ext}`;
+
+                        return `text/plain`;
+                    },
+                    document: (ext) => `text/${ext}`,
+                    object: (ext) => {
+                        if(["swf"].includes(ext)) return `application/x-shockwave-flash`;
+
+                        return `application/${ext}`
+                    },
+                    track: (ext) => `text/${ext}`
+                }
+
+                const rawExtension = path.extname(href);
+                const extension = rawExtension.startsWith(".") ? rawExtension.slice(1) : rawExtension;
+
+                if(as in unCommonTypes) return unCommonTypes[as](extension);
+
+                return `${as}/${extension}`;
+            }
+        }
+
+        for(const preload of preloads) {
+            const tag = new Tag("link").addAttributes(new Attr("rel", "preload"), new Attr("href", preload.href));
+
+            if(
+                /**
+                 * Determinates if one of the keys exists in preload
+                 * @returns {boolean}
+                 */
+                (() => 
+                    ["fromWidth", "fromHeight", "toWidth", "toHeight", "orientation"]
+                        .filter(key => key in preload)
+                        .length > 0
+                )()
+            ) {
+                const mediaParts = [];
+
+                if("orientation" in preload) mediaParts.push(`(orientation: ${preload.orientation})`);
+                if("fromWidth" in preload) mediaParts.push(`(min-width: ${preload.fromWidth}px)`);
+                if("toWidth" in preload) mediaParts.push(`(max-width: ${preload.toWidth}px)`);
+                if("fromHeight" in preload) mediaParts.push(`(min-height: ${preload.fromHeight}px)`);
+                if("toHeight" in preload) mediaParts.push(`(max-height: ${preload.toHeight}px)`);
+
+                tag.addAttributes(new Attr("media", mediaParts.join(" and ")));
+            }
+
+            const as = "as" in preload ? preload.as : mapping.as(preload.href);
+            const type = "type" in preload ? preload.type : mapping.type(preload.href, as);
+
+            tag.addAttributes(new Attr("as", as), new Attr("type", type));
+
+            tags.push(tag);
+        }
+
+        return tags;
+    }
+
+    /**
      * @returns {Tag[]}
      */
     _getAssetsTags() {
@@ -117,6 +215,15 @@ class PageCreator extends HtmlCreator {
                 
                 this.#exists(config.title, () => new Tag("title").setText(config.title)),
                 
+                new Tag(null),
+
+                // new Tag("link").addAttributes(
+                //     new Attr("rel", "preload"), 
+                //     new Attr("href", `${Constants.LibraryFileName}?v=${getRandomCharacters(this.#QUERY_ID_HASH_LENGTH)}`),
+                //     new Attr("as", "script"),
+                //     new Attr("type", "application/javascript")
+                // ),
+
                 new Tag(null),
                 
                 this.#exists(config.icon, () => new Tag("link").addAttributes(new Attr("rel", "icon"), new Attr("href", config.icon))),
@@ -171,9 +278,12 @@ class PageCreator extends HtmlCreator {
             
                 new Tag(null),
 
-                ...[
-                    ...this._getAssetsTags()
-                ],
+                ...this._getAssetsTags(),
+
+                new Tag(null),
+
+                ...this._getPrealoads(config.preloads)
+                
             ],
             body: this.#bodyContent
         })

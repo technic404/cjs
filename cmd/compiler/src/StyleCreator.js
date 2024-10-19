@@ -3,6 +3,7 @@ const StyleHelper = require("./StyleHelper");
 const fs = require('fs');
 const { getRecursivelyDirectoryFiles } = require("./utils/fileUtil");
 const { getRandomCharacters } = require("./utils/stringUtil");
+const { removeEmptyNewLines } = require("../../framework/utils/string");
 
 const StyleCreator = {
     getStyleData(input) {
@@ -27,7 +28,7 @@ const StyleCreator = {
         }
 
         return {
-            content: parts.join("\n"),
+            content: removeEmptyNewLines(parts.join("\n")),
             map: map
         }
     }

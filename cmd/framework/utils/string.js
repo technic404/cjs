@@ -49,9 +49,19 @@ function insertString(str, index, value) {
     return str.substring(0, index) + value + str.substring(index);
 }
 
+/**
+ * Removes empty new lines from string
+ * @param {string} str 
+ * @returns {string}
+ */
+function removeEmptyNewLines(str) {
+    return str.replace(/^\s*[\r\n]/gm, '')
+}
+
 module.exports = {
     capitalizeFirst,
     isUpperCase,
     getUpperCaseIndexes,
-    insertString
+    insertString,
+    removeEmptyNewLines
 }

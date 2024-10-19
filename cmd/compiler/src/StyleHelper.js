@@ -141,6 +141,10 @@ const StyleHelper = {
         }
 
         for (const [selector, cssText] of Object.entries(rules)) {
+            const isEmptyRule = cssText.trim() === '';
+
+            if(isEmptyRule) continue;
+            
             const isMediaRule = selector.startsWith("@media");
             const isKeyFrameRule = selector.startsWith("@keyframes");
 

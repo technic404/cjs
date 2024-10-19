@@ -16,7 +16,8 @@
             "descrption": "An empty description for page",
             "themeColor": "#ffffff",
             "backgroundColor": "#000000",
-            "robots": ["index", "follow"]
+            "robots": ["index", "follow"],
+            "preloads": []
         },
         "pages": {
             "index": {

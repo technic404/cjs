@@ -30,6 +30,18 @@
  */
 
 /**
+ * @typedef {object} Preload
+ * @property {string} href
+ * @property {string} [as]
+ * @property {string} [type]
+ * @property {number} [fromWidth]
+ * @property {number} [toWidth]
+ * @property {number} [fromHeight]
+ * @property {number} [toHeight]
+ * @property {"landscape"|"portrait"} [orientation]
+ */
+
+/**
  * @typedef {object} IndexTagsConfig
  * @property {string} [lang] website language
  * @property {string} [title] website title
@@ -42,6 +54,7 @@
  * @property {string} [author] creator of website
  * @property {string[]} [keywords] tags of website
  * @property {string[]} [robots] instruction to robots about website crawling
+ * @property {Preload[]} [preloads] list of path to assets that will be included in head link preload tag
  * @property {IndexSocialMediaTagsConfig} [socialMedia] setting about tags readed by social media platforms
  */
 
