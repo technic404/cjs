@@ -88,9 +88,38 @@ class CjsComponent {
             return firstElementChild.outerHTML;
         }
 
-        const onLoadAttribute = changesObserver.listen("add", () => this._executeOnLoad(this._onLoadData));
+        /**
+         * Adds identifiers to elements that use lazy scheme in their class names
+         * @param {string} html 
+         * @returns {string}
+         */
+        const addLazyIdentifiers = (html) => {
+            const container = createVirtualContainer(htmlToElement(html));
 
-        return addAttributes(html, [
+            for(
+                const element of Array
+                    .from(container.querySelectorAll(`[class*='${CjsLazyClassPrefix}'`))
+                    .filter(e => getAttributeStartingWith(e, CjsLazyElementPrefix).length == 0)
+            ) {
+                let id = null;
+
+                while(id in CjsTakenAttributes.lazy || id === null) {
+                    id = getRandomCharacters(CJS_ID_LENGTH);
+                }
+
+                CjsTakenAttributes.lazy.push(id);
+
+                const attribute = `${CjsLazyElementPrefix}${id}`;
+
+                element.setAttribute(attribute, "");
+            }
+
+            return container.innerHTML;
+        }
+
+        const onLoadAttribute = mutationListener.listen("add", () => this._executeOnLoad(this._onLoadData));
+
+        return addAttributes(addLazyIdentifiers(html), [
             this.attribute, onLoadAttribute.trim()
         ]);
     }

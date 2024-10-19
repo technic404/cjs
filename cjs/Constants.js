@@ -18,6 +18,9 @@ const CJS_ELEMENT_PREFIX = `${CJS_PREFIX}element-`
 const CJS_ELEMENT_DISABLED_PREFIX = `${CJS_PREFIX}elementdisabled-`
 const CJS_OBSERVER_PREFIX = `${CJS_PREFIX}observer-`
 
+const CjsLazyElementPrefix = `${CJS_PREFIX}lazy-`;
+const CjsLazyClassPrefix = "lazy:";
+
 const CjsFrameworkEvents = { 
     /**
      * Executes when layout is being loaded to component
@@ -28,7 +31,8 @@ const CjsFrameworkEvents = {
 
 const CjsTakenAttributes = {
     components: [],
-    layouts: []
+    layouts: [],
+    lazy: []
 };
 
 const Cjs = {};
