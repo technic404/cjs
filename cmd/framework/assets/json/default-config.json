@@ -9,7 +9,16 @@
         "stringReturnPrefix": ""
     },
     "compiler": {
-        "output": {
+        "globalPagesSettings": {
+            "lang": "en",
+            "title": "Example page",
+            "shortTitle": "Page",
+            "descrption": "An empty description for page",
+            "themeColor": "#ffffff",
+            "backgroundColor": "#000000",
+            "robots": ["index", "follow"]
+        },
+        "pages": {
             "index": {
                 "lang": "en",
                 "title": "New project!",

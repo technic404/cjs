@@ -5,9 +5,9 @@ const { Prefix } = require("../defaults");
 module.exports = class CompileCommand extends Command {
     constructor() {
         super("compile", async (args, flags) => {
-            await Compiler.compile("../src", "../compiled");
+            await Compiler.compile("../src", "../compiled", "verbose" in flags);
 
-            console.log(`${Prefix}Project compiled successfully`);
+            console.log(`\n${Prefix}Project compiled successfully`);
         });
     }
 }

@@ -8,14 +8,14 @@ const StyleCreator = require('./src/StyleCreator');
 const ManifestCreator = require('./src/ManifestCreator');
 const { cjs } = require('../lib');
 const { cjsConfig } = require('../constants');
-const { PrefixError, PrefixGreen, Colors } = require('../defaults');
+const { PrefixError, PrefixGreen, Colors, PrefixLog } = require('../defaults');
 const { openUrl } = require('./src/utils/BrowserUtil');
 const TempWebServer = require('./src/TempWebServer');
 const PageContentReader = require('./src/PageContentReader');
 const { getRandomCharacters } = require('./src/utils/stringUtil');
 
 const Compiler = {
-    compile: async (input, output) => {
+    compile: async (input, output, verbose = false) => {
         const inputFolderExists = fs.existsSync(input);
 
         if(!inputFolderExists) {
@@ -29,6 +29,7 @@ const Compiler = {
         const workerData = JavaScriptMerger.getWorkerData(input);
         const scriptContent = workerData.content;
         const workerMap = workerData.map;
+        const warningMessages = workerData.warningMessages;
         const outputFolderExists = fs.existsSync(output);
         const manifestContent = ManifestCreator.getContent();
 
@@ -47,6 +48,14 @@ const Compiler = {
         );
 
         fs.cpSync(`${input}/assets`, `${output}/src/assets`, { recursive: true });
+
+        if(warningMessages.length > 0) {
+            if(verbose) {
+                warningMessages.forEach(msg => console.log(msg));
+            } else {
+                console.log(`${PrefixError}Created ${Colors.red}${warningMessages.length}${Colors.none} warnings, use --verbose to see the details`);
+            }
+        }
 
         const tws = new TempWebServer(output);
         const cjsCompilerFileName = `cjscompiler-${getRandomCharacters(8)}.html`;
@@ -68,7 +77,7 @@ const Compiler = {
             </html>`
         );
 
-        console.log(`${PrefixGreen}Creating engine serach content ...`);
+        console.log(`\n${PrefixGreen}Creating engine serach content ...`);
 
         tws.onLoad((url) => {
             console.log(`${PrefixGreen}Temporary server started, loading enginge search content ...`);

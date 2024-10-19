@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { PrefixError } = require('../../defaults');
+const { mergeObjects } = require('../utils/objects');
 
 class CjsConfig {
     #Paths = {
@@ -53,37 +54,8 @@ class CjsConfig {
     getUser() {
         const userConfig = this.getRawUser();
         const defaultConfig = this.getDefault();
-
-        const mergeConfig = (defaultConfig, userSettings) => {
-            // Deep clone the default configuration to avoid modifying it directly
-            const mergedConfig = JSON.parse(JSON.stringify(defaultConfig));
-        
-            /**
-             * Recursive function to merge objects
-             * @param {object} obj1 object that will be changed to merged object
-             * @param {object} obj2 object that will be overwriting data to obj1
-             */
-            function mergeObjects(obj1, obj2) {
-                for (const key in obj2) {
-                    if(!obj2.hasOwnProperty(key)) continue;
     
-                    if (typeof obj2[key] === 'object' && obj2[key] !== null && obj1[key]) {
-                        // If both are objects, merge them recursively
-                        mergeObjects(obj1[key], obj2[key]);
-                    } else {
-                        // Otherwise, overwrite the value from user settings
-                        obj1[key] = obj2[key];
-                    }
-                }
-            }
-        
-            // Start merging from the top-level properties
-            mergeObjects(mergedConfig, userSettings);
-        
-            return mergedConfig;
-        }
-    
-        return mergeConfig(defaultConfig, userConfig);
+        return mergeObjects(defaultConfig, userConfig);
     }
 
     /**

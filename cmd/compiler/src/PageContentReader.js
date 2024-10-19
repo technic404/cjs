@@ -40,6 +40,14 @@ const PageContentReader = {
             async () => {
                 await init(${layoutCompiledName}().${basename});
 
+                Array.from(document.body.querySelectorAll("*")).forEach(element => {
+                    const attributes = getAttributeStartingWith(element, CJS_PREFIX);
+
+                    attributes.forEach(attribute => {
+                        element.removeAttribute(attribute);
+                    });
+                });
+
                 new CjsRequest("${tempWebServerAddress}/content", "post")
                 .setBody({
                     route: \`${route}\`,

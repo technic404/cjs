@@ -7,7 +7,8 @@
 
 /**
  * @typedef {object} CompilerConfig
- * @property {CompilerOutputConfig} output
+ * @property {IndexTagsConfig} globalPagesSettings
+ * @property {CompilerOutputConfig} pages
  * @property {boolean} minifyScripts
  * @property {string} libraryPath
  * @property {string} commonPath

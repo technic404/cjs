@@ -8,9 +8,16 @@ class HtmlCreator {
      * @returns {string}
      */
     _getHtml(structure) {
-        if(!("htmlAttributes" in structure)) structure.htmlAttributes = [];
-        if(!("head" in structure)) structure.head = [];
-        if(!("body" in structure)) structure.body = [];
+        const keys = ["htmlAttributes", "head", "body"];
+
+        for(const key of keys) {
+            if(!(key in structure)) {
+                structure[key] = [];
+                continue;
+            }
+            
+            structure[key] = Array.isArray(structure[key]) ? structure[key].flat() : structure[key];
+        }
 
         const htmlAttributes = structure.htmlAttributes.map(e => `${e.name}="${e.value}"`).join(" ")
 

@@ -1,4 +1,5 @@
 const { cjsConfig } = require("../../constants");
+const { mergeObjects } = require("../../framework/utils/objects");
 const Constants = require("../Constants");
 const HtmlCreator = require("./HtmlCreator");
 const Attr = require("./objects/Attr");
@@ -17,14 +18,14 @@ class PageCreator extends HtmlCreator {
     /**
      * Checks if object exists with specific condition, then returns it or passes null
      * @param {*} object 
-     * @param {Tag} toReturn 
-     * @returns {*|null}
+     * @param {() => Tag} returnCallback 
+     * @returns {*|[]}
      */
-    #exists (object, toReturn) {
-        if(object !== null && object !== undefined) return toReturn;
-        if(Array.isArray(object) && object.length > 0) return toReturn;
+    #exists (object, returnCallback) {
+        if(object !== null && object !== undefined) return returnCallback();
+        if(Array.isArray(object) && object.length > 0) return returnCallback();
 
-        return null;
+        return [];
     }
 
     /**
@@ -93,11 +94,15 @@ class PageCreator extends HtmlCreator {
     }
 
     getHtml() {
-        const config = cjsConfig.getUser().compiler.output[this.route];
+        const compiler = cjsConfig.getUser().compiler;
+        const { pages, globalPagesSettings } = compiler;
+
+        /** @type {import("../../types").IndexTagsConfig} */
+        const config = mergeObjects(globalPagesSettings, this.route in pages ? pages[this.route] : {});
 
         return this._getHtml({
             htmlAttributes: [
-                this.#exists(config.lang, { name: "lang", value: config.lang })
+                this.#exists(config.lang, () => new Attr("lang", config.lang))
             ],
             head: [
                 new Tag("meta").addAttributes(new Attr("charset", "UTF-8")),
@@ -110,36 +115,44 @@ class PageCreator extends HtmlCreator {
                 
                 new Tag(null),
                 
-                this.#exists(config.title, new Tag("title").setText(config.title)),
+                this.#exists(config.title, () => new Tag("title").setText(config.title)),
                 
                 new Tag(null),
                 
-                this.#exists(config.icon, new Tag("link").addAttributes(new Attr("rel", "icon"), new Attr("href", config.icon))),
-                this.#exists(config.icon, new Tag("link").addAttributes(new Attr("rel", "apple-touch-icon"), new Attr("href", config.icon))),
+                this.#exists(config.icon, () => new Tag("link").addAttributes(new Attr("rel", "icon"), new Attr("href", config.icon))),
+                this.#exists(config.icon, () => new Tag("link").addAttributes(new Attr("rel", "apple-touch-icon"), new Attr("href", config.icon))),
 
-                this.#exists(config.description, new Tag("meta").addAttributes(new Attr("name", "description"), new Attr("content", config.description))),
-                this.#exists(config.themeColor, new Tag("meta").addAttributes(new Attr("name", "theme-color"), new Attr("content", config.themeColor))),
+                this.#exists(config.description, () => new Tag("meta").addAttributes(new Attr("name", "description"), new Attr("content", config.description))),
+                this.#exists(config.themeColor, () => new Tag("meta").addAttributes(new Attr("name", "theme-color"), new Attr("content", config.themeColor))),
 
-                this.#exists(config.author, new Tag("meta").addAttributes(new Attr("name", "author"), new Attr("content", config.author))),
-                this.#exists(config.keywords, new Tag("meta").addAttributes(new Attr("name", "keywords"), new Attr("content", config.keywords.join(", ")))),
-                this.#exists(config.robots, new Tag("meta").addAttributes(new Attr("name", "robots"), new Attr("content", config.robots.join(", ")))),
-                this.#exists(config.socialMedia.title, new Tag("meta").addAttributes(new Attr("property", "og:title"), new Attr("content", config.socialMedia.title))),
-                this.#exists(config.socialMedia.description, new Tag("meta").addAttributes(new Attr("property", "og:description"), new Attr("content", config.socialMedia.description))),
-                this.#exists(config.socialMedia.image, new Tag("meta").addAttributes(new Attr("property", "og:image"), new Attr("content", config.socialMedia.image))),
-                this.#exists(config.socialMedia.url, new Tag("meta").addAttributes(new Attr("property", "og:url"), new Attr("content", config.socialMedia.url))),
-                this.#exists(config.cover, new Tag("link").addAttributes(new Attr("property", "og:image"), new Attr("content", config.cover))),
+                this.#exists(config.author, () => new Tag("meta").addAttributes(new Attr("name", "author"), new Attr("content", config.author))),
+                this.#exists(config.keywords, () => new Tag("meta").addAttributes(new Attr("name", "keywords"), new Attr("content", config.keywords.join(", ")))),
+                this.#exists(config.robots, () => new Tag("meta").addAttributes(new Attr("name", "robots"), new Attr("content", config.robots.join(", ")))),
+                
+                ...this.#exists(config.socialMedia, () => [
+                    new Tag(null),
+
+                    this.#exists(config.socialMedia.title, () => new Tag("meta").addAttributes(new Attr("property", "og:title"), new Attr("content", config.socialMedia.title))),
+                    this.#exists(config.socialMedia.description, () => new Tag("meta").addAttributes(new Attr("property", "og:description"), new Attr("content", config.socialMedia.description))),
+                    this.#exists(config.socialMedia.image, () => new Tag("meta").addAttributes(new Attr("property", "og:image"), new Attr("content", config.socialMedia.image))),
+                    this.#exists(config.socialMedia.url, () => new Tag("meta").addAttributes(new Attr("property", "og:url"), new Attr("content", config.socialMedia.url))),
+                
+                    ...this.#exists(config.socialMedia.twitter, () => 
+                        config.socialMedia.twitter.enabled ? [
+                            new Tag(null),
+
+                            this.#exists(config.socialMedia.twitter.card, () => new Tag("meta").addAttributes(new Attr("name", "twitter:card"), new Attr("content", config.socialMedia.twitter.card))),
+                            this.#exists(config.socialMedia.title, () => new Tag("meta").addAttributes(new Attr("name", "twitter:title"), new Attr("content", config.socialMedia.title))),
+                            this.#exists(config.socialMedia.description, () => new Tag("meta").addAttributes(new Attr("name", "twitter:description"), new Attr("content", config.socialMedia.description))),
+                            this.#exists(config.socialMedia.image, () => new Tag("meta").addAttributes(new Attr("name", "twitter:image"), new Attr("content", config.socialMedia.description))),
+                           
+                        ] : []
+                    )
+                ]),
 
                 new Tag(null),
                 
-                ...(config.socialMedia.twitter.enabled ? [
-                    this.#exists(config.socialMedia.twitter.card, new Tag("meta").addAttributes(new Attr("name", "twitter:card"), new Attr("content", config.socialMedia.twitter.card))),
-                    this.#exists(config.socialMedia.title, new Tag("meta").addAttributes(new Attr("name", "twitter:title"), new Attr("content", config.socialMedia.title))),
-                    this.#exists(config.socialMedia.description, new Tag("meta").addAttributes(new Attr("name", "twitter:description"), new Attr("content", config.socialMedia.description))),
-                    this.#exists(config.socialMedia.image, new Tag("meta").addAttributes(new Attr("name", "twitter:image"), new Attr("content", config.socialMedia.description))),
-                   
-                ] : []),
-                
-                new Tag(null),
+                this.#exists(config.cover, () => new Tag("link").addAttributes(new Attr("property", "og:image"), new Attr("content", config.cover))),
 
                 new Tag("link").addAttributes(new Attr("rel", "stylesheet"), new Attr("href", `style.css?v=${getRandomCharacters(this.#QUERY_ID_HASH_LENGTH)}`)),
                 

@@ -1,4 +1,5 @@
 const { cjsConfig } = require("../../constants");
+const { mergeObjects } = require("../../framework/utils/objects");
 
 const ManifestCreator = {
     /**
@@ -6,7 +7,9 @@ const ManifestCreator = {
      * @returns {string}
      */
     getContent() {
-        const config = cjsConfig.getUser().compiler.output.index;
+        const { pages, globalPagesSettings } = cjsConfig.getUser().compiler
+        /** @type {import("../../types").IndexTagsConfig} */
+        const config = mergeObjects(globalPagesSettings, "index" in pages ? pages["index"] : {});
         const manifest = {
             short_name: config.title,
             name: config.shortTitle,

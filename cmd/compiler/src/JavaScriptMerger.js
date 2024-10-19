@@ -12,6 +12,7 @@ const JavaScriptMerger = {
         const directory = input;
         const files = getRecursivelyDirectoryFiles(directory, ".mjs");
         const map = new Map(); // fileUrl, functionName
+        const warningMessages = [];
         let mergedContent = ``;
 
         for (const file of files) {
@@ -211,7 +212,9 @@ const JavaScriptMerger = {
                     .length > 0
                 
                 if(isCircularDependency) {
-                    console.log(`${PrefixError}Files ${Colors.red}${file}${Colors.none} and ${Colors.red}${importPath}${Colors.none} are circular dependencies. This can lead to 'RangeError: Maximum call stack size exceeded'. This is considered as a bad programming habit.`);
+                    warningMessages.push(
+                        `${PrefixError}Files ${Colors.red}${file}${Colors.none} and ${Colors.red}${importPath}${Colors.none} are circular dependencies. This can lead to 'RangeError: Maximum call stack size exceeded'. This is considered as a bad programming habit.`
+                    )
                 }
 
                 if (!map.has(parsedImportPath)) {
@@ -308,7 +311,8 @@ const JavaScriptMerger = {
 
         return {
             content: mergedContent,
-            map: map
+            map,
+            warningMessages
         }
     }
 }
