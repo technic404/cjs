@@ -1,12 +1,23 @@
 class CjsRunnable {
     constructor() {
+        /**
+         * @type {{ compiled?: boolean, relativePathPosition?: number, tempWebServerPort?: number, style: { map: Map } }}
+         */
         this.data = {};
     }
 
-    import() {
+    /**
+     * If runnable variable is present
+     * @returns {boolean}
+     */
+    exists() {
         const runnableExists = typeof CjsRunnableDetails !== 'undefined';
 
-        if(!runnableExists) return;
+        return runnableExists;
+    }
+
+    import() {
+        if(!this.exists()) return;
 
         this.data = CjsRunnableDetails;
     }

@@ -10,5 +10,9 @@
  * @returns {string}
  */
 function asset(path) {
-    return `./src/assets/${path}`
+    const fixed = toFixedPath(path);
+
+    if(!cjsRunnable.exists()) return `src/assets/${fixed}`;
+
+    return "../".repeat(cjsRunnable.data.relativePathPosition) + `src/assets/${fixed}`;
 }

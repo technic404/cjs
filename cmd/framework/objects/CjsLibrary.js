@@ -27,6 +27,7 @@ class CjsLibrary {
         "utils/ArrayUtil.js", 
         "utils/NumericUtil.js", 
         "utils/SearchUtil.js", 
+        "utils/PathUtil.js",
         "utils/public/CjsValidatorUtil.js", 
         "utils/public/CjsStringFormatterUtil.js", 
         "utils/public/CjsObjectsUtil.js", 

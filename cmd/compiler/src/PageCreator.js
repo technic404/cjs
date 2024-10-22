@@ -29,6 +29,19 @@ class PageCreator extends HtmlCreator {
     }
 
     /**
+     * Returns parsed path that does not start with `./` and `/`
+     * @param {string} path 
+     * @returns {string}
+     */
+    #parsePath(path) {
+        if(path.startsWith("./")) return path.slice(2);
+
+        if(path.startsWith("/")) return path.slice(1);
+
+        return path;
+    }
+
+    /**
      * @param {string} route
      * @param {string} input ./src directory
      * @param {Map} styleData of files import
@@ -39,6 +52,8 @@ class PageCreator extends HtmlCreator {
         this.route = route;
         this.input = input;
         this.styleData = styleData;
+        this.relativeParts = this.#parsePath(this.route).split("/").slice(1);
+        this.relative = this.relativeParts.map(_ => `../`);
     }
 
     /**
@@ -60,6 +75,7 @@ class PageCreator extends HtmlCreator {
         return `
             const CjsRunnableDetails = {
                 compiled: true,
+                relativePathPosition: ${this.relativeParts.length},
                 tempWebServerPort: ${cjsConfig.getUser().compiler.tempWebServerPort},
                 style: { 
                     map: new Map(${stringMap})
@@ -131,7 +147,7 @@ class PageCreator extends HtmlCreator {
         }
 
         for(const preload of preloads) {
-            const tag = new Tag("link").addAttributes(new Attr("rel", "preload"), new Attr("href", preload.href));
+            const tag = new Tag("link").addAttributes(new Attr("rel", "preload"), new Attr("href", this.relative + this.#parsePath(preload.href)));
 
             if(
                 /**
@@ -182,7 +198,7 @@ class PageCreator extends HtmlCreator {
         }
 
         return getRecursivelyDirectoryFiles(assetsDirectory).map(asset => {
-            const srcPath = asset.replaceAll("\\", "/").replace(assetsDirectory, "./src/assets");
+            const srcPath = asset.replaceAll("\\", "/").replace(assetsDirectory, `${this.relative}src/assets`);
             const extension = path.extname(srcPath);
 
             if(!(extension in assetModifiers)) return null;
@@ -226,8 +242,8 @@ class PageCreator extends HtmlCreator {
 
                 new Tag(null),
                 
-                this.#exists(config.icon, () => new Tag("link").addAttributes(new Attr("rel", "icon"), new Attr("href", config.icon))),
-                this.#exists(config.icon, () => new Tag("link").addAttributes(new Attr("rel", "apple-touch-icon"), new Attr("href", config.icon))),
+                this.#exists(config.icon, () => new Tag("link").addAttributes(new Attr("rel", "icon"), new Attr("href", this.relative + this.#parsePath(config.icon)))),
+                this.#exists(config.icon, () => new Tag("link").addAttributes(new Attr("rel", "apple-touch-icon"), new Attr("href", this.relative + this.#parsePath(config.icon)))),
 
                 this.#exists(config.description, () => new Tag("meta").addAttributes(new Attr("name", "description"), new Attr("content", config.description))),
                 this.#exists(config.themeColor, () => new Tag("meta").addAttributes(new Attr("name", "theme-color"), new Attr("content", config.themeColor))),
@@ -241,7 +257,7 @@ class PageCreator extends HtmlCreator {
 
                     this.#exists(config.socialMedia.title, () => new Tag("meta").addAttributes(new Attr("property", "og:title"), new Attr("content", config.socialMedia.title))),
                     this.#exists(config.socialMedia.description, () => new Tag("meta").addAttributes(new Attr("property", "og:description"), new Attr("content", config.socialMedia.description))),
-                    this.#exists(config.socialMedia.image, () => new Tag("meta").addAttributes(new Attr("property", "og:image"), new Attr("content", config.socialMedia.image))),
+                    this.#exists(config.socialMedia.image, () => new Tag("meta").addAttributes(new Attr("property", "og:image"), new Attr("content", this.relative + this.#parsePath(config.socialMedia.image)))),
                     this.#exists(config.socialMedia.url, () => new Tag("meta").addAttributes(new Attr("property", "og:url"), new Attr("content", config.socialMedia.url))),
                 
                     ...this.#exists(config.socialMedia.twitter, () => 
@@ -251,7 +267,7 @@ class PageCreator extends HtmlCreator {
                             this.#exists(config.socialMedia.twitter.card, () => new Tag("meta").addAttributes(new Attr("name", "twitter:card"), new Attr("content", config.socialMedia.twitter.card))),
                             this.#exists(config.socialMedia.title, () => new Tag("meta").addAttributes(new Attr("name", "twitter:title"), new Attr("content", config.socialMedia.title))),
                             this.#exists(config.socialMedia.description, () => new Tag("meta").addAttributes(new Attr("name", "twitter:description"), new Attr("content", config.socialMedia.description))),
-                            this.#exists(config.socialMedia.image, () => new Tag("meta").addAttributes(new Attr("name", "twitter:image"), new Attr("content", config.socialMedia.description))),
+                            this.#exists(config.socialMedia.image, () => new Tag("meta").addAttributes(new Attr("name", "twitter:image"), new Attr("content", this.relative + this.#parsePath(config.socialMedia.image)))),
                            
                         ] : []
                     )
@@ -261,7 +277,7 @@ class PageCreator extends HtmlCreator {
                 
                 this.#exists(config.cover, () => new Tag("link").addAttributes(new Attr("property", "og:image"), new Attr("content", config.cover))),
 
-                new Tag("link").addAttributes(new Attr("rel", "stylesheet"), new Attr("href", `style.css?v=${getRandomCharacters(this.#QUERY_ID_HASH_LENGTH)}`)),
+                new Tag("link").addAttributes(new Attr("rel", "stylesheet"), new Attr("href", `${this.relative}style.css?v=${getRandomCharacters(this.#QUERY_ID_HASH_LENGTH)}`)),
                 
                 new Tag(null),
 
@@ -273,8 +289,8 @@ class PageCreator extends HtmlCreator {
                 new Tag(null),
                 
                 new Tag("script").setText(this._getRunnableScript()),
-                new Tag("script").addAttributes(new Attr("src", `${Constants.LibraryFileName}?v=${getRandomCharacters(this.#QUERY_ID_HASH_LENGTH)}`)),
-                new Tag("script").addAttributes(new Attr("defer"), new Attr("src", `${Constants.ScriptFileName}?v=${getRandomCharacters(this.#QUERY_ID_HASH_LENGTH)}`)),
+                new Tag("script").addAttributes(new Attr("src", `${this.relative}${Constants.LibraryFileName}?v=${getRandomCharacters(this.#QUERY_ID_HASH_LENGTH)}`)),
+                new Tag("script").addAttributes(new Attr("defer"), new Attr("src", `${this.relative}${Constants.ScriptFileName}?v=${getRandomCharacters(this.#QUERY_ID_HASH_LENGTH)}`)),
             
                 new Tag(null),
 
