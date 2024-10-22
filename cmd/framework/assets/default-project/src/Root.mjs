@@ -6,4 +6,4 @@ Root.setDocumentData({
 
 Search.setDisplayedOnScreen(true);
 
-init(RootLayout)
+init(RootLayout);

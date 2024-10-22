@@ -41,7 +41,7 @@ class Cjs {
             fs.writeFileSync("../c.js", this.library.getContent(false));
         }
         
-        fs.cpSync("./framework/assets/defaultProject", this.#relative, { recursive: true });
+        fs.cpSync("./framework/assets/default-project", this.#relative, { recursive: true });
     }
 }
 
