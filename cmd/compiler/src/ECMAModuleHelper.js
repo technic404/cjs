@@ -1,18 +1,69 @@
+const BaseReader = require("../../../common/readers/BaseReader");
+
 const ECMAModuleHelper = {
     /**
      * Returns javascript identifiers from file
-     * @param {String} content
-     * @param {String} identifier
+     * @param {string} content
+     * @param {string} identifier
      * @returns {{ start: number, end: number }[]}
      */
     getIdentifiers(content, identifier) {
+        const isx = content.includes("Numer telefonu");
+        // if(isx) console.log(content);
+
+        const stringRegions = [];
+
+        const reader = new BaseReader(content)
+        reader.stringChars.push("`");
+
+        let isJsTemplateOpened = 0;
+        let stringRegion = { from: -1, to: -1 };
+
+        reader._read((char, i, matchNextChars) => {
+            const { loop } = reader;
+
+            // if(matchNextChars(`\${`)) isJsTemplateOpened++;
+
+            // if(matchNextChars(`}`)) isJsTemplateOpened--;
+
+
+            if(loop.string.opened) {
+                const isReadingRegion = stringRegion.from !== -1;
+
+                if(isReadingRegion) {
+                    stringRegion.to = i;
+                    return;
+                }
+
+                stringRegion.from = i;
+                console.log(stringRegion.from);
+                
+            }
+
+            // !loop.string.opened && stringRegion.from !== -1 && stringRegion.to !== -1
+            if(!loop.string.opened && stringRegion.from !== -1) console.log('t');
+            
+            
+            if(!loop.string.opened && stringRegion.from !== -1 && stringRegion.to !== -1) {
+                stringRegions.push(Object.assign({}, stringRegion));
+
+                stringRegion = { from: -1, to: -1 };
+            }
+
+            // if(`Email${`Email${`Email${0}`}`}`)
+
+        });
+
+        if(isx) console.log(stringRegions);
+        
+
         const regex = new RegExp(`\\b${identifier}\\b(?!:)`, "g");
         const ranges = [];
         const illegalCharsBefore = [
-            "!", "@", "#", "$", "%", ")", "]", "}", "\\", ";", "'", '"', "`", ".", ",", "?",
+            "@", "#", "$", "]", "}", "\\", ";", "'", '"', "`", ".",
         ];
         const illegalCharsAfter = [
-            "!", "@", "#", "$", "%", "(", "[", "{", "\\", "'", '"', "`", /*","*/, "?",
+            "@", "#", "$", "{", "\\", "'", '"', "`", /*","*/,
         ];
         // const illegalChars = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "+", "=", "[", "]", "{", "}", "|", "\\", ";", ":", "'", "\"", "`", ".", ",", "<", ">", "/", "?"]
         let match;
@@ -38,6 +89,8 @@ const ECMAModuleHelper = {
                 end: match.index + identifier.length - 1,
             });
         }
+
+        // if(isx) console.log(ranges)
 
         return ranges;
     },

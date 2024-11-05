@@ -13,6 +13,10 @@ class BaseReader {
         singleLine: "//"
     }
 
+    stringChars = [
+        "\"", "'"
+    ]
+
     loop = {
         comment: {
             multipleLineOpened: false,
@@ -97,7 +101,7 @@ class BaseReader {
      * Everything from example above will be included
      * Other scenario when comment in string check is disabled, then this div will be readen like this:
      * @example <div attr="Hello"></div>
-     * @param {(char: string, matchNextChars: (text: string, logNext?: boolean) => boolean) => void} callback 
+     * @param {(char: string, index: number, matchNextChars: (text: string, logNext?: boolean) => boolean) => void} callback 
      * @returns {string}
      */
     _read(callback = () => {}) {
@@ -134,7 +138,7 @@ class BaseReader {
                 continue;
             }
 
-            if((loop.char === "\"" || loop.char === "'") && !loop.string.opened) {
+            if(this.stringChars.includes(loop.char) && !loop.string.opened) {
                 loop.string.opened = true;
                 loop.string.openingChar = loop.char;
             }
@@ -158,15 +162,35 @@ class BaseReader {
         }
 
         const textSplit = text.split("");
-        
-        for(let i = 0; i < textSplit.length; i++) {
-            const char = textSplit[i];
 
+        const passCallback = (char, i) => {
             callback(char, i, (toMatch, logNext = false) => {
                 if(toMatch === undefined) return false;
 
                 return this._matchNextChars(toMatch, textSplit.slice(i), logNext);
             });
+        }
+        
+        for(let i = 0; i < textSplit.length; i++) {
+            const char = textSplit[i];
+
+            if(loop.string.opened && char === loop.string.openingChar) {
+                loop.string.opened = false;
+                loop.string.openingChar = '';
+
+                passCallback(char, i);
+                continue;
+            }
+
+            if(this.stringChars.includes(char) && !loop.string.opened) {
+                loop.string.opened = true;
+                loop.string.openingChar = char;
+
+                passCallback(char, i);
+                continue;
+            }
+
+            passCallback(char, i);
         }
 
         return text;

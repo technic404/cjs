@@ -16,7 +16,8 @@ class CjsForm {
     serialize() {
         const selects = Array.from(this.#element.querySelectorAll("select"));
         const inputs = Array.from(this.#element.querySelectorAll("input"));
-        const elements = selects.concat(inputs);
+        const textareas = Array.from(this.#element.querySelectorAll("textarea"));
+        const elements = selects.concat(inputs).concat(textareas);
         const data = {};
 
         for(let i = 0; i < elements.length; i++) {

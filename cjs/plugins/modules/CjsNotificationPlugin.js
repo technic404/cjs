@@ -4,7 +4,7 @@ class CjsNotificationPlugin extends CjsPlugin {
         name: "cjs-notification-plugin",
         duration: 5000,
         showHideOffset: 10,
-        yDiff: 5
+        yDiff: 8
     }
 
     #themes = {
@@ -35,12 +35,13 @@ class CjsNotificationPlugin extends CjsPlugin {
             [`#${this.#containerId}.container > .notification`]: [
                 `background: ${this.#themes[theme].backgroundColor};`,
                 `border-radius: 10px;`,
-                `padding: 6px;`,
+                `padding: 8px;`,
                 `width: fit-content;`,
                 `display: flex;`,
                 `align-items: center;`,
                 `opacity: 0;`,
                 `transform: translateY(0px);`,
+                `filter: drop-shadow(1px 2px 3px black);`,
                 `animation: ${this.#keyframe.name} ${this.#keyframe.duration}ms`
             ],
             [`#${this.#containerId}.container > .notification > p`]: [
@@ -49,7 +50,7 @@ class CjsNotificationPlugin extends CjsPlugin {
                 `font-size: 16px;`,
             ],
             [`#${this.#containerId}.container > .notification > .icon`]: [
-                `--size: 20px;`,
+                `--size: 26px;`,
                 `font-size: var(--size);`,
                 `border-radius: 6px;`,
                 `width: var(--size);`,
@@ -57,8 +58,8 @@ class CjsNotificationPlugin extends CjsPlugin {
                 `background: ${this.#themes[oppositeTheme].backgroundColor};`,
                 `color: ${this.#themes[theme].backgroundColor};`,
                 `text-align: center;`,
-                `line-height: calc(var(--size) - 2px);`,
-                `margin-right: 4px;`,
+                `line-height: calc(var(--size) - 1px);`,
+                `margin-right: 6px;`,
                 `user-select: none;`,
             ],
             [`@keyframes ${this.#keyframe.name}`]: [
