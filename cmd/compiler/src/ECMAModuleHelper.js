@@ -2,61 +2,84 @@ const BaseReader = require("../../../common/readers/BaseReader");
 
 const ECMAModuleHelper = {
     /**
+     * Provides regions that are string expressions, also removes from this expressions the js templates
+     * @example
+     * return `Abc ${a + b}`
+     * // Will provide [{ start: 0, end: 6 }, { start: 11, end: 12 }]
+     * @param {string} content 
+     * @returns {{ start: number, end: number }[]}
+     */
+    getTextRegions(content) {
+        const reader = new BaseReader(content)
+        reader.stringChars.push("`");
+
+        const exclude = {
+            regions: [],
+            region: { start: -1, end: -1 }
+        }
+
+        const jsTemplate = {
+            opened: false
+        }
+
+        reader._read((char, i, matchNextChars) => {
+            const { loop } = reader;
+        
+            const openRegion = () => {
+                const isReadingRegion = exclude.region.start !== -1;
+        
+                if(isReadingRegion) {
+                    exclude.region.end = i;
+                    return;
+                }
+        
+                exclude.region.start = i;
+                exclude.region.end = i;
+            }
+        
+            const closeRegion = (addToEnd = 0) => {
+                exclude.region.end += 2 + addToEnd;
+                exclude.regions.push(Object.assign({}, exclude.region));
+        
+                // Visualization
+                // parsed = insertCharAtRange(parsed, '#', stringRegion.from, stringRegion.to)
+        
+                exclude.region = { start: -1, end: -1 };
+            }
+        
+            const isJsTemplateArea = loop.string.opened && loop.string.openingChar === '`';
+        
+            if(matchNextChars(`\${`) && isJsTemplateArea) {
+                jsTemplate.opened = true;
+                closeRegion(1);
+            }
+        
+            if(matchNextChars("}") && jsTemplate.opened && isJsTemplateArea) {
+                jsTemplate.opened = false;
+                openRegion();
+                return;
+            }
+        
+            if(loop.string.opened && !jsTemplate.opened) {
+                openRegion();
+            }
+            
+            if(!loop.string.opened && exclude.region.start !== -1 && exclude.region.end !== -1 && !jsTemplate.opened) {
+                closeRegion();
+            }
+        });
+
+        return exclude.regions;
+    },
+    /**
      * Returns javascript identifiers from file
      * @param {string} content
      * @param {string} identifier
      * @returns {{ start: number, end: number }[]}
      */
     getIdentifiers(content, identifier) {
-        const isx = content.includes("Numer telefonu");
-        // if(isx) console.log(content);
 
-        const stringRegions = [];
-
-        const reader = new BaseReader(content)
-        reader.stringChars.push("`");
-
-        let isJsTemplateOpened = 0;
-        let stringRegion = { from: -1, to: -1 };
-
-        reader._read((char, i, matchNextChars) => {
-            const { loop } = reader;
-
-            // if(matchNextChars(`\${`)) isJsTemplateOpened++;
-
-            // if(matchNextChars(`}`)) isJsTemplateOpened--;
-
-
-            if(loop.string.opened) {
-                const isReadingRegion = stringRegion.from !== -1;
-
-                if(isReadingRegion) {
-                    stringRegion.to = i;
-                    return;
-                }
-
-                stringRegion.from = i;
-                console.log(stringRegion.from);
-                
-            }
-
-            // !loop.string.opened && stringRegion.from !== -1 && stringRegion.to !== -1
-            if(!loop.string.opened && stringRegion.from !== -1) console.log('t');
-            
-            
-            if(!loop.string.opened && stringRegion.from !== -1 && stringRegion.to !== -1) {
-                stringRegions.push(Object.assign({}, stringRegion));
-
-                stringRegion = { from: -1, to: -1 };
-            }
-
-            // if(`Email${`Email${`Email${0}`}`}`)
-
-        });
-
-        if(isx) console.log(stringRegions);
-        
-
+        const exclude = this.getTextRegions(content);
         const regex = new RegExp(`\\b${identifier}\\b(?!:)`, "g");
         const ranges = [];
         const illegalCharsBefore = [
@@ -67,6 +90,16 @@ const ECMAModuleHelper = {
         ];
         // const illegalChars = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "+", "=", "[", "]", "{", "}", "|", "\\", ";", ":", "'", "\"", "`", ".", ",", "<", ">", "/", "?"]
         let match;
+
+        const isInExcludeRegion = (start, end) => {
+            for(const excludeRegion of exclude) {
+                const isInRange = start >= excludeRegion.start && end <= excludeRegion.end
+                
+                if(isInRange) return true;
+            }
+    
+            return false;
+        }
 
         while ((match = regex.exec(content)) !== null) {
             const charBefore =
@@ -84,13 +117,15 @@ const ECMAModuleHelper = {
             )
                 continue;
 
-            ranges.push({
-                start: match.index,
-                end: match.index + identifier.length - 1,
-            });
-        }
+            const start = match.index;
+            const end = match.index + identifier.length - 1
 
-        // if(isx) console.log(ranges)
+            if(!isInExcludeRegion(start, end)) {
+                ranges.push({
+                    start, end
+                });
+            }
+        }
 
         return ranges;
     },
