@@ -77,6 +77,8 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
 
             const modifiedMedia = `${selector} { ${modifiedRulesInside.join("\n")} }`;
 
+            CjsDebug.Style.Media.push(modifiedMedia);
+            
             newRules.push(modifiedMedia);
             
             continue;

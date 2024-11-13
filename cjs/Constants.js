@@ -36,3 +36,10 @@ const CjsTakenAttributes = {
 };
 
 const Cjs = {};
+
+const CjsDebug = {
+    Style: {
+        /** @type {string[]} Displays all the media rules used on the website */
+        Media: []
+    }
+};
