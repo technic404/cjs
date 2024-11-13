@@ -13,6 +13,7 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
     let newRules = [];
 
     const getModifiedRules = (selector, cssText) => {
+        selector = selector.trim();
         const fullCssText = `${selector} { ${cssText} }`;
 
         if(selector.startsWith(":")) return [fullCssText];
@@ -62,6 +63,7 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
         if(isMediaRule) {
             const modifiedRulesInside = (() => {
                 const rules = new CssReader(cssText).read();
+
                 const newRules = [];
 
                 for(const [selector, cssText] of Object.entries(rules)) {
@@ -76,6 +78,7 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
             const modifiedMedia = `${selector} { ${modifiedRulesInside.join("\n")} }`;
 
             newRules.push(modifiedMedia);
+            
             continue;
         }
 
