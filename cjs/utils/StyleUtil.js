@@ -56,30 +56,78 @@ async function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRule
             .flat();
     }
 
+    const getModifiedRulesInside = ((selector, cssText) => {
+        const rules = new CssReader(cssText).read();
+
+        const newRules = [];
+
+        for(const [selector, cssText] of Object.entries(rules)) {
+            const modifiedRules = getModifiedRules(selector, cssText);
+
+            newRules.push(...modifiedRules);
+        }
+
+        return newRules;
+    });
+
     for (const [selector, cssText] of Object.entries(rules)) {
         const isMediaRule = selector.startsWith("@media");
         const isKeyFrameRule = selector.startsWith("@keyframes");
+        const isRangeRule = selector.startsWith("@range"); // @range > 450px
 
-        if(isMediaRule) {
-            const modifiedRulesInside = (() => {
-                const rules = new CssReader(cssText).read();
+        if(isRangeRule) {
+            const parts = selector.split(" ");
+            const determiner = parts[1];
+            const value = parts[2];
+            const valueParts = (() => {
+                let number = ``;
+                let unit = ``;
 
-                const newRules = [];
-
-                for(const [selector, cssText] of Object.entries(rules)) {
-                    const modifiedRules = getModifiedRules(selector, cssText);
-
-                    newRules.push(...modifiedRules);
+                for(const char of value.split("")) {
+                    if(isNaN(char)) {
+                        unit += char;
+                    } else {
+                        number += char
+                    }
                 }
 
-                return newRules;
+                return {
+                    number: parseInt(number), unit
+                }
             })();
 
-            const modifiedMedia = `${selector} { ${modifiedRulesInside.join("\n")} }`;
+            const { number, unit } = valueParts;
 
-            CjsDebug.Style.Media.push(modifiedMedia);
+            const mapping = {
+                "<": `max-width: ${number - 1}`,
+                "<=": `max-width: ${number}`,
+                ">": `min-width: ${number + 1}`,
+                ">=": `min-width: ${number}`
+            }
+
+            const addMappingUnits = (() => {
+                for(const [k, v] of Object.entries(mapping)) {
+                    mapping[k] = v + unit;
+                }
+            });
+
+            addMappingUnits();
+
+            const mediaCss = `@media only screen and (${mapping[determiner]}) { ${getModifiedRulesInside(selector, cssText).join("\n")} }`;
+
+            CjsDebug.Style.Media.push(mediaCss);
+
+            newRules.push(mediaCss);
+
+            continue;
+        }
+
+        if(isMediaRule) {
+            const mediaCss = `${selector} { ${getModifiedRulesInside(selector, cssText).join("\n")} }`;
+
+            CjsDebug.Style.Media.push(mediaCss);
             
-            newRules.push(modifiedMedia);
+            newRules.push(mediaCss);
             
             continue;
         }
