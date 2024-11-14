@@ -147,7 +147,7 @@ class CjsComponent {
 
     /**
      * Creates the component type element
-     * @param {function(object, object)} func function that will return component html. The object argument is data provided by parent layout
+     * @param {(componentData: object, layoutData: object) => string} func function that will return component html. The object argument is data provided by parent layout
      */
     constructor(func) {
         this.func = func;
