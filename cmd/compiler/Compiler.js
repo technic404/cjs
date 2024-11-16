@@ -98,7 +98,7 @@ const Compiler = {
                 if(!fs.existsSync(directory)) fs.mkdirSync(directory, { recursive: true });
     
                 const pageCreator = new PageCreator(body.route, input, styleMap)
-                    .setBodyContent(body.html.replaceAll("    ", "").replaceAll("\n", ""));
+                    .setBodyContent(`<div style="display: none;">${body.html.replaceAll("    ", "").replaceAll("\n", "")}</div>`);
     
                 fs.writeFileSync(filePath, pageCreator.getHtml());
     

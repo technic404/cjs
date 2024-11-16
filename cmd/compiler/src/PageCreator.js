@@ -244,6 +244,7 @@ class PageCreator extends HtmlCreator {
                 
                 this.#exists(config.icon, () => new Tag("link").addAttributes(new Attr("rel", "icon"), new Attr("href", this.relative + this.#parsePath(config.icon)))),
                 this.#exists(config.icon, () => new Tag("link").addAttributes(new Attr("rel", "apple-touch-icon"), new Attr("href", this.relative + this.#parsePath(config.icon)))),
+                this.#exists(config.canonical, () => new Tag("link").addAttributes(new Attr("rel", "canonical"), new Attr("href", config.canonical))),
 
                 this.#exists(config.description, () => new Tag("meta").addAttributes(new Attr("name", "description"), new Attr("content", config.description))),
                 this.#exists(config.themeColor, () => new Tag("meta").addAttributes(new Attr("name", "theme-color"), new Attr("content", config.themeColor))),

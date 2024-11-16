@@ -24,6 +24,7 @@
                 "lang": "en",
                 "title": "New project!",
                 "shortTitle": "Project!",
+                "canonical": null,
                 "icon": null,
                 "cover": null,
                 "description": "Default website description",

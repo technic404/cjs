@@ -46,6 +46,7 @@
  * @property {string} [lang] website language
  * @property {string} [title] website title
  * @property {string} [shortTitle] website short title
+ * @property {string} [canonical] website canonical link
  * @property {string} [icon] website icon
  * @property {string} [cover] website cover image
  * @property {string} [description] website description
