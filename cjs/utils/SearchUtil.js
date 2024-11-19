@@ -14,11 +14,11 @@ class CjsSearch {
      * Updates the website url
      */
     #updateUrl() {
-        let currentUrl = new URL(window.location.href);
+        const currentUrl = new URL(window.location.href);
 
         currentUrl.searchParams.set('path', this.search);
 
-        history.replaceState({}, '', currentUrl);
+        history.pushState({}, '', currentUrl);
         window.dispatchEvent(new Event('popstate'));
     }
 
@@ -63,9 +63,12 @@ class CjsSearch {
     }
 
     #displayOnScreen = true;
-    #updateWebsiteUrl = false;
+    #updateWebsiteUrl = true;
 
     #localStorageId = "cjsSearch";
+
+    /** @type {string} */
+    #lastPopstate = "";
 
     /** @type {function({ search: string, parts: string[], length: number })[]} */
     #listeners = [];
@@ -74,6 +77,8 @@ class CjsSearch {
     length = 0;
 
     #update() {
+        // history.pushState(null, '', `/${this.search}`);
+
         localStorage.setItem(this.#localStorageId, this.search);
 
         const parts = this.search.split("/").filter(e => e.trim() !== "");
@@ -99,6 +104,13 @@ class CjsSearch {
         this.search = ""; //this.#getDesiredPart(window.location.href)
 
         this.#update();
+
+        window.addEventListener('popstate', () => {
+            const currentUrl = new URL(window.location.href);
+            const path = currentUrl.searchParams.get('path');
+
+            this.set(path);
+        });
     }
 
     /**

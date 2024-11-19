@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const PageCreator = require('./src/PageCreator');
+
 const Constants = require('./Constants');
 const UglifyJS = require("uglify-js");
 const JavaScriptMerger = require('./src/JavaScriptMerger');
@@ -13,6 +14,7 @@ const { openUrl } = require('./src/utils/BrowserUtil');
 const TempWebServer = require('./src/TempWebServer');
 const PageContentReader = require('./src/PageContentReader');
 const { getRandomCharacters } = require('./src/utils/stringUtil');
+
 
 const Compiler = {
     compile: async (input, output, verbose = false) => {
@@ -64,13 +66,13 @@ const Compiler = {
         fs.writeFileSync(cjsCompilerFilePath, `
             <html>
                 <head>
-                    <script src="c.js"></script>
+                    <script src="${Constants.LibraryFileName}"></script>
                     <script>
                         function cjsPerform() {
                             ${PageContentReader.getInitHtmlContentScript(input, tws.address, workerMap)}
                         }
                     </script>
-                    <script defer src="worker.js" onload="cjsPerform();"></script>
+                    <script defer src="${Constants.ScriptFileName}" onload="cjsPerform();"></script>
                 </head>
                 <body>
                 </body>

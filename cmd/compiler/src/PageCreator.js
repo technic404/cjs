@@ -278,7 +278,7 @@ class PageCreator extends HtmlCreator {
                 
                 this.#exists(config.cover, () => new Tag("link").addAttributes(new Attr("property", "og:image"), new Attr("content", config.cover))),
 
-                new Tag("link").addAttributes(new Attr("rel", "stylesheet"), new Attr("href", `${this.relative}style.css?v=${getRandomCharacters(this.#QUERY_ID_HASH_LENGTH)}`)),
+                new Tag("link").addAttributes(new Attr("rel", "stylesheet"), new Attr("href", `${this.relative}${Constants.StyleFileName}?v=${getRandomCharacters(this.#QUERY_ID_HASH_LENGTH)}`)),
                 
                 new Tag(null),
 

@@ -13,7 +13,8 @@ class CjsLibrary {
     /** @type {string[]} List of scripts to include in library file from common files folder */
     #commonScripts = [
         "readers/BaseReader.js",
-        "readers/CssReader.js"
+        "readers/CssReader.js",
+        "utils/StyleUtil.js"
     ]
 
     /** @type {string[]} List of framework source files */
@@ -28,6 +29,7 @@ class CjsLibrary {
         "utils/NumericUtil.js", 
         "utils/SearchUtil.js", 
         "utils/PathUtil.js",
+        "utils/public/CjsMobileUtil.js",
         "utils/public/CjsValidatorUtil.js", 
         "utils/public/CjsStringFormatterUtil.js", 
         "utils/public/CjsObjectsUtil.js", 

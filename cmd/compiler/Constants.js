@@ -1,7 +1,11 @@
+const CacheHash = require("./CacheHash");
+
+CacheHash.generateHash();
+
 const Constants = {
-    LibraryFileName: "c.js",
-    ScriptFileName: "worker.js",
-    StyleFileName: "style.css",
+    LibraryFileName: `cjs.${CacheHash.getHash()}.js`,
+    ScriptFileName: `worker.${CacheHash.getHash()}.js`,
+    StyleFileName: `style.${CacheHash.getHash()}.css`,
     IndexFileName: "index.html",
     RootLayoutPath: "\\layouts\\root\\RootLayout.mjs",
     RootFilePath: "\\Root.mjs",
