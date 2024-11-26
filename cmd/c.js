@@ -2,7 +2,7 @@ const { getUsage, getArgumentsWithoutFlags, getFlags } = require("./framework/ut
 const { getRecursivelyDirectoryFiles } = require('./compiler/src/utils/fileUtil');
 const Command = require('./Command');
 
-async function command() {
+(async () => {
     const flags = getFlags(process.argv, {
         l: "layout",
         f: "force"
@@ -25,7 +25,8 @@ async function command() {
     const foundCommand = matches.length === 1;
 
     if(!foundCommand) {
-        return console.log(getUsage());
+        console.log(getUsage());
+        process.exit();
     }
 
     /** @type {Command} */
@@ -34,6 +35,4 @@ async function command() {
     await command.execute(args.slice(1), flags);
 
     process.exit();
-}
-
-command();
+})();
