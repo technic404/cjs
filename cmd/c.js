@@ -14,17 +14,24 @@ async function command() {
         process.exit();
     }
 
+    /** @type {string} */
     const commandName = args[0];
-    const commandsFiles = getRecursivelyDirectoryFiles("./commands", ".js");
 
-    for(const commandFile of commandsFiles) {
-        /** @type {Command} */
-        const command = new (require(`.\\${commandFile}`))();
-        
-        if(command.name.toLowerCase() !== commandName.toLowerCase()) continue;
-        
-        await command.execute(args.slice(1), flags);
+    /** @type {Command[]} */
+    const matches = getRecursivelyDirectoryFiles("./commands", ".js")
+        .map(path => new (require(`.\\${path}`))())
+        .filter(command => command.name.toLowerCase() === commandName.toLowerCase());
+
+    const foundCommand = matches.length === 1;
+
+    if(!foundCommand) {
+        return console.log(getUsage());
     }
+
+    /** @type {Command} */
+    const command = matches[0];
+
+    await command.execute(args.slice(1), flags);
 
     process.exit();
 }
