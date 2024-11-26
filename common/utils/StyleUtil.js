@@ -23,6 +23,11 @@ function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRules: tru
             const selectorFirstChar = sel.trim().substring(0, 1);
             const isSelectorClassOrId = selectorFirstChar === "." || selectorFirstChar === "#";
             const selectors = [`${prefix}${(isSelectorClassOrId ? '': ' ')}${sel.trim()}`];
+            
+            if(options.enableMultiSelector) {
+                // selectors.push(`${prefix} > * ${sel.trim()}`);
+                selectors.push(`${prefix} ${sel.trim()}`);
+            }
 
             if(!isSelectorClassOrId) {
                 // Selector like button[cjsAttribute] { ... }
