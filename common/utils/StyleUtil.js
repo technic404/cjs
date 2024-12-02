@@ -24,10 +24,10 @@ function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRules: tru
             const isSelectorClassOrId = selectorFirstChar === "." || selectorFirstChar === "#";
             const selectors = [`${prefix}${(isSelectorClassOrId ? '': ' ')}${sel.trim()}`];
             
-            if(options.enableMultiSelector) {
-                // selectors.push(`${prefix} > * ${sel.trim()}`);
-                selectors.push(`${prefix} ${sel.trim()}`);
-            }
+            // if(options.enableMultiSelector) {
+            //     // selectors.push(`${prefix} > * ${sel.trim()}`);
+            //     selectors.push(`${prefix} ${sel.trim()}`);
+            // }
 
             if(!isSelectorClassOrId) {
                 // Selector like button[cjsAttribute] { ... }

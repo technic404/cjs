@@ -194,16 +194,16 @@ class CjsComponent {
      * @returns {HTMLElement}
      */
     toElement(ignoreReadyState = false) {
-        const element = this.toVirtualElement();
         const selector = document.body.querySelector(`[${this.attribute}=""]`);
         const elementExists = selector !== null;
+
+        if(elementExists) return selector;
+
         const isDocumentLoaded = document.readyState === 'complete';
 
-        if((isDocumentLoaded && !ignoreReadyState) || elementExists) {
-            return selector;
-        }
+        if(isDocumentLoaded && !ignoreReadyState) return selector;
 
-        return element;
+        return this.toVirtualElement();
     }
 
     /**
