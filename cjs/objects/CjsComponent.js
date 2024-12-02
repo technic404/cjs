@@ -194,14 +194,14 @@ class CjsComponent {
      * @returns {HTMLElement}
      */
     toElement(ignoreReadyState = false) {
-        const selector = document.body.querySelector(`[${this.attribute}=""]`);
-        const elementExists = selector !== null;
+        const DOMElement = document.body.querySelector(`[${this.attribute}=""]`);
+        const elementExists = DOMElement !== null;
 
-        if(elementExists) return selector;
+        if(elementExists) return DOMElement;
 
         const isDocumentLoaded = document.readyState === 'complete';
 
-        if(isDocumentLoaded && !ignoreReadyState) return selector;
+        if(isDocumentLoaded && !ignoreReadyState) return DOMElement;
 
         return this.toVirtualElement();
     }
