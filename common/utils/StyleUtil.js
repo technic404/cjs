@@ -2,6 +2,20 @@
 
 /** @DeleteOnJsFormat */ const CjsDebug = { Style: { Media: [] } }
 
+const CjsStyle = {
+    RootVariables: {
+        /**
+         * Adds properties to RootVariable object
+         * @param {Object.<string, string>} properties 
+         */
+        _addProperties: (properties) => {
+            for(const [name, value] of Object.entries(properties)) {
+                CjsStyle.RootVariables[name] = value;
+            }
+        }
+    }
+}
+
 /**
  * @param {string} cssText
  * @param {string} prefix
@@ -17,7 +31,17 @@ function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRules: tru
         selector = selector.trim();
         const fullCssText = `${selector} { ${cssText} }`;
 
-        if(selector.startsWith(":")) return [fullCssText];
+        if(selector.startsWith(":")) {
+            const isRoot = selector.startsWith(":root");
+
+            if(isRoot) {
+                const properties = new CssStylePropertiesReader(cssText).read();
+
+                CjsStyle.RootVariables._addProperties(properties);
+            }
+
+            return [fullCssText];
+        }
 
         return selector.split(',').map(sel => {
             const selectorFirstChar = sel.trim().substring(0, 1);
@@ -89,17 +113,24 @@ function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRules: tru
             const parts = selector.split(" ");
             const determiner = parts[1];
             const value = parts[2];
-            const isCalculativeExpression = (
-                (value.startsWith("var(") || value.startsWith("calc("))
-                && value.endsWith(")")
-            );
+            const isVariable = value.startsWith("var(") && value.endsWith(")");
             const mapping = {};
 
-            if(isCalculativeExpression && false) { // TODO, var() and calc() support inside @media (min-width: var(--variable-name))
-                mapping["<"] = `max-width: ${value}`;
-                mapping["<="] = `max-width: ${value}`; // TODO, not exacly true
-                mapping[">"] = `min-width: ${value}`;
-                mapping[">="] = `min-width: ${value}`; // TODO, not excaly true
+            if(isVariable) { // TODO, var() and calc() support inside @media (min-width: var(--variable-name))
+                const variableName = value.slice(4, -1);
+
+                if(!(variableName in CjsStyle.RootVariables)) {
+                    console.log(`${CJS_PRETTY_PREFIX_X} @range selector error, used variable "${variableName}" that is not defined in none of the :root scopes`);
+                    continue;
+                }
+
+                const variableValue = CjsStyle.RootVariables[variableName];
+
+
+                mapping["<"] = `max-width: ${variableValue}`;
+                mapping["<="] = `max-width: ${variableValue}`; // TODO, not exacly true
+                mapping[">"] = `min-width: ${variableValue}`;
+                mapping[">="] = `min-width: ${variableValue}`; // TODO, not excaly true
             } else {
                 const valueParts = (() => {
                     let number = ``;

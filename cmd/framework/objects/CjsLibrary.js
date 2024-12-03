@@ -14,6 +14,7 @@ class CjsLibrary {
     #commonScripts = [
         "readers/BaseReader.js",
         "readers/CssReader.js",
+        "readers/CssStylePropertiesReader.js",
         "utils/StyleUtil.js"
     ]
 

@@ -18,7 +18,7 @@ class CssReader extends BaseReader {
     }
 
     /**
-     * Provides xml tags with its attributes
+     * Provides selector with its contents
      * @returns {Object.<string, string>}
      */
     read() {
