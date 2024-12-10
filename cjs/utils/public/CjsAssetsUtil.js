@@ -16,3 +16,30 @@ function asset(path) {
 
     return "../".repeat(cjsRunnable.data.relativePathPosition) + `src/assets/${fixed}`;
 }
+
+/**
+ * Shortcut of `asset` method, by default adds `svg/` prefix and `.svg` suffix.
+ * @param {string} path 
+ * @returns {string}
+ */
+function svg(path) {
+    return asset(`svg/${path}.svg`);
+}
+
+/**
+ * Shortcut of `asset` method, by default adds `images/` prefix and `.png` suffix.
+ * @param {string} path 
+ * @returns {string}
+ */
+function png(path) {
+    return asset(`images/${path}.png`);
+}
+
+/**
+ * Shortcut of `asset` method, by default adds `images/` prefix and `.jpg` suffix.
+ * @param {string} path 
+ * @returns {string}
+ */
+function jpg(path) {
+    return asset(`images/${path}.jpg`);
+}
