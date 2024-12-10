@@ -10,9 +10,25 @@ const CjsStyle = {
          */
         _addProperties: (properties) => {
             for(const [name, value] of Object.entries(properties)) {
-                CjsStyle.RootVariables[name] = value;
+                CjsStyle.RootVariables[name.trim()] = value;
             }
         }
+    },
+    /**
+     * Adds style to website
+     * @param {string} path 
+     */
+    importStyle: async (path) => {
+        const request = await new CjsRequest(path, "get").doRequest();
+
+        if(request.isError()) {
+            return console.log(`${CJS_PRETTY_PREFIX_X}Error occurred while importing style (${Colors.Yellow}${path}${Colors.None})`);
+        }
+
+        const text = request.text();
+        const style = document.head.querySelector(`[id="${CJS_STYLE_PREFIX}"]`);
+
+        style.innerHTML += addPrefixToSelectors(text);
     }
 }
 
@@ -22,7 +38,7 @@ const CjsStyle = {
  * @param {CjsStyleImportOptions} options
  * @return {string}
  */
-function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRules: true, encodeKeyframes: true, enableMultiSelector: true }) {
+function addPrefixToSelectors(cssText, prefix = '', options = { prefixStyleRules: true, encodeKeyframes: true, enableMultiSelector: true }) {
     const rules = new CssReader(cssText).read();
 
     let newRules = [];
@@ -125,7 +141,6 @@ function addPrefixToSelectors(cssText, prefix, options = { prefixStyleRules: tru
                 }
 
                 const variableValue = CjsStyle.RootVariables[variableName];
-
 
                 mapping["<"] = `max-width: ${variableValue}`;
                 mapping["<="] = `max-width: ${variableValue}`; // TODO, not exacly true

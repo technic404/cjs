@@ -49,6 +49,21 @@ class CjsRoot {
         // Links
         createLink("icon", data.icon);
     }
+
+    async importStyle(path) {
+        const style = document.head.querySelector(`[id="${CJS_STYLE_PREFIX}"]`);
+        const request = await new CjsRequest(path, "get").doRequest();
+
+        if(request.isError()) {
+            return console.log(`${CJS_PRETTY_PREFIX_X}Error importing root style at path "${path}"`);
+        }
+
+        const definitions = addPrefixToSelectors(request.text());
+
+        style.innerHTML += definitions;
+        console.log('imported');
+        
+    }
 }
 
 const Root = new CjsRoot();
