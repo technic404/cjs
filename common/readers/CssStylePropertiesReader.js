@@ -84,3 +84,5 @@ class CssStylePropertiesReader extends BaseReader {
         return properties;
     }
 }
+
+/** @DeleteOnJsFormat */ module.exports = CssStylePropertiesReader;

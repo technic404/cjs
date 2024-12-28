@@ -1,8 +1,8 @@
 
 /**
- * 
- * @param {string} path 
- * @param {string} filename 
+ * Downloads a file
+ * @param {string} path
+ * @param {string} filename
  */
 async function download(path, filename = null) {
     try {
@@ -16,7 +16,7 @@ async function download(path, filename = null) {
 
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = filename;
+        link.download = filename ? filename : path.split('/').pop();
 
         document.body.appendChild(link);
         link.click();

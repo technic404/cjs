@@ -1,6 +1,8 @@
 /** @DeleteOnJsFormat */ const CssReader = require("../readers/CssReader");
+/** @DeleteOnJsFormat */ const CssStylePropertiesReader = require("../readers/CssStylePropertiesReader");
 
 /** @DeleteOnJsFormat */ const CjsDebug = { Style: { Media: [] } }
+/** @DeleteOnJsFormat */ const CJS_PRETTY_PREFIX_X = '', CJS_STYLE_PREFIX = '';
 
 const CjsStyle = {
     RootVariables: {

@@ -32,6 +32,7 @@ class CjsLibrary {
         "utils/PathUtil.js",
         "utils/public/CjsObjectUtil.js", 
         "utils/public/CjsStringUtil.js", 
+        "utils/public/CjsDownloadUtil.js", 
         "utils/public/CjsMobileUtil.js",
         "utils/public/CjsValidatorUtil.js", 
         "utils/public/CjsStringFormatterUtil.js", 

@@ -134,6 +134,20 @@ class CjsSearch {
     }
 
     /**
+     * Slice implementation for Search
+     * @param {number} start
+     * @param {number} end
+     * @returns {string}
+     */
+    slice(start, end = null) {
+        const parts = this.search.split("/").filter(e => e.trim() !== "");
+
+        if(!end) return parts.slice(start).join("/");
+
+        return parts.slice(start, end).join("/");
+    }
+
+    /**
      * If display the actual debug search in the black box on the website.
      * @param {boolean} displayOnScreen 
      * @returns {CjsSearch}

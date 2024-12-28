@@ -203,6 +203,8 @@ class CjsLayout {
 
         container.innerHTML = ``;
         container.appendChild(this.toElement());
+
+        this._executeOnLoad(this.#data.active);
     }
 
     /**
