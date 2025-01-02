@@ -212,7 +212,7 @@ class CjsComponent {
      * @returns {string}
      */
     render(data = {}) {
-        const html = this._getHtml(data, this._onLoadData);
+        const html = this._getHtml(this._getData(data), this._onLoadData);
 
         return html;
     }
