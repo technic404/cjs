@@ -1,4 +1,5 @@
 class CjsComponentsCollection {
+
     /** @param {function(HTMLElement)} func */
     #call = (func) => {
         this.components.forEach(c => func(c));
@@ -9,8 +10,10 @@ class CjsComponentsCollection {
         this.components.push(element);
     }
 
+    /** @type {HTMLElement[]} */
+    components;
+
     /**
-     * 
      * @param {NodeListOf<HTMLElement>} components 
      */
     constructor(components) {
