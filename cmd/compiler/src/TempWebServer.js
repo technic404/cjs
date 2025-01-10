@@ -64,7 +64,7 @@ class TempWebServer {
     }
 
     /**
-     * Creates listetning endpoint, that when called will return request details
+     * Creates listening endpoint, that when called will return request details
      * @param {"post"|"get"|"delete"|"options"|"patch"} method 
      * @param {string} endpoint 
      * @param {{ body: object, query: Object.<string, string>, headers: Object.<string, string> } callback

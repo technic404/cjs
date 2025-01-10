@@ -9,6 +9,7 @@ const Constants = {
     IndexFileName: "index.html",
     RootLayoutPath: "\\layouts\\root\\RootLayout.mjs",
     RootFilePath: "\\Root.mjs",
+    PreRootFilePath: "\\PreRoot.mjs",
     RootLayoutName: "RootLayout.mjs",
     ModuleSetterPrefix: "__init_",
     ExportVariableName: "__export",

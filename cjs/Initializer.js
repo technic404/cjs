@@ -12,12 +12,9 @@ async function init(layout) {
     const loadStartMs = new Date().getTime();
 
     const removeRootIfExists = () => {
-        const element = document.getElementById(CJS_ROOT_CONTAINER_PREFIX);
+        const roots = Array.from(document.querySelectorAll(`#${CJS_ROOT_CONTAINER_PREFIX}`));
 
-        if(element !== null) {
-            element.remove();
-            return;
-        }
+        roots.forEach(root => root.remove());
 
         document.head.appendChild(document.createComment("Styles"));
     }

@@ -1,9 +1,9 @@
 class CjsLayout {
 
     /**
-     * @type {function} Callback that is called when element is loaded into website
+     * @type {(object) => void} Callback that is called when element is loaded into website
      */
-    #onLoadCallback = function() {};
+    #onLoadCallback = function(data) {};
 
     /**
      * @type {{ default: object|null, active: object|null }}
@@ -30,7 +30,10 @@ class CjsLayout {
      * @param {function} callback 
      */
     onLoad(callback) {
-        this.#onLoadCallback = callback;
+        this.#onLoadCallback = (data) => {
+            CjsFrameworkEvents.onLoadLayout(this);
+            callback(data);
+        };
     }
 
     /**

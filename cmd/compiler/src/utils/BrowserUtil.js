@@ -1,19 +1,16 @@
-const { exec } = require('child_process');
+const puppeteer = require('puppeteer');
 
 /**
  * Open browser with provided url
  * @param {string} url
+ * @returns {Promise<PuppeteerCore.Browser>}
  */
-function openUrl(url) {
-    const command = process.platform === 'win32'
-        ? `start ${url}`
-        : process.platform === 'darwin'
-        ? `open ${url}`
-        : `xdg-open ${url}`;
+async function openUrl(url) {
+    const browser = await puppeteer.launch({ headless: false });
+    const page = await browser.newPage();
+    await page.goto(url);
 
-    exec(command, (error) => {
-        if(error) console.log("Cannot open the browser window", error);
-    });
+    return browser;
 }
 
 module.exports = {

@@ -66,6 +66,11 @@ const Compiler = {
         fs.writeFileSync(cjsCompilerFilePath, `
             <html>
                 <head>
+                    <style id="c_js-style-"></style>
+                    <style id="c_js-filters-"></style>
+                    <style id="c_js-keyframes-"></style>
+                    <style id="c_js-plugins-"></style>
+                    
                     <script src="${Constants.LibraryFileName}"></script>
                     <script>
                         function cjsPerform() {
@@ -81,35 +86,39 @@ const Compiler = {
 
         console.log(`\n${PrefixGreen}Creating engine serach content ...`);
 
-        tws.onLoad((url) => {
-            console.log(`${PrefixGreen}Temporary server started, loading enginge search content ...`);
-            openUrl(`${url}/${cjsCompilerFileName}`);
-        });
-        
         return new Promise((resolve, _) => {
-            tws.listenOn("post", "/content", ((data) => {
-                /** @type {{ route: string, html: string, progressed: { count: number, total: number, isLast: boolean } }} */
-                const body = data.body;
-                const { progressed } = body;
-    
-                console.log(`${PrefixGreen}Creating engine search content for ${Colors.green}${body.route}${Colors.none} (${progressed.count}/${progressed.total})`);
-              
-                const filePath = `${output}/${body.route}.html`;
-                const directory = path.dirname(filePath);
-    
-                if(!fs.existsSync(directory)) fs.mkdirSync(directory, { recursive: true });
-    
-                const pageCreator = new PageCreator(body.route, input, styleMap)
-                    .setBodyContent(`<div style="display: none;">${body.html.replaceAll("    ", "").replaceAll("\n", "")}</div>`);
-    
-                fs.writeFileSync(filePath, pageCreator.getHtml());
-    
-                if(progressed.isLast) {
-                    tws.close();
-                    resolve();
-                    fs.rmSync(cjsCompilerFilePath);
-                }
-            }));
+            tws.onLoad(async (url) => {
+                console.log(`${PrefixGreen}Temporary server started, loading enginge search content ...`);
+
+                const browserPromise = openUrl(`${url}/${cjsCompilerFileName}`);
+
+                tws.listenOn("post", "/content", (async (data) => {
+                    /** @type {{ route: string, html: string, progressed: { count: number, total: number, isLast: boolean } }} */
+                    const body = data.body;
+                    const { progressed } = body;
+
+                    console.log(`${PrefixGreen}Creating engine search content for ${Colors.green}${body.route}${Colors.none} (${progressed.count}/${progressed.total})`);
+
+                    const filePath = `${output}/${body.route}.html`;
+                    const directory = path.dirname(filePath);
+
+                    if(!fs.existsSync(directory)) fs.mkdirSync(directory, { recursive: true });
+
+                    const pageCreator = new PageCreator(body.route, input, styleMap)
+                        .setBodyContent(`<div style="display: none;">${body.html.replaceAll("    ", "").replaceAll("\n", "")}</div>`);
+
+                    fs.writeFileSync(filePath, pageCreator.getHtml());
+
+                    if(progressed.isLast) {
+                        await (await browserPromise).close();
+
+                        tws.close();
+                        fs.rmSync(cjsCompilerFilePath);
+
+                        resolve();
+                    }
+                }));
+            });
         });
     }
 }

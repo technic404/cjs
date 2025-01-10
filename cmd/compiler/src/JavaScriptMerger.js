@@ -17,9 +17,12 @@ const JavaScriptMerger = {
 
         for (const file of files) {
             const fileMethodName = getRandomCharacters(16);
+            const layoutName = path.basename(file).replace(".mjs", "");
+            const setUpFunctionName = `${Constants.ModuleSetterPrefix}${layoutName}${fileMethodName}`;
             const namings = {
-                setUpFunctionName: `${Constants.ModuleSetterPrefix}${path.basename(file).replace(".mjs", "")}${fileMethodName}`,
-                varName: path.basename(file).replace(".mjs", "") + fileMethodName,
+                setUpFunctionName,
+                layoutName,
+                varName: layoutName + fileMethodName,
             };
     
             mergedContent += `var ${namings.varName} = {}; \n`;
@@ -308,6 +311,19 @@ const JavaScriptMerger = {
 
             mergedContent += `\n${moduleData.setUpFunctionName}();`;
         }
+
+        mergedContent += `\nvar CjsCompiledLayouts = {\n`;
+
+        Array.from(map.values()).forEach((value) => {
+            console.log(value);
+            
+            mergedContent += `${value.layoutName}: ${value.setUpFunctionName},`;
+        });
+
+        mergedContent += "};";
+
+        console.log(mergedContent);
+        
 
         return {
             content: mergedContent,

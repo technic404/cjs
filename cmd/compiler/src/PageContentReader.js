@@ -58,7 +58,7 @@ const PageContentReader = {
                         isLast: ${isLast}
                     }
                 })
-                ${!isLast ? `.onEnd(() => CjsInitPages[${index + 1}]())` : `.onEnd(() => window.close()  )`}
+                ${!isLast ? `.onEnd(() => CjsInitPages[${index + 1}]())` : `.onEnd(() => { console.log('[Debug] Finished Compilation'); })`}
                 .doRequest();
             }
             `
@@ -67,50 +67,28 @@ const PageContentReader = {
         return `
         const CjsInitPages = {
             0: ${getInnitorContent({
-                layoutCompiledName: workerMap.get("..\\src\\layouts\\root\\RootLayout.mjs").setUpFunctionName,
-                basename: "RootLayout",
-                route: "index",
-                index: 0
-            })},
-        ${paths.map((path, index) => {
-            const layoutCompiledName = workerMap.get(path).setUpFunctionName;
-            const basename = getBasename(path);
-            const route = backslashesToSlashes(path).replace("../src/pages/", "").replace(`${basename}.mjs`, `\${${layoutCompiledName}().${basename}.basename}`);
-
-            return `${index + 1}: ` + getInnitorContent({
-                layoutCompiledName,
-                basename,
-                route,
-                index: index + 1
-            });
-            
-            const isLast = index + 1 >= paths.length;
-            console.log(path, workerMap);
-            
-            
-
-            return `
-                ${index}: async () => {
-                    await init(${layoutCompiledName}().${basename});
-                    
-                    new CjsRequest("${tempWebServerAddress}/content", "post")
-                    .setBody({
-                        route: \`${backslashesToSlashes(path).replace("../src/pages/", "").replace(`${basename}.mjs`, `\${${layoutCompiledName}().${basename}.basename}`)}\`,
-                        html: document.body.innerHTML,
-                        progressed: {
-                            count: ${index + 1},
-                            total: ${paths.length},
-                            isLast: ${isLast}
-                        }
-                    })
-                    ${!isLast ? `.onEnd(() => CjsInitPages[${index + 1}]())` : `.onEnd(() => window.close()  )`}
-                    .doRequest();
-                }
-            `
-        }).join(",\n")}
+                    layoutCompiledName: workerMap.get("..\\src\\layouts\\root\\RootLayout.mjs").setUpFunctionName,
+                    basename: "RootLayout",
+                    route: "index",
+                    index: 0
+                })},
+            ${paths.map((path, index) => {
+                const layoutCompiledName = workerMap.get(path).setUpFunctionName;
+                const basename = getBasename(path);
+                const route = backslashesToSlashes(path).replace("../src/pages/", "").replace(`${basename}.mjs`, `\${${layoutCompiledName}().${basename}.basename}`);
+    
+                return `${index + 1}: ` + getInnitorContent({
+                    layoutCompiledName,
+                    basename,
+                    route,
+                    index: index + 1
+                });
+            }).join(",\n")}
         };
+        
+        window.addEventListener('DOMContentLoaded', () => CjsInitPages[0]());
 
-        sleep(100).then(() => CjsInitPages[0]());
+        //sleep(1000).then(() => CjsInitPages[0]());
         `;
     }
 }
