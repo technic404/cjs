@@ -315,15 +315,10 @@ const JavaScriptMerger = {
         mergedContent += `\nvar CjsCompiledLayouts = {\n`;
 
         Array.from(map.values()).forEach((value) => {
-            console.log(value);
-            
             mergedContent += `${value.layoutName}: ${value.setUpFunctionName},`;
         });
 
         mergedContent += "};";
-
-        console.log(mergedContent);
-        
 
         return {
             content: mergedContent,
