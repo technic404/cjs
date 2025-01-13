@@ -157,9 +157,7 @@ class CjsRequest {
             return new CjsRequestResult(0, null, true);
         }
 
-        if(this.method === "get") {
-            url += `?${Object.keys(this.query).map(e => { return `${e}=${this.query[e]}` }).join("&")}`
-        }
+        url += `?${Object.keys(this.query).map(e => { return `${e}=${this.query[e]}` }).join("&")}`
 
         xhr.open(this.method, url, true);
 

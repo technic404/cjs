@@ -14,11 +14,21 @@ class CjsSearch {
      * Updates the website url
      */
     #updateUrl() {
-        const currentUrl = new URL(window.location.href);
+        const modes = {
+            "query": () => {
+                const currentUrl = new URL(window.location.href);
 
-        currentUrl.searchParams.set('path', this.search);
+                currentUrl.searchParams.set('path', this.search);
 
-        history.pushState({}, '', currentUrl);
+                history.pushState({}, '', currentUrl);
+            },
+            "path": () => {
+                history.pushState(null, '', `/${this.search}`);
+            }
+        }
+
+        modes[this._mode]();
+
         window.dispatchEvent(new Event('popstate'));
     }
 
@@ -73,10 +83,24 @@ class CjsSearch {
     /** @type {function({ search: string, parts: string[], length: number })[]} */
     #listeners = [];
 
+    /** @type {"query"|"path"} */
+    _mode = "query";
+
+    /**
+     * Sets the Search functional mode
+     * @param {"query"|"path"} mode
+     */
+    setMode(mode) {
+        this._mode = mode;
+    }
+
     /** @type {number} */
     length = 0;
 
-    #update() {
+    /**
+     * Updates search parameters
+     */
+    update() {
         // history.pushState(null, '', `/${this.search}`);
 
         localStorage.setItem(this.#localStorageId, this.search);
@@ -103,11 +127,11 @@ class CjsSearch {
     constructor() {
         this.search = ""; //this.#getDesiredPart(window.location.href)
 
-        this.#update();
-
         window.addEventListener('popstate', () => {
             const currentUrl = new URL(window.location.href);
-            const path = currentUrl.searchParams.get('path');
+            const path = this._mode === "query"
+                ? currentUrl.searchParams.get('path')
+                : currentUrl.pathname.replace(/^\/|\/$/g, '');
 
             this.set(path);
         });
@@ -183,7 +207,7 @@ class CjsSearch {
 
         this.search = parsed;
 
-        this.#update();
+        this.update();
 
         return this;
     }
@@ -224,7 +248,7 @@ class CjsSearch {
 
         this.search += this.search.trim().length === 0 ? `${parsed}` : `/${parsed}`;
 
-        this.#update();
+        this.update();
 
         return this;
     }
@@ -255,7 +279,7 @@ class CjsSearch {
 
         this.search = cuttedSearch.join("/");
 
-        this.#update();
+        this.update();
 
         return this;
     }
