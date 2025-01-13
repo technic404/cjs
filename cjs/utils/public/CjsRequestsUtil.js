@@ -192,7 +192,11 @@ class CjsRequest {
             const formData = new FormData();
 
             for(const [key, value] of Object.entries(this.files)) {
-                formData.append(key, value)
+                if(value instanceof FileList) {
+                    for(const file of Array.from(value)) {
+                        formData.append(key, file);
+                    }
+                }
             }
 
             xhr.send(formData);
