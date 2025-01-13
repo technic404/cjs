@@ -16,7 +16,7 @@
  */
 function strmap(array, callback) {
     if(!Array.isArray(array)) {
-        console.log(`${CJS_PRETTY_PREFIX_X}The provided argument in strmap is not an array`)
+        console.log(`${CJS_PRETTY_PREFIX_X}The provided argument in strmap is not an array, it's `, array)
         return '';
     }
 
