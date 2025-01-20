@@ -11,11 +11,10 @@ class CjsScaleClickPlugin extends CjsPlugin {
         .addEntry({ transform: `scale(${this.scales.start})` })
         .addEntry({ transform: `scale(${this.scales.end})` })
 
-        /**
-         * 
-         * @param {HTMLElement} element 
-         * @param {boolean} isTouchStart 
-         */
+    /**
+     * @param {HTMLElement} element 
+     * @param {boolean} isTouchStart 
+     */
     #onTouch(element, isTouchStart) {
         const className = this.keyframe.getClass({ reversed: isTouchStart });
         const endScale = isTouchStart ? this.scales.start : this.scales.end;
@@ -33,7 +32,6 @@ class CjsScaleClickPlugin extends CjsPlugin {
     }
 
     /**
-     * 
      * @param {HTMLElement} element 
      */
     applyEvents(element) {

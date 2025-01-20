@@ -292,4 +292,18 @@ class CjsLayout {
 
         return container;
     }
+
+    /**
+     * Sets display to none
+     */
+    hide() {
+        this.getElement().style.display = 'none';
+    }
+
+    /**
+     * Removes display style property
+     */
+    show() {
+        this.getElement().style.display = '';
+    }
 }

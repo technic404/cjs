@@ -82,6 +82,7 @@ class CjsLibrary {
         "plugins/modules/CjsNotificationPlugin.js",
         "plugins/modules/CjsRipplePlugin.js",
         "plugins/modules/CjsScaleClickPlugin.js",
+        "plugins/modules/CjsScaleHoverPlugin.js",
         "plugins/CjsPluginManager.js",
         "builders/CjsProgressBuilder.js",
     ]
