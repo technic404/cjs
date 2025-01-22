@@ -45,6 +45,7 @@ class CjsLibrary {
         "utils/public/CjsGlobalsUtil.js", 
         "utils/public/CjsWebSocket.js", 
         "utils/public/CjsHandler.js", 
+        "utils/public/CjsWindowUtil.js", 
         "helpers/AttributeHelper.js", 
         "objects/CjsHtmlElement.js", 
         "objects/CjsEvent.js", 
