@@ -24,13 +24,14 @@ class CjsCreator {
      */
     create(element, name, flags = {}) {
         const names = CjsNames.getNames(name, element);
+        const hasDirFlat = "dir" in flags && flags.dir !== null;
 
         if(element === "component") {
             const { pascalCase } = names;
             const hasLayoutFlag = "layout" in flags && flags.layout !== null;
             const path = hasLayoutFlag
-                ? `../src/layouts/${capitalizeFirst(flags.layout, false)}`
-                : `../src/components`
+                ? `../src/layouts/${hasDirFlat ? `${flags.dir}/` : ''}${capitalizeFirst(flags.layout, false)}`
+                : `../src/components${hasDirFlat ? `/${flags.dir}` : ''}`
             const upperCaseIndexes = getUpperCaseIndexes(pascalCase);
             const isWholeUpper = upperCaseIndexes.length === pascalCase.length;
             const className = isWholeUpper
@@ -67,7 +68,7 @@ class CjsCreator {
         }
 
         if(element === "layout") {
-            const path = `../src/layouts/${names.camelStyle.toLowerCase()}`;
+            const path = `../src/layouts/${hasDirFlat ? `${flags.dir}/` : ''}${names.camelStyle.toLowerCase()}`;
             const layout = new CjsLayout(names, path);
 
             if(fs.existsSync(layout.getFilePath())) {

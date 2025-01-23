@@ -6,7 +6,7 @@ module.exports = class ComponentCommand extends Command {
 
     structure = {
         arguments: ["Component name ..."],
-        flags: ["layout"]
+        flags: ["layout", "dir"]
     }
 
     constructor() {

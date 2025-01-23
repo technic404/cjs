@@ -84,7 +84,8 @@
 /**
  * @typedef {object} CjsCommandFlags
  * @property {string} target used to determinate under which component create part
- * @property {string} layout used to determinate where create a component or part 
+ * @property {string} layout used to determinate where create a component
+ * @property {string} dir used to determinate extra folder of a component
  */
 
 module.exports = {

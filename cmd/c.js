@@ -5,7 +5,8 @@ const Command = require('./Command');
 (async () => {
     const flags = getFlags(process.argv, {
         l: "layout",
-        f: "force"
+        f: "force",
+        d: "dir"
     });
     const args = getArgumentsWithoutFlags(process.argv);
 
