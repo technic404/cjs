@@ -51,7 +51,7 @@ class CjsComponent {
         mergeObjects(mergedData, data);
         mergeObjects(mergedData, this.defaultData, true);
 
-        return mergedData;
+        return CjsObject.copy(mergedData);
     }
 
     /**

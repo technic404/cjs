@@ -30,7 +30,7 @@ class CjsLibrary {
         "utils/NumericUtil.js", 
         "utils/SearchUtil.js", 
         "utils/PathUtil.js",
-        "utils/public/CjsObjectUtil.js", 
+        "utils/shared/CjsObjectUtil.js", 
         "utils/public/CjsStringUtil.js", 
         "utils/public/CjsDownloadUtil.js", 
         "utils/public/CjsMobileUtil.js",

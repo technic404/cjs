@@ -157,6 +157,14 @@ class CjsSearch {
         return this.search === parsed;
     }
 
+    startsWith(text) {
+        if(this.equals(text)) return true;
+
+        const parsed = text.charAt(0) === "/" ? text.slice(1) : text;
+
+        return this.search.startsWith(parsed);
+    }
+
     /**
      * Slice implementation for Search
      * @param {number} start

@@ -219,6 +219,14 @@ class CjsLayout {
     }
 
     /**
+     * Checks if element exists in DOM
+     * @returns {boolean}
+     */
+    exists() {
+        return document.body.querySelector(`[${this.attribute}]`) !== null;
+    }
+
+    /**
      * Creates the HTMLElement from other layouts and components inside layout
      * @returns {HTMLElement} layout element
      */
