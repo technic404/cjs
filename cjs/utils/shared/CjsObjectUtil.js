@@ -61,6 +61,8 @@ const CjsObject = {
      */
     copy: function(object) {
         const traverse = (obj) => {
+            if(obj === null) return null;
+            
             const isPrimitive = typeof obj !== 'object';
             
             if(isPrimitive) return obj;
