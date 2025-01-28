@@ -1,6 +1,9 @@
+/**
+ * @class
+ * @classdesc Class that determinates the basic event
+ */
 class CjsEvent {
     /**
-     *
      * @param {Event|ChangesObserverEvent} event
      * @param {HTMLElement} source element to witch the event was applied
      */

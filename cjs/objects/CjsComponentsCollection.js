@@ -54,7 +54,17 @@ class CjsComponentsCollection {
             /**
              * @param {string} token 
              */
-            contains: (token) => this.#call((c) => c.classList.contains(token)),
+            contains: (token) => {
+                let allContains = true;
+
+                this.#call((c) => {
+                    if(!allContains) return;
+
+                    if(!c.classList.contains(token)) allContains = false;
+                });
+                
+                return allContains;
+            },
             /**
              * @param {string} token 
              * @param {boolean} force

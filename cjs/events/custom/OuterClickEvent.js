@@ -1,6 +1,7 @@
 /**
  * Executes when clicked outside the element
  * @param {function(CjsEvent)} f
+ * @returns {string}
  */
 function onOuterclick(f) {
     return functionMappings.add("click", (event, source) => {

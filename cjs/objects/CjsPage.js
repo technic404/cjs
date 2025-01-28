@@ -2,7 +2,8 @@
 const CjsPages = [];
 
 /**
- * Organiser for declaring website sub pages
+ * @class
+ * @classdesc Organiser for declaring website sub pages
  */
 class CjsPage extends CjsLayout {
     /**

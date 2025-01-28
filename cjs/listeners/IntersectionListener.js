@@ -1,3 +1,7 @@
+/**
+ * @class
+ * @classdesc Class for detecting elements that appear in user view
+ */
 class CjsIntersectionListener {
     /**
      * @param {IntersectionObserverEntry[]} entries 
@@ -36,7 +40,10 @@ class CjsIntersectionListener {
         this.observer.observe(DOMElement);
     }
 
-    observell() {
+    /**
+     * Observes all elements with attribute
+     */
+    observeAll() {
         const elements = Array.from(document.querySelectorAll(`[class*='${CjsLazyClassPrefix}']`));
 
         elements.forEach(element => {

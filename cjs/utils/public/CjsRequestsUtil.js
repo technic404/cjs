@@ -1,6 +1,5 @@
 class CjsRequestResult {
     /**
-     *
      * @param {number} statusCode
      * @param {string} responseText
      * @param {boolean} networkError
@@ -43,8 +42,11 @@ class CjsRequestResult {
     }
 }
 
+/**
+ * @class
+ * @classdesc Class intended to manage web requests
+ */
 class CjsRequest {
-
     #onStartCallback = function() {};
     #onEndCallback = function() {};
     #onErrorCallback = function() {};
@@ -52,7 +54,6 @@ class CjsRequest {
     #onProgressCallback = function() {};
 
     /**
-     *
      * @param {string} url
      * @param {CjsRequestMethods} method
      */
@@ -67,7 +68,7 @@ class CjsRequest {
     }
 
     /**
-     *
+     * Executes when request starts
      * @param {function} callback
      * @returns {CjsRequest}
      */
@@ -78,7 +79,7 @@ class CjsRequest {
     }
 
     /**
-     *
+     * Executes when request end
      * @param {function(CjsRequestResult)} callback
      * @returns {CjsRequest}
      */
@@ -123,6 +124,7 @@ class CjsRequest {
     }
 
     /**
+     * Provides percentage status for progress (eg. uploading files)
      * @param {(percentage: number, loaded: number, total: number, event: ProgressEvent<EventTarget>) => void} callback 
      * @returns {CjsRequest}
      */
@@ -133,7 +135,7 @@ class CjsRequest {
     }
 
     /**
-     *
+     * Executes request
      * @return {Promise<CjsRequestResult>}
      */
     async doRequest() {
@@ -236,8 +238,8 @@ class CjsRequest {
     }
 
     /**
-     *
-     * @param {object} query
+     * Sets query parameters in url like `?param=value&sort=ASC`
+     * @param {Object.<string, string>} query
      * @return {CjsRequest}
      */
     setQuery(query) {
@@ -247,8 +249,8 @@ class CjsRequest {
     }
 
     /**
-     *
-     * @param {object} headers
+     * Sets headers like eg. `Authorization: Bearer TOKEN`
+     * @param {Object.<string, string>} headers
      * @returns {CjsRequest}
      */
     setHeaders(headers) {
@@ -258,7 +260,7 @@ class CjsRequest {
     }
 
     /**
-     *
+     * Sets body data
      * @param {object} body
      * @returns {CjsRequest}
      */
@@ -269,7 +271,7 @@ class CjsRequest {
     }
 
     /**
-     *
+     * Sets files
      * @param {object} files
      * @returns {CjsRequest}
      */

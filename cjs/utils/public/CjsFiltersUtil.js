@@ -1,6 +1,5 @@
 class CjsFilter {
     /**
-     *
      * @param {string} name
      * @param {number} amount
      * @param {string} direction
@@ -21,7 +20,6 @@ class CjsFilter {
 }
 
 /**
- *
  * @param {CjsFilterTypes} filterName
  * @param {number} filterAmount
  * @param {CjsFilterDirections} filterDirection
@@ -104,7 +102,6 @@ async function passFilterToElement(el, name, amount, direction, time) {
 }
 
 /**
- * 
  * @param {HTMLElement} element
  * @param {CjsFilterOptions} options
  * @return {Promise<void>}

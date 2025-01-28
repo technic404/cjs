@@ -15,11 +15,10 @@ function getRandomCharacters(length) {
     }
 
     /**
-     *
      * @param {String} string
      * @return {boolean}
      */
-    const isFirstCharacterANumber = (string) => { return !isNaN(string.substring(0, 1)); }
+    const isFirstCharacterANumber = (string) => { return !isNaN(string.substring(0, 1)); };
 
     while (isFirstCharacterANumber(result)) {
         result = getRandomCharacters(length);
@@ -29,7 +28,7 @@ function getRandomCharacters(length) {
 }
 
 /**
- *
+ * Creates unique number
  * @param {string} string
  * @return {number}
  */
@@ -45,7 +44,7 @@ function getUniqueNumberId(string) {
 }
 
 /**
- *
+ * string.replaceAll function, but supports multiple js enviroments
  * @param {string} string source string
  * @param {string} search
  * @param {string} value

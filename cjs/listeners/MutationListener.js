@@ -9,6 +9,10 @@ class CjsMutationEvent {
     }
 }
 
+/**
+ * @class
+ * @classdesc Class for detecting elements that are inserted into website DOM
+ */
 class CjsMutationListener {
     /** @type {(element: Node) => {}} */
     #onAddCallback = () => {};
@@ -137,7 +141,6 @@ class CjsMutationListener {
     }
 
     /**
-     *
      * @param {"add"|"remove"} type
      * @param {function(CjsEvent)} f function to execute when changes observer detects the trigger
      * @returns {string} attribute
@@ -160,7 +163,6 @@ class CjsMutationListener {
     }
 
     /**
-     *
      * @param {string} attribute
      * @return {string|null} new attribute
      */
@@ -184,6 +186,11 @@ class CjsMutationListener {
         return newAttribute;
     }
 
+    /**
+     * @param {HTMLElement} element 
+     * @param {string} oldAttribute 
+     * @param {string} newAttribute 
+     */
     replaceAttribute(element, oldAttribute, newAttribute) {
         element.removeAttribute(oldAttribute);
         element.setAttribute(newAttribute, "");
@@ -210,7 +217,6 @@ class CjsMutationListener {
     }
 
     /**
-     *
      * @param {"add"|"remove"} type
      */
     executeAll(type) {
@@ -241,7 +247,6 @@ class CjsMutationListener {
     }
 
     /**
-     *
      * @param {"add"|"remove"} type
      * @param {string} attribute
      * @param {HTMLElement|Node} element source element that has been changed

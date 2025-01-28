@@ -5,7 +5,7 @@ const CjsScaleHover = new CjsScaleHoverPlugin();
 
 const CjsPluginManager = {
     /**
-     * 
+     * Enables plugins
      * @param {{ ripple?: boolean, notification?: boolean, scaleClick?: boolean, scaleHover?: boolean }} plugins 
      */
     enable(plugins) {

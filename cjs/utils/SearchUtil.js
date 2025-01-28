@@ -72,13 +72,26 @@ class CjsSearch {
         return element;
     }
 
+    /**
+     * Parses search to basic search format
+     * @example
+     * `/users` -> `users`
+     * `/users/` -> `users`
+     * `/users/dashboard` -> `users/dashboard`
+     * @param {string} search 
+     * @returns {string}
+     */
+    #parseSearch(search) {
+        if(search.charAt(0) === "/") search = search.slice(1);
+        if(search.charAt(search.length - 1) === "/") search = search.slice(0, -1);
+
+        return search;
+    }
+
     #displayOnScreen = true;
     #updateWebsiteUrl = true;
 
     #localStorageId = "cjsSearch";
-
-    /** @type {string} */
-    #lastPopstate = "";
 
     /** @type {function({ search: string, parts: string[], length: number })[]} */
     #listeners = [];
@@ -143,7 +156,7 @@ class CjsSearch {
      * // Actual search: dashboard/users
      * ✔ equals("dashboard/users"); // true
      * ✔ equals("/dashboard/users"); // true
-     * ✘ equals("/dashboard/users/"); // false
+     * ✔ equals("/dashboard/users/"); // true
      * ✘ equals("dashboard"); // false
      * ✘ equals("/dashboard"); // false
      * @param {string} text 
@@ -152,17 +165,16 @@ class CjsSearch {
     equals(text) {
         if(text === this.search) return true;
 
-        const parsed = text.charAt(0) === "/" ? text.slice(1) : text;
-
-        return this.search === parsed;
+        return this.search === this.#parseSearch(text);
     }
 
+    /**
+     * Checks if search starts with certain string
+     * @param {string} text 
+     * @returns {boolean}
+     */
     startsWith(text) {
-        if(this.equals(text)) return true;
-
-        const parsed = text.charAt(0) === "/" ? text.slice(1) : text;
-
-        return this.search.startsWith(parsed);
+        return this.search.startsWith(this.#parseSearch(text));
     }
 
     /**

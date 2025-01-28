@@ -5,7 +5,7 @@ class CjsNotificationPlugin extends CjsPlugin {
         duration: 5000,
         showHideOffset: 10,
         yDiff: 8
-    }
+    };
 
     #themes = {
         dark: {
@@ -14,7 +14,7 @@ class CjsNotificationPlugin extends CjsPlugin {
         light: {
             backgroundColor: "#e9e9e9"
         }
-    }
+    };
 
     #addStyles() {
         const theme = "dark";

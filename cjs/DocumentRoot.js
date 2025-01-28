@@ -11,7 +11,7 @@ class CjsRoot {
     }
 
     /**
-     *
+     * Sets cursor for the body (whole website)
      * @param {CjsCursorTypes} cursor
      */
     setCursor(cursor) {
@@ -19,7 +19,6 @@ class CjsRoot {
     }
 
     /**
-     *
      * @param {{title?: string, icon?: string}} data
      */
     setDocumentData(data) {
@@ -44,7 +43,7 @@ class CjsRoot {
 
         document.title = data.title;
 
-        document.head.appendChild(document.createComment("Meta definitions"))
+        document.head.appendChild(document.createComment("Meta definitions"));
 
         // Links
         createLink("icon", data.icon);
@@ -61,7 +60,6 @@ class CjsRoot {
         const definitions = addPrefixToSelectors(request.text());
 
         style.innerHTML += definitions;
-        console.log('imported');
         
     }
 }

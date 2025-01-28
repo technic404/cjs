@@ -14,4 +14,4 @@ const CjsWindow = {
         a.click();
         a.remove();
     }
-}
+};

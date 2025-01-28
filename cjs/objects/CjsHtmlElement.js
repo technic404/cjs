@@ -1,12 +1,12 @@
 /**
- * Converts string to CjsHtmlElement
+ * @class
+ * @classdesc Converts string to CjsHtmlElement
  */
 class CjsHtmlElement {
     /** @type {HTMLElement} */
     #element;
 
     /**
-     * 
      * @param {string} html 
      */
     constructor(html) {

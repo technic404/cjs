@@ -1,15 +1,14 @@
 const CjsRunnableStyleWatcher = new Map();
 
 /**
- *
  * @param {string} selectorPrefix
  * @param {string} path
  * @param {CjsStyleImportOptions} options
  */
 async function addRootStyle(selectorPrefix, path, options = { prefixStyleRules: true, encodeKeyframes: true, enableMultiSelector: true } ) {
-    if(!("prefixStyleRules" in options)) { options.prefixStyleRules = true; }
-    if(!("encodeKeyframes" in options)) { options.encodeKeyframes = true; }
-    if(!("enableMultiSelector" in options)) { options.enableMultiSelector = true; }
+    if(!("prefixStyleRules" in options)) options.prefixStyleRules = true;
+    if(!("encodeKeyframes" in options)) options.encodeKeyframes = true;
+    if(!("enableMultiSelector" in options)) options.enableMultiSelector = true;
     
     if(cjsRunnable.isStyleValid()) return CjsRunnableStyleWatcher.set(selectorPrefix, { options, path }); 
 

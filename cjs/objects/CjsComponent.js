@@ -135,9 +135,6 @@ class CjsComponent {
         return forms.map(form => new CjsForm(form));
     }
 
-    /** @type {boolean} */
-    #rerenderOnSearchEnabled = false;
-
     /**
      * @returns {CjsComponentsCollection}
      */
@@ -212,9 +209,7 @@ class CjsComponent {
      * @returns {string}
      */
     render(data = {}) {
-        const html = this._getHtml(this._getData(data), this._onLoadData);
-
-        return html;
+        return this._getHtml(this._getData(data), this._onLoadData);
     }
 
     /**
@@ -278,8 +273,6 @@ class CjsComponent {
     rerenderOnSearch(data = { useSmartRender: false }) {
         Search.onChange(() => this.rerenderComponents(data));
 
-        this.#rerenderOnSearchEnabled = true;
-
         return this;
     }
 
@@ -296,7 +289,6 @@ class CjsComponent {
         if(options.useSmartRender) {
             for(const component of components) {
                 /**
-                 * 
                  * @param {HTMLElement} parent 
                  * @param {HTMLElement} newParent 
                  */
@@ -434,7 +426,7 @@ class CjsComponent {
 
     /**
      * Set function that will be executed when element is loaded on website
-     * @param {function} callback 
+     * @param {() => void} callback 
      */
     onLoad(callback) {
         this.#onLoadCallback = callback;
@@ -495,7 +487,7 @@ class CjsComponent {
 
 
     /**
-     * Returns the first element that is a descendant of node that matches selectors.
+     * Returns the first element that is a descendant of node that matches selectors (only for the first instance of the component).
      * @param {string} selectors 
      * @returns {HTMLElement|Element|null}
      */
@@ -504,7 +496,7 @@ class CjsComponent {
     }
 
     /**
-     * Returns all element descendants of node that match selectors.
+     * Returns all element descendants of node that match selectors (for all instances of component).
      * @param {string} selectors 
      * @returns {HTMLElement[]|Element[]}
      */

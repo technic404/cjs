@@ -7,4 +7,4 @@ const CjsString = {
     removeHtmlTags: function(input) {
         return input.replace(/<[^>]*>/g, '');
     }
-}
+};

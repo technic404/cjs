@@ -3,4 +3,4 @@
  */
 const cjs = {
     a: CjsAnimation
-}
+};

@@ -1,8 +1,6 @@
 class CjsRunnable {
     constructor() {
-        /**
-         * @type {{ compiled?: boolean, relativePathPosition?: number, tempWebServerPort?: number, style: { map: Map } }}
-         */
+        /** @type {{ compiled?: boolean, relativePathPosition?: number, tempWebServerPort?: number, style: { map: Map } }} */
         this.data = {};
     }
 

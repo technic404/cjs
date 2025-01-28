@@ -86,4 +86,4 @@ const CjsObject = {
         
         return traverse(object);
     }
-}
+};

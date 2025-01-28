@@ -6,7 +6,7 @@ mutationListener._onAdd((node) => {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
-    insertionListener.observell();
+    insertionListener.observeAll();
 
     mutationListener.observe();
     mutationListener.executeAll("add");

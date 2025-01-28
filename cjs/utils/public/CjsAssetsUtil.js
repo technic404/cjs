@@ -3,9 +3,9 @@
  * 
  * In the following example image will be taken from:
  * 
- * `/shoppinglist/assets/images/user.png`
+ * `/src/assets/images/user.png`
  * @example
- * <img shoppinglist="${asset(`images/user.png`)}" alt="user">
+ * <img src="${asset(`images/user.png`)}" alt="user">
  * @param {string} path 
  * @returns {string}
  */

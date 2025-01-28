@@ -17,7 +17,7 @@ async function init(layout) {
         roots.forEach(root => root.remove());
 
         document.head.appendChild(document.createComment("Styles"));
-    }
+    };
 
     const loadLayout = async () => {
         removeRootIfExists();

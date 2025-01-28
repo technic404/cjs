@@ -1,17 +1,9 @@
 class CjsLayout {
-
-    /**
-     * @type {(object) => void} Callback that is called when element is loaded into website
-     */
+    /** @type {(object) => void} Callback that is called when element is loaded into website */
     #onLoadCallback = function(data) {};
 
-    /**
-     * @type {{ default: object|null, active: object|null }}
-     */
-    #data = {
-        default: null,
-        active: null
-    }
+    /** @type {{ default: object|null, active: object|null }} */
+    #data = { default: null, active: null };
 
     /** @type {string} attribute identifier of layout */
     attribute;
@@ -106,7 +98,7 @@ class CjsLayout {
     }
 
     /**
-     *  Sets global layout data
+     * Sets global layout data
      * @param {object} data 
      * @returns {CjsLayout}
      */

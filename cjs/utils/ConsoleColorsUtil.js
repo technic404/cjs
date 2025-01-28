@@ -15,4 +15,4 @@ const Colors = {
     Magenta: "\x1b[35m",
     Cyan: "\x1b[36m",
     White: "\x1b[37m"
-}
+};

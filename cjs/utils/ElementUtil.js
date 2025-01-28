@@ -1,5 +1,5 @@
 /**
- *
+ * Provides attributes that starts with certain string in element
  * @param {HTMLElement|Node} element
  * @param {string} startingWith
  * @returns {string[]} attribute name
@@ -20,6 +20,11 @@ function getAttributeStartingWith(element, startingWith) {
     return attributes;
 }
 
+/**
+ * Turns html string into HTMLElement
+ * @param {string} html 
+ * @returns {HTMLElement}
+ */
 function htmlToElement(html) {
     const template = document.createElement('template');
 

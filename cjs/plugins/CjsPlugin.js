@@ -1,5 +1,4 @@
 class CjsPlugin {
-
     /**
      * Enables the plugin
      */

@@ -7,4 +7,4 @@ const CjsValidator = {
     isEmail(string) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(string);
     }
-}
+};

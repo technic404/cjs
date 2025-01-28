@@ -35,7 +35,6 @@ class CjsKeyFrame {
     }
 
     /**
-     *
      * @param {boolean} keepEntry
      * @returns {CjsKeyFrame}
      */
@@ -46,7 +45,6 @@ class CjsKeyFrame {
     }
 
     /**
-     *
      * @param {CjsStylePropertieses} style
      * @returns {CjsKeyFrame}
      */
@@ -57,7 +55,6 @@ class CjsKeyFrame {
     }
 
     /**
-     *
      * @param {number} duration animation time in ms
      * @return {CjsKeyFrame}
      */
@@ -72,7 +69,6 @@ class CjsKeyFrame {
     }
 
     /**
-     *
      * @param {CjsAnimationTimingFunction} timingFunction
      * @return {CjsKeyFrame}
      */
@@ -83,7 +79,6 @@ class CjsKeyFrame {
     }
 
     /**
-     *
      * @param {boolean} isImportant
      * @return {CjsKeyFrame}
      */
@@ -94,15 +89,14 @@ class CjsKeyFrame {
     }
 
     /**
-     *
      * @param {{reversed?: boolean}} options
      * @return {string}
      */
     getClass(options = { reversed: false }) {
-        if(!("reversed" in options)) { options.reversed = false; }
+        if(!("reversed" in options)) { options.reversed = false; };
 
         if(this.entries.length > 100) {
-            console.log(`${CJS_PRETTY_PREFIX_X}CjsKeyFrame cannot have more than 100 entries`)
+            console.log(`${CJS_PRETTY_PREFIX_X}CjsKeyFrame cannot have more than 100 entries`);
         }
 
         const directionDefinedEntries = ( options.reversed === true ? this.entries.slice().reverse() : this.entries );
@@ -112,7 +106,7 @@ class CjsKeyFrame {
             const hasOneEntry = directionDefinedEntries.length === 1;
             const percent = hasOneEntry ? 100 : i * entriesEachPercent;
 
-            return `    ${percent}% { ${Object.keys(entry).map(e => `${e}: ${entry[e]};`).join(" ")} }`
+            return `    ${percent}% { ${Object.keys(entry).map(e => `${e}: ${entry[e]};`).join(" ")} }`;
         });
 
         const entriesCss = `{ \n${parsedEntries.join("\n")} \n}`;
@@ -126,7 +120,7 @@ class CjsKeyFrame {
 
             style.innerHTML += `\n${css}`;
 
-            const object = { hash: animationHash, animation: animationName }
+            const object = { hash: animationHash, animation: animationName };
 
             CJS_KEYFRAMES_ANIMATIONS.push(object);
 

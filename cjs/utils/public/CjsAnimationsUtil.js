@@ -1,7 +1,4 @@
 class CjsAnimationExecutor {
-    constructor() {
-    }
-
     /**
      * Creates simple animation that transforms object by provided value
      * @param {number} offset 

@@ -1,5 +1,6 @@
 /**
- * Object intended to manage the form data
+ * @class
+ * @classdesc Object intended to manage the form data
  */
 class CjsForm {
     /** @type {HTMLFormElement} */

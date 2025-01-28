@@ -1,8 +1,6 @@
 class CjsWebSocket {
     constructor() {
-        /**
-         * @type {WebSocket}
-         */
+        /** @type {WebSocket} */
         this.webSocket = null;
         this.captures = new Map(); // captureId, callback
         this.isOpened = false;
@@ -10,7 +8,7 @@ class CjsWebSocket {
     }
 
     /**
-     *
+     * Connects to WebSocket
      * @param {string} url ws://address:port/
      * @returns {CjsWebSocket}
      */
@@ -39,8 +37,8 @@ class CjsWebSocket {
     }
 
     /**
-     *
-     * @param data
+     * Sends data to WebSocket
+     * @param {*} data
      * @returns {CjsWebSocket}
      */
     send(data) {
@@ -56,7 +54,7 @@ class CjsWebSocket {
     }
 
     /**
-     *
+     * Sets data as json to WebSocket (uses JSON.stringify(...))
      * @param {object} json
      * @returns {CjsWebSocket}
      */
@@ -67,7 +65,7 @@ class CjsWebSocket {
     }
 
     /**
-     *
+     * Creates capture, when any message is received the capture will provide its content
      * @param {function(MessageEvent)} callback
      * @returns {string} id of the created capture
      */
@@ -80,7 +78,7 @@ class CjsWebSocket {
     }
 
     /**
-     *
+     * Removes capture
      * @param {string} id
      * @returns {CjsWebSocket}
      */
@@ -91,7 +89,7 @@ class CjsWebSocket {
     }
 
     /**
-     *
+     * Checks is capture exists
      * @param {string} id
      * @returns {boolean}
      */
