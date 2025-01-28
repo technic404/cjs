@@ -219,9 +219,6 @@ function addPrefixToSelectors(cssText, prefix = '', options = { prefixStyleRules
         newRules.push(cssText);
     }
 
-    console.log(newRules.join(' '));
-    
-
     return newRules.join(' ').replaceAll("\n", "");
 }
 
