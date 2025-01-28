@@ -72,7 +72,7 @@ class PageCreator extends HtmlCreator {
     _getRunnableScript() {
         const stringMap = JSON.stringify(Array.from(this.styleData.entries()).map(e => { return [e[0].replace("../", "./"), e[1] ] }));
         
-        return `
+        return (`
             const CjsRunnableDetails = {
                 compiled: true,
                 relativePathPosition: ${this.relativeParts.length},
@@ -81,7 +81,7 @@ class PageCreator extends HtmlCreator {
                     map: new Map(${stringMap})
                 }
             };
-        `;
+        `).replaceAll("\n", "").replaceAll("  ", "");
     }
 
     /**

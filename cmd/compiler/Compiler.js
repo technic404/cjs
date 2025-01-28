@@ -59,6 +59,8 @@ const Compiler = {
             }
         }
 
+        if(!cjsConfig.getUser().compiler.createEngineSearchContent) return;
+
         const tws = new TempWebServer(output);
         const cjsCompilerFileName = `cjscompiler-${getRandomCharacters(8)}.html`;
         const cjsCompilerFilePath = `${output}/${cjsCompilerFileName}`;
