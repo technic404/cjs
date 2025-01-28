@@ -17,11 +17,10 @@ class CjsNotificationPlugin extends CjsPlugin {
     }
 
     #addStyles() {
-        const style = document.getElementById(CJS_STYLE_PLUGINS_PREFIX);
         const theme = "dark";
         const oppositeTheme = theme === "dark" ? "light" : "dark";
 
-        const selectors = {
+        this._addStyleRules({
             [`#${this.#containerId}.container`]: [
                 `position: fixed;`,
                 `bottom: 0;`,
@@ -68,11 +67,7 @@ class CjsNotificationPlugin extends CjsPlugin {
                 `${100 - this.#keyframe.showHideOffset}% { opacity: 1; transform: translateY(-${this.#keyframe.yDiff}px); }`,
                 `100% { opacity: 0; transform: translateY(${this.#keyframe.yDiff}px); }`
             ]
-        };
-
-        for(const [selector, rules] of Object.entries(selectors)) {
-            style.innerHTML += `${selector} { \n${rules.map(e => `    ${e}`).join("\n")} \n}\n`;
-        }
+        })
     }
 
     /**

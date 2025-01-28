@@ -23,9 +23,9 @@ class CjsRipplePlugin extends CjsPlugin {
     }
 
     #addStyles() {
-        const style = document.getElementById(CJS_STYLE_PLUGINS_PREFIX);
         const cssAnimationTime = `${this.#animationTime}ms`;
-        const selectors = {
+
+        this._addStyleRules({
             [`[${this.#attribute}]`]: [
                 `cursor: pointer;`,
                 `overflow: hidden;`,
@@ -52,11 +52,7 @@ class CjsRipplePlugin extends CjsPlugin {
                 `opacity: calc(var(--o, 1) * var(--ripple-opacity, 0.3));`,
                 `transition: calc(var(--t, 0) * var(--ripple-duration, ${cssAnimationTime})) var(--ripple-easing, linear);`,
             ]
-        };
-
-        for(const [selector, rules] of Object.entries(selectors)) {
-            style.innerHTML += `${selector} { \n${rules.map(e => `    ${e}`).join("\n")} \n}\n`;
-        }
+        });
     }
 
     /**

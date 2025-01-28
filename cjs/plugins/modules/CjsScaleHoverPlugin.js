@@ -9,20 +9,14 @@ class CjsScaleHoverPlugin extends CjsPlugin {
     #hoverScale = 0.95;
 
     #addStyles() {
-        const style = document.getElementById(CJS_STYLE_PLUGINS_PREFIX);
-
-        const selectors = {
+        this._addStyleRules({
             [`[${this.#attribute}]`]: [
                 `transition: transform ${this.#animationTime}ms !important;`,
             ],
             [`[${this.#attribute}]:hover`]: [
                 `transform: scale(${this.#hoverScale}) !important;`,
             ]
-        };
-
-        for(const [selector, rules] of Object.entries(selectors)) {
-            style.innerHTML += `${selector} { \n${rules.map(e => `    ${e}`).join("\n")} \n}\n`;
-        }
+        });
     }
 
     enable() {
