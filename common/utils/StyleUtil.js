@@ -219,7 +219,10 @@ function addPrefixToSelectors(cssText, prefix = '', options = { prefixStyleRules
         newRules.push(cssText);
     }
 
-    return newRules.join('\n') + "\n";
+    console.log(newRules.join(' '));
+    
+
+    return newRules.join(' ').replaceAll("\n", "");
 }
 
 /** @DeleteOnJsFormat */ module.exports = { addPrefixToSelectors };
