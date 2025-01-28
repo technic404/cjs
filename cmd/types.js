@@ -13,6 +13,7 @@
  * @property {string} libraryPath
  * @property {string} commonPath
  * @property {number} tempWebServerPort
+ * @property {boolean} createEngineSearchContent
  * @property {string} output Folder of the compiled website files
  */
 

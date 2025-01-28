@@ -45,6 +45,7 @@
                 }
             }
         },
+        "createEngineSearchContent": true,
         "minifyScripts": true,
         "libraryPath": "./cjs",
         "commonPath": "./common",
