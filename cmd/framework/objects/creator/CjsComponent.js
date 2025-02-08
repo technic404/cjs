@@ -16,7 +16,7 @@ class CjsComponent extends CjsElement {
     supplyStyleImport() {
         const { pascalCase } = this.names;
 
-        this.#imports.style = `${pascalCase}.importStyle('${this.semiAbsolutePath}/styles/${pascalCase}.css');`;
+        this.#imports.style = `${pascalCase}.importStyle('${this.semiAbsolutePath}/_styles/${pascalCase}.css');`;
 
         return this;
     }

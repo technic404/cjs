@@ -156,6 +156,17 @@ class CjsComponent {
     }
 
     /**
+     * Clones an component and sets data with argument (used for Layouts)
+     * @param {object} data
+     * @returns {CjsComponent}
+     */
+    withData(data) {
+        const clone = Object.create(Object.getPrototypeOf(this));
+        Object.assign(clone, this);
+        return clone.setData(data);
+    }
+
+    /**
      * Determinates if component exists in DOM
      * @returns {boolean}
      */

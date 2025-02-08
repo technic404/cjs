@@ -46,7 +46,7 @@ class CjsCreator {
                     return char;
                 }).join("").toLowerCase();
 
-            const style = new CjsStyle(names, path + "/styles", className);
+            const style = new CjsStyle(names, path + "/_styles", className);
             const component = new CjsComponent(names, path, className)
                 .supplyStyleImport();
 

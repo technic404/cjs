@@ -6,4 +6,4 @@ export const Container = new CjsComponent((data) => {
     `;
 });
 
-Container.importStyle('./src/layouts/root/styles/Container.css');
+Container.importStyle('./src/layouts/root/_styles/Container.css');

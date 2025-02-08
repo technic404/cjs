@@ -43,3 +43,12 @@ function png(path) {
 function jpg(path) {
     return asset(`images/${path}.jpg`);
 }
+
+/**
+ * Shortcut of `asset` method, by default adds `gif/` prefix and `.gif` suffix.
+ * @param {string} path
+ * @returns {string}
+ */
+function gif(path) {
+    return asset(`gif/${path}.gif`);
+}

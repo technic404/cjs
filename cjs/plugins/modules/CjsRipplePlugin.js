@@ -5,6 +5,15 @@ class CjsRipplePlugin extends CjsPlugin {
     /** @type {number} Animation time in ms */
     #animationTime = 400;
 
+    #cssVariables = {
+        s: "sx",
+        t: "tx", // animation time
+        o: "ox", // opacity
+        d: "dx", // width, height
+        x: "xx", // position
+        y: "yx" // position
+    }
+
     /**
      * Applies the effect, adds click listener to element
      * @param {HTMLElement} element 
@@ -16,9 +25,9 @@ class CjsRipplePlugin extends CjsPlugin {
             const r = element.getBoundingClientRect();
             const d = Math.sqrt(Math.pow(r.width, 2) + Math.pow(r.height, 2)) * 2;
 
-            element.style.cssText = `--s: 0; --o: 1;`;
+            element.style.cssText = `--${this.#cssVariables.s}: 0; --${this.#cssVariables.o}: 1;`;
             element.offsetTop;
-            element.style.cssText = `--t: 1; --o: 0; --d: ${d}; --x:${e.clientX - r.left}; --y:${e.clientY - r.top};`;
+            element.style.cssText = `--${this.#cssVariables.t}: 1; --${this.#cssVariables.o}: 0; --${this.#cssVariables.d}: ${d}; --${this.#cssVariables.x}:${e.clientX - r.left}; --${this.#cssVariables.y}:${e.clientY - r.top};`;
         });
     }
 
@@ -43,14 +52,14 @@ class CjsRipplePlugin extends CjsPlugin {
                 `position: absolute;`,
                 `pointer-events: none;`,
                 `transform-origin: center;`,
-                `top: calc(var(--y) * 1px);`,
-                `left: calc(var(--x) * 1px);`,
-                `width: calc(var(--d) * 1px);`,
-                `height: calc(var(--d) * 1px);`,
+                `top: calc(var(--${this.#cssVariables.y}) * 1px);`,
+                `left: calc(var(--${this.#cssVariables.x}) * 1px);`,
+                `width: calc(var(--${this.#cssVariables.d}) * 1px);`,
+                `height: calc(var(--${this.#cssVariables.d}) * 1px);`,
                 `background: var(--ripple-background, white);`,
-                `transform: translate(-50%, -50%) scale(var(--s, 1));`,
-                `opacity: calc(var(--o, 1) * var(--ripple-opacity, 0.3));`,
-                `transition: calc(var(--t, 0) * var(--ripple-duration, ${cssAnimationTime})) var(--ripple-easing, linear);`,
+                `transform: translate(-50%, -50%) scale(var(--${this.#cssVariables.s}, 1));`,
+                `opacity: calc(var(--${this.#cssVariables.o}, 1) * var(--ripple-opacity, 0.3));`,
+                `transition: calc(var(--${this.#cssVariables.t}, 0) * var(--ripple-duration, ${cssAnimationTime})) var(--ripple-easing, linear);`,
             ]
         });
     }
