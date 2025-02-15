@@ -16,6 +16,8 @@ class CjsScaleClickPlugin extends CjsPlugin {
      * @param {boolean} isTouchStart 
      */
     #onTouch(element, isTouchStart) {
+        if(element.hasAttribute("disabled")) return;
+
         const className = this.keyframe.getClass({ reversed: isTouchStart });
         const endScale = isTouchStart ? this.scales.start : this.scales.end;
 

@@ -228,7 +228,9 @@ class CjsRequest {
 
                 this.#onEndCallback(requestResult);
 
-                if(!requestResult.isError()) {
+                if(requestResult.isError()) {
+                    this.#onErrorCallback(requestResult);
+                } else {
                     this.#onSuccessCallback(requestResult);
                 }
 

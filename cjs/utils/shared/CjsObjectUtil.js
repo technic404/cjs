@@ -64,8 +64,9 @@ const CjsObject = {
             if(obj === null) return null;
             
             const isPrimitive = typeof obj !== 'object';
-            
-            if(isPrimitive) return obj;
+            const isHtmlElement = obj instanceof HTMLElement || obj instanceof Node;
+
+            if(isPrimitive || isHtmlElement) return obj;
             
             if(Array.isArray(obj)) {
                 const arrayClone = [];

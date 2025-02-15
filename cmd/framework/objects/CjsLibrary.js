@@ -4,6 +4,22 @@ const { PrefixError } = require("../../defaults");
 
 class CjsLibrary {
 
+    #copywrite = `
+/*
+############################################
+#                                          #
+#  This file includes C.JS framework core  #
+#     Distributed under MS-RSL license     #
+#                                          #
+#    Any changes or other distributions    #
+#        requires author agreement         #
+#                                          #
+#          Created by technic404           #
+#      https://github.com/technic404       #
+#                                          #
+############################################
+*/`.trim()
+
     /** @type {import('../../types').Config} General config */
     #config;
 
@@ -196,10 +212,10 @@ class CjsLibrary {
             return null;
         }
 
-        return this.#config.compiler.minifyScripts && minifyScripts
+        return this.#copywrite + "\n\n" + (this.#config.compiler.minifyScripts && minifyScripts
             ? UglifyJS.minify(content).code
             : content
-        ;
+        );
     }
 }
 
