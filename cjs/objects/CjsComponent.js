@@ -156,6 +156,20 @@ class CjsComponent {
     }
 
     /**
+     * Parses HTMLElement to forms
+     * @param {HTMLElement} element 
+     * @returns {CjsForm[]}
+     */
+    toForms(element) {
+        const forms = Array.from(element.querySelectorAll("form"));
+        const componentIsForm = element.tagName === "FORM"
+
+        if(componentIsForm) forms.push(element);
+
+        return forms.map(form => new CjsForm(form));
+    }
+
+    /**
      * Clones an component and sets data with argument (used for Layouts)
      * @param {object} data
      * @returns {CjsComponent}
