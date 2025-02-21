@@ -306,4 +306,25 @@ class CjsLayout {
     show() {
         this.getElement().style.display = '';
     }
+
+    /**
+     * Rerenders all layouts this type
+     * @returns {CjsLayout}
+     */
+    rerenderLayouts() {
+        const layouts = Array.from(document.body.querySelectorAll(`[${this.attribute}]`));
+        const newLayout = this.toElement();
+
+        for(const layout of layouts) {
+            layout.replaceWith(newLayout);
+
+            setTimeout(() => {
+                this._executeOnLoad();
+
+                CjsFrameworkEvents.onLoadLayout(this);
+            }, 2);
+        }
+
+        return this;
+    }
 }
