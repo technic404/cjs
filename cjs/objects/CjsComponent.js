@@ -61,7 +61,14 @@ class CjsComponent {
      * @returns {string} html
      */
     _getHtml = (data, layoutData = {}) => {
-        const html = this.func(data, layoutData);
+        let elementPromiseResolver = () => {};
+
+        const elementPromise = new Promise((resolve, rejest) => elementPromiseResolver = resolve);
+        const onLoadAttribute = mutationListener.listen("add", (cjsEvent) => {
+            elementPromiseResolver(cjsEvent.target);
+            this._executeOnLoad(this._onLoadData)
+        });
+        const html = this.func(data, elementPromise, layoutData);
 
         /**
          * Adds attributes to root element
@@ -117,8 +124,6 @@ class CjsComponent {
             return container.innerHTML;
         }
 
-        const onLoadAttribute = mutationListener.listen("add", () => this._executeOnLoad(this._onLoadData));
-
         return addAttributes(addLazyIdentifiers(html), [
             this.attribute, onLoadAttribute.trim()
         ]);
@@ -144,7 +149,7 @@ class CjsComponent {
 
     /**
      * Creates the component type element
-     * @param {(componentData: object, layoutData: object) => string} func function that will return component html. The object argument is data provided by parent layout
+     * @param {(componentData: object, promise: Promise<HTMLElement> layoutData: object) => string} func function that will return component html. The object argument is data provided by parent layout
      */
     constructor(func) {
         this.func = func;
