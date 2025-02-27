@@ -15,7 +15,7 @@ class CjsRequestResult {
     }
 
     isError() {
-        return this.statusCode !== 200 || this.networkError;
+        return !(`${this.statusCode}`.startsWith("2")) || this.networkError;
     }
 
     isNetworkError() {
@@ -65,6 +65,18 @@ class CjsRequest {
         this.headers = {};
         this.files = {};
         this.cooldown = 0;
+        this.bodyKey = null;
+    }
+
+    /**
+     * Sets body key, it's required when sending files and body at the same time
+     * @param {string} bodyKey 
+     * @returns {CjsRequest}
+     */
+    setBodyKey(bodyKey) {
+        this.bodyKey = bodyKey;
+
+        return this;
     }
 
     /**
@@ -170,11 +182,11 @@ class CjsRequest {
         const bodyExists = Object.keys(this.body).length > 0;
         const filesExists = Object.keys(this.files).length > 0;
 
-        if(filesExists && bodyExists) {
-            console.log(`${CJS_PRETTY_PREFIX_X}Cannot send files and body data at the same time`);
+        // if(filesExists && bodyExists) {
+        //     console.log(`${CJS_PRETTY_PREFIX_X}Cannot send files and body data at the same time`);
 
-            return new CjsRequestResult(0, null, true)
-        }
+        //     return new CjsRequestResult(0, null, true)
+        // }
 
         xhr.upload.onprogress = (e) => {
             if (e.lengthComputable) {
@@ -184,27 +196,58 @@ class CjsRequest {
             }
         };
 
-        if(bodyExists) {
-            xhr.setRequestHeader("Content-Type", "application/json");
+        if(bodyExists || filesExists) {
+            if(bodyExists && !filesExists) {
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send(JSON.stringify(this.body));
+            } else {
+                const formData = new FormData();
 
-            xhr.send(JSON.stringify(this.body));
-        } else if(filesExists) {
-            //xhr.setRequestHeader("Content-Type", "multipart/form-data");
-
-            const formData = new FormData();
-
-            for(const [key, value] of Object.entries(this.files)) {
-                if(value instanceof FileList) {
-                    for(const file of Array.from(value)) {
-                        formData.append(key, file);
+                for (const [key, value] of Object.entries(this.files)) {
+                    if (value instanceof FileList) {
+                        for (const file of Array.from(value)) {
+                            formData.append(key, file);
+                        }
+                    } else {
+                        formData.append(key, value);
                     }
                 }
-            }
 
-            xhr.send(formData);
+                if(bodyExists && !this.bodyKey) {
+                    console.log(`${CJS_PRETTY_PREFIX_X}Cannot send files and body data at the same time if bodyKey is not defined`);
+
+                    return new CjsRequestResult(0, null, true);
+                }
+    
+                if(bodyExists) formData.append(this.bodyKey, JSON.stringify(this.body));
+
+                xhr.send(formData);
+            }
         } else {
             xhr.send();
         }
+
+        // if(bodyExists) {
+        //     xhr.setRequestHeader("Content-Type", "application/json");
+
+        //     xhr.send(JSON.stringify(this.body));
+        // } else if(filesExists) {
+        //     //xhr.setRequestHeader("Content-Type", "multipart/form-data");
+
+        //     const formData = new FormData();
+
+        //     for(const [key, value] of Object.entries(this.files)) {
+        //         if(value instanceof FileList) {
+        //             for(const file of Array.from(value)) {
+        //                 formData.append(key, file);
+        //             }
+        //         }
+        //     }
+
+        //     xhr.send(formData);
+        // } else {
+        //     xhr.send();
+        // }
 
         xhr.onerror = (e) => {
             const requestResult = new CjsRequestResult(0, null, true);
