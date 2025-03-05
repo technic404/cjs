@@ -182,6 +182,7 @@ class CjsComponent {
     withData(data) {
         const clone = Object.create(Object.getPrototypeOf(this));
         Object.assign(clone, this);
+        clone.attribute = Cjs.generateAttribute(CJS_COMPONENT_PREFIX, CjsTakenAttributes.components)
         return clone.setData(data);
     }
 
@@ -471,6 +472,20 @@ class CjsComponent {
         this._onLoadData = onLoadData;
 
         return this;
+    }
+
+    /**
+     * Sets display to none
+     */
+    hide() {
+        this.toElement().style.display = 'none';
+    }
+
+    /**
+     * Removes display style property
+     */
+    show() {
+        this.toElement().style.display = '';
     }
 
     /**

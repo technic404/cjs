@@ -10,7 +10,9 @@ async function addRootStyle(selectorPrefix, path, options = { prefixStyleRules: 
     if(!("encodeKeyframes" in options)) options.encodeKeyframes = true;
     if(!("enableMultiSelector" in options)) options.enableMultiSelector = true;
     
-    if(cjsRunnable.isStyleValid()) return CjsRunnableStyleWatcher.set(selectorPrefix, { options, path }); 
+    if(cjsRunnable.isStyleValid()) return CjsRunnableStyleWatcher.set(selectorPrefix, { options, path });
+
+    path = path.startsWith("./") ? path.slice(2) : path;
 
     const request = await new CjsRequest(path, "get").doRequest();
 

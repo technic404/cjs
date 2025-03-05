@@ -60,6 +60,10 @@ class CjsNotificationPlugin extends CjsPlugin {
                 `color: ${this.#themes[oppositeTheme].backgroundColor};`,
                 `margin: 0;`,
                 `font-size: 16px;`,
+                `display: -webkit-box;`,
+                `-webkit-line-clamp: 1;`,
+                `-webkit-box-orient: vertical;`,
+                `overflow: hidden;`
             ],
             [`#${this.#containerId}.container > .notification > .icon`]: [
                 `--size: 22px;`,

@@ -1,12 +1,13 @@
 class CjsRequestResult {
+
     /**
      * @param {number} statusCode
-     * @param {string} responseText
+     * @param {ArrayBuffer|Blob|Document|object|string} response
      * @param {boolean} networkError
      */
-    constructor(statusCode, responseText, networkError) {
+    constructor(statusCode, response, networkError) {
         this.statusCode = statusCode;
-        this.responseText = responseText;
+        this.response = response;
         this.networkError = networkError;
     }
 
@@ -18,20 +19,19 @@ class CjsRequestResult {
         return !(`${this.statusCode}`.startsWith("2")) || this.networkError;
     }
 
-    isNetworkError() {
-        return this.networkError;
-    }
+    /** @returns {boolean} */
+    isNetworkError() { return this.networkError; }
 
-    text() {
-        return this.responseText;
-    }
+    /** @returns {string} */
+    text() { return this.response; }
 
-    json() {
-        return JSON.parse(this.responseText);
-    }
+    /** @returns {object} */
+    json() { return JSON.parse(this.response); }
+
+    /** @returns {Blob} */
+    blob() { return this.response; }
 
     /**
-     *
      * @param {number} code
      * @param {function} callback
      */
@@ -66,6 +66,7 @@ class CjsRequest {
         this.files = {};
         this.cooldown = 0;
         this.bodyKey = null;
+        this.responseType = null;
     }
 
     /**
@@ -109,6 +110,17 @@ class CjsRequest {
      */
     setCooldown(cooldown) {
         this.cooldown = cooldown;
+
+        return this;
+    }
+
+    /**
+     * Sets the response type of the request
+     * @param {"text"|"json"|"document"|"blob"|"arraybuffer"} responseType
+     * @returns {CjsRequest}
+     */
+    setResponseType(responseType) {
+        this.responseType = responseType;
 
         return this;
     }
@@ -175,6 +187,8 @@ class CjsRequest {
 
         xhr.open(this.method, url, true);
 
+        if(this.responseType) xhr.responseType = this.responseType;
+
         for(const [key, value] of Object.entries(this.headers)) {
             xhr.setRequestHeader(key, `${value}`);
         }
@@ -190,7 +204,7 @@ class CjsRequest {
 
         xhr.upload.onprogress = (e) => {
             if (e.lengthComputable) {
-                var percentage = (e.loaded / e.total) * 100;
+                let percentage = (e.loaded / e.total) * 100;
 
                 this.#onProgressCallback(percentage, e.loaded, e.total, e);
             }
@@ -263,7 +277,7 @@ class CjsRequest {
             xhr.onreadystatechange = async () => {
                 const requestResult = new CjsRequestResult(
                     xhr.status,
-                    xhr.responseText,
+                    xhr.response,
                     (xhr.status === 0)
                 );
 
@@ -284,7 +298,7 @@ class CjsRequest {
 
     /**
      * Sets query parameters in url like `?param=value&sort=ASC`
-     * @param {Object.<string, string>} query
+     * @param {Object.<string|number, any>} query
      * @return {CjsRequest}
      */
     setQuery(query) {
@@ -295,7 +309,7 @@ class CjsRequest {
 
     /**
      * Sets headers like eg. `Authorization: Bearer TOKEN`
-     * @param {Object.<string, string>} headers
+     * @param {Object.<string|number, any>} headers
      * @returns {CjsRequest}
      */
     setHeaders(headers) {
@@ -317,7 +331,7 @@ class CjsRequest {
 
     /**
      * Sets files
-     * @param {object} files
+     * @param {Object.<string|number, any>} files
      * @returns {CjsRequest}
      */
     setFiles(files) {
