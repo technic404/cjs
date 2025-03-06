@@ -31,6 +31,9 @@ class CjsRequestResult {
     /** @returns {Blob} */
     blob() { return this.response; }
 
+    /** @returns {string} */
+    toObjectURL() { return (window.URL || window.webkitURL).createObjectURL(this.response); }
+
     /**
      * @param {number} code
      * @param {function} callback
