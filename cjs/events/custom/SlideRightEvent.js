@@ -45,10 +45,10 @@ function onSlideRight(f, slideThreshold = 50, cancelUpDownThreshold = 50) {
             mouse.lastX = clientX
         }
 
-        cjsEvent.source.addEventListener('mousedown', start)
-        cjsEvent.source.addEventListener('touchstart', start)
+        cjsEvent.target.addEventListener('mousedown', start)
+        cjsEvent.target.addEventListener('touchstart', start)
 
-        cjsEvent.source.addEventListener('mousemove', move);
-        cjsEvent.source.addEventListener('touchmove', move);
+        cjsEvent.target.addEventListener('mousemove', move);
+        cjsEvent.target.addEventListener('touchmove', move);
     });
 }

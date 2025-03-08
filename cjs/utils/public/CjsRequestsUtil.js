@@ -56,6 +56,45 @@ class CjsRequest {
     #onSuccessCallback = function() {};
     #onProgressCallback = function() {};
 
+    /** @type {Object.<string, { data: *, statusCode: number, expiryTimestamp: number }>} */
+    #cached = {};
+
+    #getRequestCachedKey() {
+        return "cjsrequest-" + JSON.stringify(this.body) + this.bodyKey + JSON.stringify(this.query) + JSON.stringify(this.headers);
+    }
+
+    #getCached = () => {
+        if(localStorage.getItem(this.#getRequestCachedKey()) === null) return null;
+
+        const value = JSON.parse(localStorage.getItem(this.#getRequestCachedKey()));
+        const { data, expiryTimestamp } = value;
+
+        if(new Date().getTime() > expiryTimestamp) return null;
+
+        return data;
+    }
+
+    #hasCached = () => {
+        if(localStorage.getItem(this.#getRequestCachedKey()) === null) return false;
+
+        const value = JSON.parse(localStorage.getItem(this.#getRequestCachedKey()));
+        const { expiryTimestamp } = value;
+
+        if(new Date().getTime() > expiryTimestamp) return false;
+
+        return true;
+    }
+
+    #setCached = (data, seconds) => {
+        const expiryTimestamp = new Date().getTime() + (1000 * seconds);
+
+        localStorage.setItem(this.#getRequestCachedKey(), JSON.stringify({ data, expiryTimestamp }));
+    }
+
+    #removeCached = () => {
+        localStorage.removeItem(this.#getRequestCachedKey());
+    }
+
     /**
      * @param {string} url
      * @param {CjsRequestMethods} method
@@ -70,6 +109,40 @@ class CjsRequest {
         this.cooldown = 0;
         this.bodyKey = null;
         this.responseType = null;
+        this.cacheSeconds = 0;
+    }
+
+    /**
+     * Sets cache'ing time for an object, before it expiry and will be downloaded using full network request
+     * @param {number} seconds 
+     * @returns {CjsRequest}
+     */
+    setCacheSeconds(seconds = 10) {
+        this.cacheSeconds = seconds;
+
+        return this;
+    }
+
+    /**
+     * Sets cache'ing time for an object, before it expiry and will be downloaded using full network request
+     * @param {number} minutes 
+     * @returns {CjsRequest}
+     */
+    setCacheMinutes(minutes = 5) {
+        this.cacheSeconds = minutes * 60;
+
+        return this;
+    }
+    
+    /**
+     * Sets cache'ing time for an object, before it expiry and will be downloaded using full network request
+     * @param {number} hours 
+     * @returns {CjsRequest}
+     */
+    setCacheHours(hours = 1) {
+        this.cacheSeconds = hours * 60 * 60;
+        
+        return this;
     }
 
     /**
@@ -166,6 +239,13 @@ class CjsRequest {
      * @return {Promise<CjsRequestResult>}
      */
     async doRequest() {
+        const cacheEnabled = this.cacheSeconds > 0;
+        
+        if(cacheEnabled && this.#hasCached()) {
+            const cached = this.#getCached();
+            return new CjsRequestResult(cached.statusCode, cached.data, false);
+        }
+
         if(this.cooldown > 0) {
             await new Promise((res) => setTimeout(() => res(), this.cooldown));
         }
@@ -198,12 +278,6 @@ class CjsRequest {
 
         const bodyExists = Object.keys(this.body).length > 0;
         const filesExists = Object.keys(this.files).length > 0;
-
-        // if(filesExists && bodyExists) {
-        //     console.log(`${CJS_PRETTY_PREFIX_X}Cannot send files and body data at the same time`);
-
-        //     return new CjsRequestResult(0, null, true)
-        // }
 
         xhr.upload.onprogress = (e) => {
             if (e.lengthComputable) {
@@ -292,6 +366,13 @@ class CjsRequest {
                     this.#onErrorCallback(requestResult);
                 } else {
                     this.#onSuccessCallback(requestResult);
+                }
+
+                if(cacheEnabled) {
+                    this.#setCached({
+                        data: xhr.response,
+                        statusCode: xhr.status
+                    }, this.cacheSeconds)
                 }
 
                 resolve(requestResult);

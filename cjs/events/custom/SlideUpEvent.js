@@ -35,10 +35,10 @@ function onSlideUp(f, slideThreshold = 10) {
             lastClientY = clientY;
         }
 
-        cjsEvent.source.addEventListener('mousedown', start)
-        cjsEvent.source.addEventListener('touchstart', start)
+        cjsEvent.target.addEventListener('mousedown', start)
+        cjsEvent.target.addEventListener('touchstart', start)
 
-        cjsEvent.source.addEventListener('mousemove', move);
-        cjsEvent.source.addEventListener('touchmove', move);
+        cjsEvent.target.addEventListener('mousemove', move);
+        cjsEvent.target.addEventListener('touchmove', move);
     });
 }
