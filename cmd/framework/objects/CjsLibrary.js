@@ -81,6 +81,7 @@ class CjsLibrary {
         "events/common/MouseLeaveEvent.js", 
         "events/common/MouseMoveEvent.js", 
         "events/common/TouchMoveEvent.js", 
+        "events/custom/EscapeEvent.js", 
         "events/custom/HoldDownEvent.js", 
         "events/custom/LoadEvent.js", 
         "events/custom/OuterClickEvent.js", 

@@ -35,6 +35,27 @@ class CjsRequestResult {
     toObjectURL() { return (window.URL || window.webkitURL).createObjectURL(this.response); }
 
     /**
+     * Provides translation of the status code
+     * @returns {string}
+     */
+    getTranslation() {
+        const codes = {
+            200: "Pomyślnie wykonano operację",
+            400: "Niepoprawne dane",
+            401: "Brak autoryzacji",
+            403: "Brak uprawnień",
+            404: "Nie znaleziono",
+            500: "Błąd serwera"
+        }
+
+        return this.statusCode in codes ? codes[this.statusCode] : (
+            this.isError() 
+            ? `Błąd wykonania operacji`
+            : `Pomyślnie wykonano operację`
+        );
+    }
+
+    /**
      * @param {number} code
      * @param {function} callback
      */
