@@ -220,7 +220,7 @@ class CjsSearch {
      * @returns {CjsSearch}
      */
     set(search, forceRerender = false) {
-        const parsed = search.charAt(0) === "/" ? search.slice(1) : search;
+        const parsed = this.#parseSearch(search);
         const notChanged = this.search === parsed;
 
         if(notChanged && !forceRerender) return this;
