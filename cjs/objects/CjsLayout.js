@@ -191,6 +191,21 @@ class CjsLayout {
     }
 
     /**
+     * Parses layout to a component using `CjsComponent.withData(...)`
+     * @param {object} data 
+     * @returns {CjsComponent}
+     */
+    asComponentWithData(data) {
+        this.setData(data);
+
+        const component = new CjsComponent(_ => `<div></div>`)
+
+        component.onLoad(_ => component.loadLayout(this.setData(data)));
+
+        return component;
+    }
+
+    /**
      * Replaces the website content with layout elements
      */
     replacePage() {
