@@ -61,14 +61,18 @@ class CjsComponent {
      * @returns {string} html
      */
     _getHtml = (data, layoutData = {}) => {
-        let elementPromiseResolver = () => {};
-
-        const elementPromise = new Promise((resolve, rejest) => elementPromiseResolver = resolve);
+        // let elementPromiseResolver = () => {};
+        //
+        // const elementPromise = new Promise((resolve, rejest) => {
+        //     elementPromiseResolver = resolve;
+        // });
         const onLoadAttribute = mutationListener.listen("add", (cjsEvent) => {
-            elementPromiseResolver(cjsEvent.target);
+            // elementPromiseResolver(cjsEvent.target);
+            // console.log('resolved', cjsEvent.target);
             this._executeOnLoad(this._onLoadData)
         });
-        const html = this.func(data, elementPromise, layoutData);
+        // console.log('ola', onLoadAttribute, data)
+        const html = this.func(data, () => document.querySelector(`[${onLoadAttribute}]`), layoutData);
 
         /**
          * Adds attributes to root element
@@ -149,7 +153,7 @@ class CjsComponent {
 
     /**
      * Creates the component type element
-     * @param {(componentData: object, promise: Promise<HTMLElement>, layoutData: object) => string} func function that will return component html. The object argument is data provided by parent layout
+     * @param {(componentData: object, find: () => HTMLElement, layoutData: object) => string} func function that will return component html. The object argument is data provided by parent layout
      */
     constructor(func) {
         this.func = func;
@@ -533,10 +537,16 @@ class CjsComponent {
 
     /**
      * Returns the first element that is a descendant of node that matches selectors (only for the first instance of the component).
-     * @param {string} selectors 
-     * @returns {HTMLElement|Element|null}
+     * @param {string[]} selectors
+     * @returns {HTMLElement|null|HTMLElement[]}
      */
-    querySelector(selectors) {
+    querySelector(...selectors) {
+        const _querySelector = (_selectors) => this.toElement().querySelector(_selectors);
+
+        const mapped = selectors.map(selector => _querySelector(selector));
+
+        if(mapped.length > 1) return mapped;
+
         return this.toElement().querySelector(selectors);
     }
 

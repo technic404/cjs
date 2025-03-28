@@ -38,6 +38,7 @@ class CjsMutationListener {
             const fictionChild of childListMutations
                 .map((mutation) => Array.from(mutation.addedNodes))
                 .flat()
+                .filter(node => node.nodeType === 1)
                 .map((addedNode) => {
                     // Convert Node to HTMLElement
                     const element = document.createElement("div");
@@ -45,7 +46,7 @@ class CjsMutationListener {
             
                     return element;
                 })
-                .map((element) => [element, ...element.querySelectorAll("*")])
+                .map((element) => Array.from(element.querySelectorAll("*")))
                 .flat()
         ) {
             this.#onAddCallback(fictionChild);
@@ -125,12 +126,12 @@ class CjsMutationListener {
 
     constructor() {
         this.map = new Map(); // attribute, { type: string, action: function, data: object }
-        this.executedFunctions = new Map(); // attribute, { element: HTMLElement }
+        this.executedFunctions = new Map(); // attribute, { elements: HTMLElement[] }
         this.observer = new MutationObserver(this.#callback);
     }
 
     observe() {
-        this.observer.observe(document, { childList: true, subtree: true });
+        this.observer.observe(document.body, { childList: true, subtree: true });
     }
 
     /**
@@ -257,7 +258,7 @@ class CjsMutationListener {
         const isRegistered = this.executedFunctions.has(attribute);
 
         if(isRegistered) {
-            const registeredElementMatches = this.executedFunctions.get(attribute).element === element
+            const registeredElementMatches = this.executedFunctions.get(attribute).elements.includes(element);
 
             if(registeredElementMatches) return;
         }
@@ -268,14 +269,15 @@ class CjsMutationListener {
 
         const cjsEvent = new CjsEvent(
             new CjsMutationEvent(element, new Date()),
-            findParentThatHasAttribute(element, CJS_COMPONENT_PREFIX),
             element,
         );
 
         obj.action(cjsEvent);
 
         if(!this.executedFunctions.has(attribute)) {
-            this.executedFunctions.set(attribute, { element: element })
+            this.executedFunctions.set(attribute, { elements: [] })
         }
+
+        this.executedFunctions.get(attribute).elements.push(element);
     }
 }

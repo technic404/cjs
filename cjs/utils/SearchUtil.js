@@ -113,7 +113,7 @@ class CjsSearch {
     /**
      * Updates search parameters
      */
-    update() {
+    update(quiet = false) {
         // history.pushState(null, '', `/${this.search}`);
 
         localStorage.setItem(this.#localStorageId, this.search);
@@ -122,7 +122,9 @@ class CjsSearch {
 
         this.length = parts.length;
 
-        this.#listeners.forEach(listener => listener({ search: this.search, parts, length: this.length }));
+        if(!quiet) {
+            this.#listeners.forEach(listener => listener({ search: this.search, parts, length: this.length }));
+        }
 
         if(this.#displayOnScreen) {
             const debugBox = document.getElementById(this.#debugBoxId) === null 
@@ -228,6 +230,19 @@ class CjsSearch {
         this.search = parsed;
 
         this.update();
+
+        return this;
+    }
+
+    /**
+     * Sets the search location without rerender
+     * @param {string} search
+     * @returns {CjsSearch}
+     */
+    setQuiet(search) {
+        this.search = this.#parseSearch(search);
+
+        this.update(true);
 
         return this;
     }
