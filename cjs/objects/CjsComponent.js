@@ -537,7 +537,7 @@ class CjsComponent {
 
     /**
      * Returns the first element that is a descendant of node that matches selectors (only for the first instance of the component).
-     * @param {string[]} selectors
+     * @param {string|string[]} selectors
      * @returns {HTMLElement|null|HTMLElement[]}
      */
     querySelector(...selectors) {
