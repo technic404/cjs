@@ -294,6 +294,8 @@ class CjsLayout {
                 if(!isChildAnArray) return console.log(`${CJS_PRETTY_PREFIX_X}Layout sub components at second argument have to be Array`);
 
                 componentChildren.forEach(componentChild => {
+                    if(componentChild === null) return;
+
                     component.insertAdjacentElement(`beforeend`, walk(componentChild, parentLayoutData))
                 });
             }
@@ -302,7 +304,9 @@ class CjsLayout {
         }
 
         this.elements.forEach(elements => {
-            container.insertAdjacentElement(`beforeend`, walk(elements, this.#data.active));
+            if(elements === null) return;
+
+            container.insertAdjacentElement(`beforeend`, walk(elements.filter(e => e !== null), this.#data.active));
         });
 
         return container;
