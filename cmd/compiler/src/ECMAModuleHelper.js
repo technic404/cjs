@@ -12,16 +12,18 @@ const ECMAModuleHelper = {
     getTextRegions(content) {
         const reader = new BaseReader(content)
         reader.stringChars.push("`");
-
+     
         const exclude = {
             regions: [],
             region: { start: -1, end: -1 }
         }
-
+     
         const jsTemplate = {
-            opened: false
+            opened: false,
+            nestedOpeningBrackets: 0,
+            content: "",
         }
-
+     
         reader._read((char, i, matchNextChars) => {
             const { loop } = reader;
         
@@ -40,22 +42,42 @@ const ECMAModuleHelper = {
             const closeRegion = (addToEnd = 0) => {
                 exclude.region.end += 2 + addToEnd;
                 exclude.regions.push(Object.assign({}, exclude.region));
-        
-                // Visualization
-                // parsed = insertCharAtRange(parsed, '#', stringRegion.from, stringRegion.to)
-        
                 exclude.region = { start: -1, end: -1 };
             }
         
             const isJsTemplateArea = loop.string.opened && loop.string.openingChar === '`';
-        
-            if(matchNextChars(`\${`) && isJsTemplateArea) {
+     
+            if(jsTemplate.opened) {
+                jsTemplate.content += char;
+            }
+    
+            if(jsTemplate.opened && char === "{" && content[i - 1] !== '$') {
+                jsTemplate.nestedOpeningBrackets += 1;
+            }
+     
+            if(jsTemplate.opened && isJsTemplateArea && char === "}") {
+                if(jsTemplate.nestedOpeningBrackets > 0) {
+                    jsTemplate.nestedOpeningBrackets -= 1;
+                    return;
+                }
+            }
+     
+            if(matchNextChars(`\${`) && isJsTemplateArea && !jsTemplate.opened) {
                 jsTemplate.opened = true;
                 closeRegion(1);
+                loop.skipChars += 1;
+                return;
             }
         
             if(matchNextChars("}") && jsTemplate.opened && isJsTemplateArea) {
+                const jsTemplateContentLength = jsTemplate.content.length;
+                const jsTemplateRegions = getTextRegions(jsTemplate.content).map(region => {
+                    const indexAddDiff = i - jsTemplateContentLength + 1;
+                    return { start: region.start + indexAddDiff, end: region.end + indexAddDiff }
+                });
+                exclude.regions.push(...jsTemplateRegions);
                 jsTemplate.opened = false;
+                jsTemplate.content = '';
                 openRegion();
                 return;
             }
@@ -63,12 +85,12 @@ const ECMAModuleHelper = {
             if(loop.string.opened && !jsTemplate.opened) {
                 openRegion();
             }
-            
+     
             if(!loop.string.opened && exclude.region.start !== -1 && exclude.region.end !== -1 && !jsTemplate.opened) {
                 closeRegion();
             }
         });
-
+     
         return exclude.regions;
     },
     /**
@@ -126,6 +148,17 @@ const ECMAModuleHelper = {
                 });
             }
         }
+
+        // // Debug visualisation of text exclude regions
+        // if(content.includes("Some content here...")) {
+        //     let cp = content;
+
+        //     for(const range of exclude) {
+        //         cp = cp.slice(0, range.start) + "#".repeat(range.end - range.start) + cp.slice(range.end);
+        //     }
+
+        //     console.log(cp);
+        // }
 
         return ranges;
     },
