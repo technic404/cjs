@@ -71,7 +71,7 @@ const ECMAModuleHelper = {
         
             if(matchNextChars("}") && jsTemplate.opened && isJsTemplateArea) {
                 const jsTemplateContentLength = jsTemplate.content.length;
-                const jsTemplateRegions = getTextRegions(jsTemplate.content).map(region => {
+                const jsTemplateRegions = this.getTextRegions(jsTemplate.content).map(region => {
                     const indexAddDiff = i - jsTemplateContentLength + 1;
                     return { start: region.start + indexAddDiff, end: region.end + indexAddDiff }
                 });
