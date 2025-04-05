@@ -4,6 +4,12 @@
 /** @DeleteOnJsFormat */ const CjsDebug = { Style: { Media: [] } }
 /** @DeleteOnJsFormat */ const CJS_PRETTY_PREFIX_X = '', CJS_STYLE_PREFIX = '';
 
+const CjsCssMultisupportProperties = {
+    "backdrop-filter": [
+        "-webkit-backdrop-filter"
+    ]
+}
+
 const CjsStyle = {
     RootVariables: {
         /**
@@ -110,6 +116,18 @@ function addPrefixToSelectors(cssText, prefix = '', options = { prefixStyleRules
         const newRules = [];
 
         for(const [selector, cssText] of Object.entries(rules)) {
+            const properties = new CssStylePropertiesReader(cssText).read();
+
+            for(const [name, value] of Object.entries(properties)) {
+                if(!(name in CjsCssMultisupportProperties)) continue;
+
+                for(const multisupportPropertyName of CjsCssMultisupportProperties[name]) {
+                    if(multisupportPropertyName in properties) continue;
+
+                    properties[multisupportPropertyName] = value;
+                }
+            }
+
             const modifiedRules = getModifiedRules(selector, cssText);
 
             newRules.push(...modifiedRules);
