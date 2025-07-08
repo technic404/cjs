@@ -47,7 +47,6 @@ class CjsComponent extends CjsElement {
             `export const ${pascalCase} = new class ${pascalCase} extends CjsComponent { constructor() { super((data) => {`,
             `    const {  } = this.data;`
         );
-        // content.push(`export const ${pascalCase} = new CjsComponent((data) => {`);
 
         for(let i = 0; i < creator.topEmptyLines; i++) {
             content.push(`    `);
