@@ -69,7 +69,7 @@ class CjsComponent {
     _getHtml = (data, layoutData = {}) => {
         if(!this.#renderedCssStyle && this._cssStyle) {
             addRootStyle(this.attribute, this._cssStyle, { prefixStyleRules: true, encodeKeyframes: true, enableMultiSelector: true }).then();
-            
+
             this.#renderedCssStyle = true;
         }
 
@@ -461,8 +461,10 @@ class CjsComponent {
                 traverse(component, element);
             }
         } else {
+            const html = this._getHtml(data, this._onLoadData);
+            
             for(const component of components) {
-                component.replaceWith(element);
+                component.replaceWith(htmlToElement(html));
             }
         }
 
