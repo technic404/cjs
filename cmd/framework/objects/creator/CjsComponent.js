@@ -69,6 +69,10 @@ class CjsComponent extends CjsElement {
             `    data = {`,
             `    `,
             `    };`,
+            ``,
+            `    /** Settings */`,
+            `    _renderData = this.data;`,
+            `    _cssStyle = './src/layouts/root/_styles/Container.css'`,
             `};`
         );
 
