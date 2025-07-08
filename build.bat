@@ -13,6 +13,9 @@ mkdir build
 :: Copy the ./cmd folder to ./build/cmd
 xcopy /e /i /y cmd build\cmd >nul
 
+:: Copy the ./common folder to ./build/common
+xcopy /e /i /y common build\common >nul
+
 :: Remove the ./build/cmd/node_modules folder
 if exist build\cmd\node_modules (
     rd /s /q build\cmd\node_modules
