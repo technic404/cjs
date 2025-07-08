@@ -16,7 +16,7 @@ class CjsComponent extends CjsElement {
     supplyStyleImport() {
         const { pascalCase } = this.names;
 
-        this.#imports.style = `${pascalCase}.importStyle('${this.semiAbsolutePath}/_styles/${pascalCase}.css');`;
+        this.#imports.style = `${this.semiAbsolutePath}/_styles/${pascalCase}.css`;
 
         return this;
     }
@@ -63,6 +63,7 @@ class CjsComponent extends CjsElement {
         }
 
         content.push(
+            ...([
             `    \`;`,
             `    });};`,
             `    `,
@@ -72,11 +73,10 @@ class CjsComponent extends CjsElement {
             ``,
             `    /** Settings */`,
             `    _renderData = this.data;`,
-            `    _cssStyle = './src/layouts/root/_styles/Container.css'`,
+            (this.#imports.style ? `    _cssStyle = '${this.#imports.style}';` : null),
             `};`
+            ].filter(e => e !== null))
         );
-
-        if(this.#imports.style) content.push("\n" + this.#imports.style);
 
         return content.join("\n");
     }
