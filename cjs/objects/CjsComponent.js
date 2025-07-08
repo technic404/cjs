@@ -11,6 +11,12 @@ class CjsComponent {
     /** @type {object} */
     _onLoadData = {};
 
+    /** @type {string|null} Path of the style CSS file of the component */
+    _cssStyle = null;
+
+    /** @type {boolean} Determinates if css style for component was loaded */
+    #renderedCssStyle = false;
+
     /** Callback that is called when element is loaded into website */
     #onLoadCallback = function() {};
 
@@ -61,18 +67,19 @@ class CjsComponent {
      * @returns {string} html
      */
     _getHtml = (data, layoutData = {}) => {
-        // let elementPromiseResolver = () => {};
-        //
-        // const elementPromise = new Promise((resolve, rejest) => {
-        //     elementPromiseResolver = resolve;
-        // });
+        if(!this.#renderedCssStyle && this._cssStyle) {
+            addRootStyle(this.attribute, this._cssStyle, { prefixStyleRules: true, encodeKeyframes: true, enableMultiSelector: true }).then();
+            
+            this.#renderedCssStyle = true;
+        }
+
         const onLoadAttribute = mutationListener.listen("add", (cjsEvent) => {
-            // elementPromiseResolver(cjsEvent.target);
-            // console.log('resolved', cjsEvent.target);
             this._executeOnLoad(this._onLoadData)
         });
-        // console.log('ola', onLoadAttribute, data)
-        const html = this.func(data, () => document.querySelector(`[${onLoadAttribute}]`), layoutData);
+
+        this._renderData = data;
+        
+        const html = this.func(() => document.querySelector(`[${onLoadAttribute}]`), layoutData);
 
         /**
          * Adds attributes to root element
@@ -153,13 +160,15 @@ class CjsComponent {
 
     /**
      * Creates the component type element
-     * @param {(componentData: object, find: () => HTMLElement, layoutData: object) => string} func function that will return component html. The object argument is data provided by parent layout
+     * @param {(find: () => HTMLElement, layoutData: object) => string} func function that will return component html. The object argument is data provided by parent layout
      */
     constructor(func) {
         this.func = func;
 
         /** @type {object} Contains the default data (init data) of the component */
         this.data = {};
+        /** @type {object} Intended to be an typedef for data declared in `this.data` - stores last rendered component data */
+        this._renderData = {};
         this.preSetData = {};
 
         this.attribute = Cjs.generateAttribute(CJS_COMPONENT_PREFIX, CjsTakenAttributes.components);
@@ -509,15 +518,6 @@ class CjsComponent {
 
             window.addEventListener('resize', resize);
         }
-    }
-
-    /**
-     * Imports style to element from specified file
-     * @param {string} path path of the specific style file (.css)
-     * @param {CjsStyleImportOptions} options
-     */
-    importStyle(path, options = { prefixStyleRules: true, encodeKeyframes: true, enableMultiSelector: true } ) {
-        addRootStyle(this.attribute, path, options).then();
     }
 
     /**
