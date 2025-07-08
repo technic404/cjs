@@ -35,7 +35,6 @@ class CjsComponent extends CjsElement {
 
         const className = !setHtmlTag && creator.autoAddClassNames
             ? ` class="${this.className}"`
-            // ? ` class="${pascalCase.toLowerCase()}"`
             : ''
 
         const defaultText = creator.includeDefaultText
@@ -44,7 +43,11 @@ class CjsComponent extends CjsElement {
 
         if(this.#imports.handler) content.push(this.#imports.handler + "\n");
 
-        content.push(`export const ${pascalCase} = new CjsComponent((data) => {`);
+        content.push(
+            `export const ${pascalCase} = new class ${pascalCase} extends CjsComponent { constructor() { super((data) => {`,
+            `    const {  } = this.data;`
+        );
+        // content.push(`export const ${pascalCase} = new CjsComponent((data) => {`);
 
         for(let i = 0; i < creator.topEmptyLines; i++) {
             content.push(`    `);
@@ -60,8 +63,15 @@ class CjsComponent extends CjsElement {
             content.push(`        <${tagName}${className}>${defaultText}</${tagName}>`);
         }
 
-        content.push(`    \`;`);
-        content.push(`});`);
+        content.push(
+            `    \`;`,
+            `    });};`,
+            `    `,
+            `    data = {`,
+            `    `,
+            `    };`,
+            `};`
+        );
 
         if(this.#imports.style) content.push("\n" + this.#imports.style);
 
