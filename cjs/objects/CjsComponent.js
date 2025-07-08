@@ -49,7 +49,7 @@ class CjsComponent {
         }
 
         mergeObjects(mergedData, data);
-        mergeObjects(mergedData, this.defaultData, true);
+        mergeObjects(mergedData, this.data, true);
 
         return CjsObject.copy(mergedData);
     }
@@ -158,7 +158,8 @@ class CjsComponent {
     constructor(func) {
         this.func = func;
 
-        this.defaultData = {};
+        /** @type {object} Contains the default data (init data) of the component */
+        this.data = {};
         this.preSetData = {};
 
         this.attribute = Cjs.generateAttribute(CJS_COMPONENT_PREFIX, CjsTakenAttributes.components);
@@ -529,7 +530,7 @@ class CjsComponent {
 
         if(!isObject(data)) return console.log(`${CJS_PRETTY_PREFIX_X}Data passed into setDefaultData() have to be object type argument`);
 
-        this.defaultData = data;
+        this.data = data;
 
         return this;
     }
