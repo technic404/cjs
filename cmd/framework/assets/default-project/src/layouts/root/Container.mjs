@@ -8,7 +8,7 @@ export const Container = new class Container extends CjsComponent { constructor(
 
     data = { }; 
     
-    /** Component settings */
+    /** Settings */
     _renderData = this.data;
     _cssStyle = './src/layouts/root/_styles/Container.css';
 }
