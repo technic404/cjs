@@ -15,7 +15,16 @@ class CjsMutationEvent {
  */
 class CjsMutationListener {
     /** @type {(element: Node) => {}} */
-    #onAddCallback = () => {};
+    #onAddCallback = () => {}; 
+
+    /**
+     * Function that disables default behaviour of <form> onSubmit (prevent default)
+     */
+    #processForms() {
+        document.body.querySelectorAll("form").forEach(form => {
+            form.onsubmit = (e) => e.preventDefault();
+        });
+    }
 
     /**
      * @param {string} attribute 
@@ -31,6 +40,8 @@ class CjsMutationListener {
      * @param {MutationRecord[]} mutationsList 
      */
     #callback = (mutationsList) => {
+        this.#processForms();
+
         const childListMutations = mutationsList
         .filter((mutation) => mutation.type === 'childList');
 
