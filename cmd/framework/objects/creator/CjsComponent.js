@@ -44,32 +44,34 @@ class CjsComponent extends CjsElement {
         if(this.#imports.handler) content.push(this.#imports.handler + "\n");
 
         content.push(
-            `export const ${pascalCase} = new class ${pascalCase} extends CjsComponent { constructor() { super((data) => {`,
-            `    const {  } = this._renderData;`
+            `export const ${pascalCase} = new class ${pascalCase} extends CjsComponent {`,
+            `    data = {};`,
+            ``,
+            `   _() {`,
         );
 
         for(let i = 0; i < creator.topEmptyLines; i++) {
             content.push(`    `);
         }
 
-        content.push(`    return ${creator.stringReturnPrefix}\``);
+        content.push(
+            `       const {} = this._renderData;`,
+            ``,
+            `       return ${creator.stringReturnPrefix}\``
+        );
 
         if(creator.createWithSplitLines) {
-            content.push(`        <${tagName}${className}>`);
-            content.push(`            ${defaultText}`);
-            content.push(`        </${tagName}>`);
+            content.push(`          <${tagName}${className}>`);
+            content.push(`              ${defaultText}`);
+            content.push(`          </${tagName}>`);
         } else {
-            content.push(`        <${tagName}${className}>${defaultText}</${tagName}>`);
+            content.push(`          <${tagName}${className}>${defaultText}</${tagName}>`);
         }
 
         content.push(
             ...([
-            `    \`;`,
-            `    });};`,
-            `    `,
-            `    data = {`,
-            `    `,
-            `    };`,
+            `       \`;`,
+            `   }`,
             ``,
             `    /** Settings */`,
             `    _renderData = this.data;`,

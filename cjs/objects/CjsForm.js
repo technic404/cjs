@@ -10,6 +10,13 @@ class CjsForm {
         this.#element = element;
     }
 
+    #valueProcessRules = {
+        "radio": (element) => element.checked ? element.value : null,
+        "checkbox": (element) => element.checked,
+        "file": (element) => element.files,
+        "*": (element) => element.value,
+    }
+
     /**
      * Serializes data from form element
      * @returns {object}
@@ -24,13 +31,13 @@ class CjsForm {
         for(let i = 0; i < elements.length; i++) {
             const element = elements[i];
             const name = element.getAttribute("name");
-            const value =
-                element.getAttribute("type") === "checkbox"
-                    ? element.checked
-                    : element.getAttribute("type") === "file"
-                        ? element.files
-                        : element.value;
+            const type = element.getAttribute("type");
+            const value = type in this.#valueProcessRules
+                ? this.#valueProcessRules[type](element)
+                : this.#valueProcessRules["*"];
             const key = name || i;
+
+            if(type === "radio" && (!element.checked || key in data)) continue;
         
             data[key] = value;
         }

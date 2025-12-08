@@ -23,6 +23,9 @@ class CjsComponent {
     /** @type {{ offset: number, maxHeight: number }} Auto fills height of the component to window height if set */
     #fillHeightData;
 
+    /** @type {(find: () => HTMLElement, layoutData: object) => string} function that will return component html. The object argument is data provided by parent layout */
+    _;
+
     /**
      * Returns data that will be passed to html
      * @param {object} data
@@ -79,7 +82,7 @@ class CjsComponent {
 
         this._renderData = data;
         
-        const html = this.func(() => document.querySelector(`[${onLoadAttribute}]`), layoutData);
+        const html = this._(() => document.querySelector(`[${onLoadAttribute}]`), layoutData);
 
         /**
          * Adds attributes to root element
@@ -160,11 +163,8 @@ class CjsComponent {
 
     /**
      * Creates the component type element
-     * @param {(find: () => HTMLElement, layoutData: object) => string} func function that will return component html. The object argument is data provided by parent layout
      */
-    constructor(func) {
-        this.func = func;
-
+    constructor() {
         /** @type {object} Contains the default data (init data) of the component */
         this.data = {};
         /** @type {object} Intended to be an typedef for data declared in `this.data` - stores last rendered component data */
@@ -540,7 +540,7 @@ class CjsComponent {
 
     /**
      * Returns the first element that is a descendant of node that matches selectors (only for the first instance of the component).
-     * @param {string|string[]} selectors
+     * @param {...string} selectors
      * @returns {HTMLElement|null|HTMLElement[]}
      */
     querySelector(...selectors) {
