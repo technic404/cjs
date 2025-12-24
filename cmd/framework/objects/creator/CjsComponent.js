@@ -4,6 +4,7 @@ const CjsElement = require("./CjsElement");
 class CjsComponent extends CjsElement {
     fileNameSuffix = ".mjs";
 
+    /** @type {{ handler: string|null, style: string|null }} */
     #imports = {
         handler: null,
         style: null

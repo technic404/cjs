@@ -10,7 +10,6 @@ class CjsElement {
     #relativePathPrefix = "../"
 
     /**
-     * 
      * @param {import("../../../types").CjsCreatorNames} names 
      * @param {string} directory 
      * @param {string} className

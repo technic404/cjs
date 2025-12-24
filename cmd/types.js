@@ -87,6 +87,7 @@
  * @property {string} target used to determinate under which component create part
  * @property {string} layout used to determinate where create a component
  * @property {string} dir used to determinate extra folder of a component
+ * @property {string} async used to determinate if create async component
  */
 
 module.exports = {
