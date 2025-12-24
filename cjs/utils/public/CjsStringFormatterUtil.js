@@ -42,3 +42,34 @@ function strmap(array, callback) {
 function strif(condition, string) {
     return condition ? string : '';
 }
+
+/**
+ * If string is too long (limited by max param) then the string will be cut and the `"..."` suffix will be added.
+ * 
+ * Example:
+ * ```
+ * <div class="row">
+ *     ${strmax(data.message, 10)}
+ * </div>
+ * ```
+ * 
+ * Will provide full message if the `data.message` does not exceed the characters length of `10`.
+ * Else will provide `data.message` sliced like `"Hello w..."`.
+ * 
+ * @param {string} str
+ * @param {number} max
+ * @returns {string}
+ */
+function strmax(str, max) {
+    const SUFFIX = "...";
+
+    if(str.length > max) {
+        const exceededLimitBy = str.length - max;
+        const extraSuffixCutRaw = SUFFIX.length - exceededLimitBy;
+        const extraSuffixCut = extraSuffixCutRaw > SUFFIX.length ? SUFFIX.length : extraSuffixCutRaw;
+
+        return str.substring(0, max + extraSuffixCut) + SUFFIX;
+    }
+
+    return str;
+}
