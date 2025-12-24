@@ -31,13 +31,13 @@ class CjsForm {
         for(let i = 0; i < elements.length; i++) {
             const element = elements[i];
             const name = element.getAttribute("name");
-            const type = element.getAttribute("type");
-            const value = type in this.#valueProcessRules
-                ? this.#valueProcessRules[type](element)
-                : this.#valueProcessRules["*"];
+            const value =
+                element.getAttribute("type") === "checkbox"
+                    ? element.checked
+                    : element.getAttribute("type") === "file"
+                        ? element.files
+                        : element.value;
             const key = name || i;
-
-            if(type === "radio" && (!element.checked || key in data)) continue;
         
             data[key] = value;
         }
