@@ -76,9 +76,8 @@ class CjsComponent {
             this.#renderedCssStyle = true;
         }
 
-        const isAsync = this._[Symbol.toStringTag] === 'AsyncFunction';
-
-        this._renderData = data;
+        const renderHtmlFunction = Object.getPrototypeOf(this)._;
+        const isAsync = renderHtmlFunction[Symbol.toStringTag] === 'AsyncFunction';
 
         /**
          * Adds attributes to root element
@@ -136,7 +135,8 @@ class CjsComponent {
 
         const onLoadAttribute = mutationListener.listen("add", async (cjsEvent) => {
             if(isAsync) {
-                const html = await this.func(() => cjsEvent.source, layoutData);
+                this._renderData = data;
+                const html = await renderHtmlFunction.call(this, () => cjsEvent.source, layoutData);
 
                 cjsEvent.source.outerHTML = addAttributes(addLazyIdentifiers(html), [
                     this.attribute
@@ -154,7 +154,8 @@ class CjsComponent {
             `;
         }
         
-        const html = this._(() => document.querySelector(`[${onLoadAttribute}]`), layoutData);
+        this._renderData = data;
+        const html = renderHtmlFunction.call(this, () => document.querySelector(`[${onLoadAttribute}]`), layoutData);
 
         return addAttributes(addLazyIdentifiers(html), [
             this.attribute, onLoadAttribute.trim()

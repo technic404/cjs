@@ -56,7 +56,7 @@ class CjsComponent extends CjsElement {
         }
 
         content.push(
-            `       const {} = this._renderData;`,
+            `       const {  } = this._renderData;`,
             ``,
             `       return ${creator.stringReturnPrefix}\``
         );
