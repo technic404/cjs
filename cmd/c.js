@@ -1,6 +1,7 @@
 const { getUsage, getArgumentsWithoutFlags, getFlags } = require("./framework/utils/cmd");
 const { getRecursivelyDirectoryFiles } = require('./compiler/src/utils/fileUtil');
 const Command = require('./Command');
+const path = require("path");
 
 (async () => {
     const flags = getFlags(process.argv, {
@@ -20,7 +21,7 @@ const Command = require('./Command');
 
     /** @type {Command[]} */
     const matches = getRecursivelyDirectoryFiles("./commands", ".js")
-        .map(path => new (require(`.\\${path}`))())
+        .map(filepath => new (require(path.join(__dirname, filepath)))())
         .filter(command => command.name.toLowerCase() === commandName.toLowerCase());
 
     const foundCommand = matches.length === 1;
