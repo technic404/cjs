@@ -73,3 +73,24 @@ function strmax(str, max) {
 
     return str;
 }
+
+/**
+ * If string (str) is empty the function will provide the or argument
+ * 
+ * Example:
+ * ```
+ * <div class="row">
+ *     ${stror(data.source, "N/A")}
+ * </div>
+ * ```
+ * 
+ * Will provide full message if the `data.source` exists (the text is not empty).
+ * Else will provide second argument - in this case "N/A".
+ * 
+ * @param {string} str
+ * @param {string} or
+ * @returns {string}
+ */
+function stror(str, or) {
+    return str === null || str.trim() === "" ? or : str;
+}
