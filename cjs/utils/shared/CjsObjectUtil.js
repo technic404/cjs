@@ -86,5 +86,25 @@ const CjsObject = {
         }
         
         return traverse(object);
+    },
+    /**
+     * Removes keys that has nullable values (with mutation)
+     * @param object
+     * @returns {object}
+     */
+    filterOutNullableValues: function(object) {
+        for(const [key, value] of Object.entries(object)) {
+            if(
+                value === null
+                || value === undefined
+                || (Array.isArray(value) && value.length === 0)
+                || (typeof value === "string" && value.trim() === "")
+                || (typeof value === "object" && Object.keys(value).length === 0)
+            ) {
+                delete object[key];
+            }
+        }
+
+        return object;
     }
 };
