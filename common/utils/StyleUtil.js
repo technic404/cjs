@@ -79,7 +79,8 @@ function addPrefixToSelectors(cssText, prefix = '', options = { prefixStyleRules
 
             if(!isSelectorClassOrId) {
                 // Selector like button[cjsAttribute] { ... }
-                const selectorTextSplit = selector.split(" ");
+                // const selectorTextSplit = selector.split(" ");
+                const selectorTextSplit = sel.split(" ");
                 const firstTag = selectorTextSplit[0];
                 const rawRestSelector = selectorTextSplit.slice(1).join(" ");
 
