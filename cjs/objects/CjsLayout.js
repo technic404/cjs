@@ -278,9 +278,7 @@ class CjsLayout {
                 return document.createElement(`cjslayouterror`);
             }
             
-            /**
-             * @type {CjsComponent}
-             */
+            /** @type {HTMLElement} */
             const component = layoutElement._setOnLoadData(parentLayoutData).toVirtualElement();
             const hasParentAndChild = elements.length === 2;
 
@@ -296,7 +294,15 @@ class CjsLayout {
                 componentChildren.forEach(componentChild => {
                     if(componentChild === null) return;
 
-                    component.insertAdjacentElement(`beforeend`, walk(componentChild, parentLayoutData))
+                    const cjsRenderElement = component.querySelector(CJS_COMPONENT_FORCE_RENDER_PLACE_TAG);
+                    const cjsRenderElementExists = cjsRenderElement !== null;
+                    const _walk = () => walk(componentChild, parentLayoutData)
+
+                    if(cjsRenderElementExists) {
+                        cjsRenderElement.replaceWith(_walk());
+                    } else {
+                        component.insertAdjacentElement(`beforeend`, _walk());
+                    }
                 });
             }
 

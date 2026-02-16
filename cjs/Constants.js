@@ -13,6 +13,7 @@ const CJS_STYLE_KEYFRAMES_PREFIX = `${CJS_PREFIX}keyframes-`;
 const CJS_STYLE_PLUGINS_PREFIX = `${CJS_PREFIX}plugins-`;
 const CJS_ROOT_CONTAINER_PREFIX = `${CJS_PREFIX}root-`;
 const CJS_COMPONENT_PREFIX = `${CJS_PREFIX}component-`;
+const CJS_COMPONENT_FORCE_RENDER_PLACE_TAG = `cjsrender`;
 const CJS_LAYOUT_PREFIX = `${CJS_PREFIX}layout-`;
 const CJS_ELEMENT_PREFIX = `${CJS_PREFIX}element-`;
 const CJS_ELEMENT_DISABLED_PREFIX = `${CJS_PREFIX}elementdisabled-`;
