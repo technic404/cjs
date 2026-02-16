@@ -66,7 +66,7 @@ function strmax(str, max) {
     if(str.length > max) {
         const exceededLimitBy = str.length - max;
         const extraSuffixCutRaw = SUFFIX.length - exceededLimitBy;
-        const extraSuffixCut = extraSuffixCutRaw > SUFFIX.length ? SUFFIX.length : extraSuffixCutRaw;
+        const extraSuffixCut = extraSuffixCutRaw > SUFFIX.length ? extraSuffixCutRaw : SUFFIX.length;
 
         return str.substring(0, max + extraSuffixCut) + SUFFIX;
     }
