@@ -232,10 +232,9 @@ class CjsLayout {
 
         /**
          * @param {CjsComponent|CjsLayout[][]} elements
-         * @param {object} parentLayoutData
          * @returns {HTMLElement}
          */
-        const walk = (elements, parentLayoutData) => {
+        const walk = (elements) => {
             if(!elements instanceof Array) {
                 console.log(`${CJS_PRETTY_PREFIX_X}Layout have wrong pattern, component should be in array`);
 
@@ -272,12 +271,19 @@ class CjsLayout {
                 componentChildren.forEach(componentChild => {
                     if(componentChild === null) return;
 
+                    const _walk = () => walk(componentChild);
+
                     const cjsRenderElement = component.querySelector(CJS_COMPONENT_FORCE_RENDER_PLACE_TAG);
                     const cjsRenderElementExists = cjsRenderElement !== null;
-                    const _walk = () => walk(componentChild, parentLayoutData)
 
                     if(cjsRenderElementExists) {
-                        cjsRenderElement.replaceWith(_walk());
+                        if(componentChild.length === 2 && componentChild[1].length === 0) {
+                            cjsRenderElement.remove();
+                            component.insertAdjacentElement(`beforeend`, _walk());
+                        } else {
+                            cjsRenderElement.replaceWith(_walk());
+                        }
+
                     } else {
                         component.insertAdjacentElement(`beforeend`, _walk());
                     }
