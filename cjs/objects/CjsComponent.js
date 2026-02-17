@@ -6,13 +6,13 @@
  */
 class CjsComponent {
     /** @type {string} attribute that indicated the element on the website */
-    attribute = null;
-    
-    /** @type {object} */
-    _onLoadData = {};
+    attribute;
 
     /** @type {string|null} Path of the style CSS file of the component */
     _cssStyle = null;
+
+    /** @type {CjsStyleProperties} */
+    _setStyle = {};
 
     /** @type {boolean} Determinates if css style for component was loaded */
     #renderedCssStyle = false;
@@ -29,7 +29,7 @@ class CjsComponent {
     /**
      * Returns data that will be passed to html
      * @param {object} data
-     * @returns {object} data with merged default data 
+     * @returns {object} data with merged default data
      */
     _getData(data) {
         const mergedData = {};
@@ -64,12 +64,117 @@ class CjsComponent {
     }
 
     /**
+     * I
+     * @param html
+     * @param styleValue
+     * @returns {string|*}
+     */
+    #injectStyle = (html, styleValue) => {
+        const len = html.length;
+        let i = 0;
+
+        while (i < len && html.charCodeAt(i) <= 32) i++; // Skip leading whitespace
+
+        if (html[i] !== "<") return html; // Must start with "<"
+
+        const tagStart = i;
+        const tagEnd = html.indexOf(">", tagStart); // Find end of opening tag
+
+        if (tagEnd === -1) return html;
+
+        const openingTag = html.slice(tagStart, tagEnd);
+        const styleIndex = openingTag.indexOf("style="); // Check if style already exists
+
+        let newOpeningTag;
+
+        if (styleIndex !== -1) {
+            // Merge into existing style=""
+            const quoteChar = openingTag[styleIndex + 6];
+            const styleValueStart = styleIndex + 7;
+            const styleValueEnd = openingTag.indexOf(quoteChar, styleValueStart);
+
+            const existingStyle = openingTag.slice(styleValueStart, styleValueEnd);
+            const mergedStyle = existingStyle.trim().endsWith(";")
+                ? existingStyle + styleValue
+                : existingStyle + ";" + styleValue;
+
+            newOpeningTag =
+                openingTag.slice(0, styleValueStart) +
+                mergedStyle +
+                openingTag.slice(styleValueEnd);
+        } else {
+            // Inject new style attribute before tag ends
+            newOpeningTag = openingTag + ` style="${styleValue}"`;
+        }
+
+        return (
+            html.slice(0, tagStart) +
+            newOpeningTag +
+            html.slice(tagEnd)
+        );
+    }
+
+    /**
+     * Adds attributes to root element
+     *
+     * For example if you have `<div class="wrapper"><p>text</p></div>`
+     *
+     * The transformed code will be `<div attribute-1 attribute-2 class="wrapped"><p>text</p></div>`
+     * @param {string} html
+     * @param {string[]} attributes
+     * @returns {string} code with added attributes
+     */
+    #addAttributes = (html, attributes) => {
+        const element = createVirtualContainer(htmlToElement(html));
+        const hasNoChildren = element.children.length === 0;
+
+        if(hasNoChildren) return ``;
+
+        const { firstElementChild } = element;
+
+        attributes.forEach(attribute => {
+            firstElementChild.setAttribute(attribute, "");
+        });
+
+        return firstElementChild.outerHTML;
+    }
+
+    /**
+     * Adds identifiers to elements that use lazy scheme in their class names
+     * @param {string} html
+     * @returns {string}
+     */
+    #addLazyIdentifiers = (html) => {
+        const container = createVirtualContainer(htmlToElement(html));
+
+        for(
+            const element of Array
+            .from(container.querySelectorAll(`[class*='${CjsLazyClassPrefix}'`))
+            .filter(e => getAttributeStartingWith(e, CjsLazyElementPrefix).length == 0)
+            ) {
+            let id = null;
+
+            while(id in CjsTakenAttributes.lazy || id === null) {
+                id = getRandomCharacters(CJS_ID_LENGTH);
+            }
+
+            CjsTakenAttributes.lazy.push(id);
+
+            const attribute = `${CjsLazyElementPrefix}${id}`;
+
+            element.setAttribute(attribute, "");
+        }
+
+        return container.innerHTML;
+    }
+
+    /**
      * Returns html containing attribute in parent with data transformed into its references
-     * @param {object} data 
-     * @param {object} layoutData
+     * @param {object} data
+     * @param {object} style
      * @returns {string} html
      */
-    _getHtml = (data, layoutData = {}) => {
+    _getHtml = (data, style = {}) => {
         if(!this.#renderedCssStyle && this._cssStyle) {
             addRootStyle(this.attribute, this._cssStyle, { prefixStyleRules: true, encodeKeyframes: true, enableMultiSelector: true }).then();
 
@@ -78,88 +183,29 @@ class CjsComponent {
 
         const renderHtmlFunction = Object.getPrototypeOf(this)._;
         const isAsync = renderHtmlFunction[Symbol.toStringTag] === 'AsyncFunction';
-
-        /**
-         * Adds attributes to root element
-         * 
-         * For example if you have `<div class="wrapper"><p>text</p></div>`
-         * 
-         * The transformed code will be `<div attribute-1 attribute-2 class="wrapped"><p>text</p></div>`
-         * @param {string} html
-         * @param {string[]} attributes
-         * @returns {string} code with added attributes
-         */
-        const addAttributes = (html, attributes) => {
-            const element = createVirtualContainer(htmlToElement(html));
-            const hasNoChildren = element.children.length === 0;
-    
-            if(hasNoChildren) return ``;
-    
-            const { firstElementChild } = element;
-
-            attributes.forEach(attribute => {
-                firstElementChild.setAttribute(attribute, "");
-            });
-    
-            return firstElementChild.outerHTML;
-        }
-
-        /**
-         * Adds identifiers to elements that use lazy scheme in their class names
-         * @param {string} html 
-         * @returns {string}
-         */
-        const addLazyIdentifiers = (html) => {
-            const container = createVirtualContainer(htmlToElement(html));
-
-            for(
-                const element of Array
-                    .from(container.querySelectorAll(`[class*='${CjsLazyClassPrefix}'`))
-                    .filter(e => getAttributeStartingWith(e, CjsLazyElementPrefix).length == 0)
-            ) {
-                let id = null;
-
-                while(id in CjsTakenAttributes.lazy || id === null) {
-                    id = getRandomCharacters(CJS_ID_LENGTH);
-                }
-
-                CjsTakenAttributes.lazy.push(id);
-
-                const attribute = `${CjsLazyElementPrefix}${id}`;
-
-                element.setAttribute(attribute, "");
-            }
-
-            return container.innerHTML;
-        }
-
+        const styleString = Object.entries(style).map(e => `${e[0]}: ${e[1]};`).join(" ");
         const onLoadAttribute = mutationListener.listen("add", async (cjsEvent) => {
             if(isAsync) {
                 this._renderData = data;
-                const html = await renderHtmlFunction.call(this, () => cjsEvent.source, layoutData);
+                const html = await renderHtmlFunction.call(this, () => cjsEvent.source);
 
-                cjsEvent.source.outerHTML = addAttributes(addLazyIdentifiers(html), [
-                    this.attribute
-                ]);
+                cjsEvent.source.outerHTML = this.#addAttributes(
+                    this.#addLazyIdentifiers(this.#injectStyle(html, styleString)),
+                    [this.attribute]
+                );
             }
-            this._executeOnLoad(this._onLoadData)
+            this._executeOnLoad()
         });
 
-        if(isAsync) {
-            return `
-                <div 
-                    ${this.attribute} 
-                    ${onLoadAttribute.trim()}
-                ></div>
-            `;
-        }
-        
-        this._renderData = data;
-        const html = renderHtmlFunction.call(this, () => document.querySelector(`[${onLoadAttribute}]`), layoutData);
+        if(isAsync) return `<div ${this.attribute} ${onLoadAttribute.trim()}></div>`;
 
-        return addAttributes(addLazyIdentifiers(html), [
-            this.attribute, onLoadAttribute.trim()
-        ]);
+        this._renderData = data;
+        const html = renderHtmlFunction.call(this, () => document.querySelector(`[${onLoadAttribute}]`));
+
+        return this.#addAttributes(
+            this.#addLazyIdentifiers(this.#injectStyle(html, styleString)),
+            [this.attribute, onLoadAttribute.trim()]
+        );
     }
 
     /** @returns {CjsForm[]} */
@@ -195,7 +241,7 @@ class CjsComponent {
 
     /**
      * Parses HTMLElement to forms
-     * @param {HTMLElement} element 
+     * @param {HTMLElement} element
      * @returns {CjsForm[]}
      */
     toForms(element) {
@@ -215,8 +261,16 @@ class CjsComponent {
     withData(data) {
         const clone = Object.create(Object.getPrototypeOf(this));
         Object.assign(clone, this);
-        clone.attribute = Cjs.generateAttribute(CJS_COMPONENT_PREFIX, CjsTakenAttributes.components)
+        clone.attribute = Cjs.generateAttribute(CJS_COMPONENT_PREFIX, CjsTakenAttributes.components);
         return clone.setData(data);
+    }
+
+    withStyle(style) {
+        const clone = Object.create(Object.getPrototypeOf(this));
+        Object.assign(clone, this);
+        clone.attribute = Cjs.generateAttribute(CJS_COMPONENT_PREFIX, CjsTakenAttributes.components)
+        clone._setStyle = style;
+        return clone;
     }
 
     /**
@@ -225,9 +279,8 @@ class CjsComponent {
      */
     exists() {
         const selector = document.body.querySelector(`[${this.attribute}=""]`);
-        const elementExists = selector !== null;
 
-        return elementExists;
+        return selector !== null;
     }
 
     /**
@@ -246,12 +299,12 @@ class CjsComponent {
      * @returns {HTMLElement}
      */
     toVirtualElement() {
-        return htmlToElement(this._getHtml(this._getData(this.preSetData), this._onLoadData));
+        return htmlToElement(this._getHtml(this._getData(this.preSetData), this._setStyle));
     }
 
     /**
      * Provides component element as HTMLElement, could be a new instance if not exists in DOM, but also could return existing component in DOM
-     * @param {boolean} ignoreReadyState 
+     * @param {boolean} ignoreReadyState
      * @returns {HTMLElement}
      */
     toElement(ignoreReadyState = false) {
@@ -269,16 +322,16 @@ class CjsComponent {
 
     /**
      * Renders the html string from provided data
-     * @param {object} data 
+     * @param {object} data
      * @returns {string}
      */
     render(data = {}) {
-        return this._getHtml(this._getData(data), this._onLoadData);
+        return this._getHtml(this._getData(data), this._setStyle);
     }
 
     /**
      * Visualises component as HTMLElement
-     * @param {object} data 
+     * @param {object} data
      * @returns {HTMLElement}
      */
     visualise(data = {}) {
@@ -286,10 +339,10 @@ class CjsComponent {
     }
 
     /**
-    * Sets data for component and reload the old component occurrence
-    * @param {object} data information that should be inserted to component
-    * @returns {CjsComponent}
-    */
+     * Sets data for component and reload the old component occurrence
+     * @param {object} data information that should be inserted to component
+     * @returns {CjsComponent}
+     */
     setData(data) {
         const isObject = (any) => { return any instanceof Object; }
 
@@ -301,7 +354,7 @@ class CjsComponent {
         const elementExists = selector !== null;
 
         if(elementExists) {
-            selector.replaceWith(htmlToElement(this._getHtml(this._getData(data), this._onLoadData)))
+            selector.replaceWith(htmlToElement(this._getHtml(this._getData(data), this._setStyle)))
         }
 
         return this;
@@ -331,7 +384,7 @@ class CjsComponent {
 
     /**
      * Redenders all components this type when search changed
-     * @param {{ useSmartRender: boolean }} data 
+     * @param {{ useSmartRender: boolean }} data
      * @returns {CjsComponent}
      */
     rerenderOnSearch(data = { useSmartRender: false }) {
@@ -348,18 +401,18 @@ class CjsComponent {
      */
     rerenderComponents(data = {}, options = { useSmartRender: false }) {
         const components = Array.from(document.body.querySelectorAll(`[${this.attribute}]`));
-        const element = htmlToElement(this._getHtml(data, this._onLoadData));
+        const element = htmlToElement(this._getHtml(data, this._setStyle));
 
         if(options.useSmartRender) {
             for(const component of components) {
                 /**
-                 * @param {HTMLElement} parent 
-                 * @param {HTMLElement} newParent 
+                 * @param {HTMLElement} parent
+                 * @param {HTMLElement} newParent
                  */
                 const walk = (parent, newParent) => {
                     const attributesMap = (attributes) => {
                         const obj = {};
-                        
+
                         Array.from(attributes).forEach(attribute => {
                             obj[attribute.name] = attribute.value;
                         });
@@ -443,7 +496,7 @@ class CjsComponent {
                         if(parent.children.length > newParent.children.length) {
                             const diff = parent.children.length - newParent.children.length;
                             const childrenToRemove = Array.from(parent.children).slice(-1 * diff);
-    
+
                             childrenToRemove.forEach(c => c.remove());
                         }
                     }
@@ -456,9 +509,9 @@ class CjsComponent {
                 }
 
                 /**
-                 * 
-                 * @param {HTMLElement} root 
-                 * @param {HTMLElement} newRoot 
+                 *
+                 * @param {HTMLElement} root
+                 * @param {HTMLElement} newRoot
                  */
                 const traverse = (root, newRoot) => {
                     walk(root, newRoot);
@@ -480,8 +533,8 @@ class CjsComponent {
                 traverse(component, element);
             }
         } else {
-            const html = this._getHtml(data, this._onLoadData);
-            
+            const html = this._getHtml(data, this._setStyle);
+
             for(const component of components) {
                 component.replaceWith(htmlToElement(html));
             }
@@ -492,21 +545,10 @@ class CjsComponent {
 
     /**
      * Set function that will be executed when element is loaded on website
-     * @param {() => void} callback 
+     * @param {() => void} callback
      */
     onLoad(callback) {
         this.#onLoadCallback = callback;
-    }
-
-    /**
-     * Sets load data for generic onLoad function
-     * @param {object} onLoadData 
-     * @returns {CjsPart|CjsComponent}
-     */
-    _setOnLoadData(onLoadData) {
-        this._onLoadData = onLoadData;
-
-        return this;
     }
 
     /**
@@ -525,11 +567,10 @@ class CjsComponent {
 
     /**
      * Executes the onLoad function
-     * @param {object} data information passed to onLoad function
      */
-    _executeOnLoad(data) {
-        this.#onLoadCallback(data);
-        
+    _executeOnLoad() {
+        this.#onLoadCallback();
+
         if(this.#fillHeightData !== undefined) {
             const { maxHeight, offset } = this.#fillHeightData;
             const element = this.toElement();
@@ -543,7 +584,7 @@ class CjsComponent {
 
     /**
      * Sets default data, so if there is no values in original data, the missing values will be replaced with defaults
-     * @param {object} data 
+     * @param {object} data
      * @returns {CjsComponent}
      */
     setDefaultData(data) {
@@ -574,7 +615,7 @@ class CjsComponent {
 
     /**
      * Returns all element descendants of node that match selectors (for all instances of component).
-     * @param {string} selectors 
+     * @param {string} selectors
      * @returns {HTMLElement[]|Element[]}
      */
     querySelectorAll(selectors) {

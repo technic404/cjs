@@ -34,20 +34,8 @@ class CjsLayout {
      */
     _executeOnLoad(data) {
         flattenInfinite(this.elements(this.#data.active)).forEach(element => {
-            const isLayout = element instanceof CjsLayout;
-
-            if(isLayout) {
-                element._executeOnLoad();
-                return;
-            }
-
-            const isComponent = element instanceof CjsComponent;
-
-            if(isComponent) {
-                // element._executeOnLoad(this.data);
-                element._setOnLoadData(this.data);
-                return;
-            }
+            if(element instanceof CjsLayout) return element._executeOnLoad();
+            // if(element instanceof CjsComponent) return;
         });
 
         this.#onLoadCallback(data);
@@ -243,51 +231,39 @@ class CjsLayout {
         container.setAttribute(this.attribute, "");
 
         /**
-         *
          * @param {CjsComponent|CjsLayout[][]} elements
          * @param {object} parentLayoutData
          * @returns {HTMLElement}
          */
         const walk = (elements, parentLayoutData) => {
-            const componentInArray = elements instanceof Array;
-
-            if(!componentInArray) {
+            if(!elements instanceof Array) {
                 console.log(`${CJS_PRETTY_PREFIX_X}Layout have wrong pattern, component should be in array`);
 
                 return document.createElement(`cjslayouterror`);
             }
 
-            const noComponents = elements.length === 0;
-
-            if(noComponents) {
+            if(elements.length === 0) {
                 console.log(`${CJS_PRETTY_PREFIX_X}Layout have an empty component space`);
 
                 return document.createElement(`cjslayouterror`);
             }
 
             const layoutElement = elements[0];
-            const isLayout = layoutElement instanceof CjsLayout
 
-            if(isLayout) return layoutElement.toElement();
+            if(layoutElement instanceof CjsLayout) return layoutElement.toElement();
 
-            const isComponent = layoutElement instanceof CjsComponent;
-
-            if(!isComponent) {
+            if(!(layoutElement instanceof CjsComponent)) {
                 console.log(`${CJS_PRETTY_PREFIX_X}The passed element inside layout is not CjsComponent and CjsLayout, expected CjsComponent or CjsLayout`);
 
                 return document.createElement(`cjslayouterror`);
             }
 
-            /**
-             * @type {HTMLElement}
-             */
-            const component = layoutElement._setOnLoadData(parentLayoutData).toVirtualElement();
+            /** @type {HTMLElement} */
+            const component = layoutElement.toVirtualElement();
             const hasParentAndChild = elements.length === 2;
 
             if(hasParentAndChild) {
-                /**
-                 * @type {CjsComponent|CjsLayout[]}
-                 */
+                /** @type {CjsComponent|CjsLayout[]} */
                 const componentChildren = elements[1]
                 const isChildAnArray = componentChildren instanceof Array;
 

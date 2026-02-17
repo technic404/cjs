@@ -45,7 +45,7 @@ class CjsKeyFrame {
     }
 
     /**
-     * @param {CjsStylePropertieses} style
+     * @param {CjsStyleProperties} style
      * @returns {CjsKeyFrame}
      */
     addEntry(style) {
