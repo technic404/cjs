@@ -7,7 +7,7 @@ class CjsLayout extends CjsElement {
         const { pascalCase } = this.names;
         const content = [];
 
-        content.push(`export const ${pascalCase}Layout = new CjsLayout(`)
+        content.push(`export const ${pascalCase}Layout = new CjsLayout((data) => `)
         content.push(`    [`);
         content.push(`        `);
         content.push(`    ]`);
