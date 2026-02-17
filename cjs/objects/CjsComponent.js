@@ -11,8 +11,8 @@ class CjsComponent {
     /** @type {string|null} Path of the style CSS file of the component */
     _cssStyle = null;
 
-    /** @type {CjsStyleProperties} */
-    _setStyle = {};
+    /** @type {CjsStyleProperties|null} */
+    _setStyle = null;
 
     /** @type {boolean} Determinates if css style for component was loaded */
     #renderedCssStyle = false;
@@ -93,10 +93,10 @@ class CjsComponent {
             const styleValueStart = styleIndex + 7;
             const styleValueEnd = openingTag.indexOf(quoteChar, styleValueStart);
 
-            const existingStyle = openingTag.slice(styleValueStart, styleValueEnd);
-            const mergedStyle = existingStyle.trim().endsWith(";")
-                ? existingStyle + styleValue
-                : existingStyle + ";" + styleValue;
+            const existingStyle = openingTag.slice(styleValueStart, styleValueEnd).trim();
+            const mergedStyle = !existingStyle.endsWith(";") && existingStyle.length > 0
+                ? existingStyle + ";" + styleValue
+                : existingStyle + styleValue;
 
             newOpeningTag =
                 openingTag.slice(0, styleValueStart) +
@@ -126,9 +126,8 @@ class CjsComponent {
      */
     #addAttributes = (html, attributes) => {
         const element = createVirtualContainer(htmlToElement(html));
-        const hasNoChildren = element.children.length === 0;
 
-        if(hasNoChildren) return ``;
+        if(element.children.length === 0) return ``;
 
         const { firstElementChild } = element;
 
@@ -149,8 +148,8 @@ class CjsComponent {
 
         for(
             const element of Array
-            .from(container.querySelectorAll(`[class*='${CjsLazyClassPrefix}'`))
-            .filter(e => getAttributeStartingWith(e, CjsLazyElementPrefix).length == 0)
+                .from(container.querySelectorAll(`[class*='${CjsLazyClassPrefix}'`))
+                .filter(e => getAttributeStartingWith(e, CjsLazyElementPrefix).length == 0)
             ) {
             let id = null;
 
@@ -160,9 +159,7 @@ class CjsComponent {
 
             CjsTakenAttributes.lazy.push(id);
 
-            const attribute = `${CjsLazyElementPrefix}${id}`;
-
-            element.setAttribute(attribute, "");
+            element.setAttribute(`${CjsLazyElementPrefix}${id}`, "");
         }
 
         return container.innerHTML;
@@ -171,10 +168,10 @@ class CjsComponent {
     /**
      * Returns html containing attribute in parent with data transformed into its references
      * @param {object} data
-     * @param {object} style
+     * @param {object|null} style
      * @returns {string} html
      */
-    _getHtml = (data, style = {}) => {
+    _getHtml = (data, style = null) => {
         if(!this.#renderedCssStyle && this._cssStyle) {
             addRootStyle(this.attribute, this._cssStyle, { prefixStyleRules: true, encodeKeyframes: true, enableMultiSelector: true }).then();
 
@@ -183,18 +180,18 @@ class CjsComponent {
 
         const renderHtmlFunction = Object.getPrototypeOf(this)._;
         const isAsync = renderHtmlFunction[Symbol.toStringTag] === 'AsyncFunction';
-        const styleString = Object.entries(style).map(e => `${e[0]}: ${e[1]};`).join(" ");
+        const styleString = style && Object.entries(style).map(e => `${e[0]}: ${e[1]};`).join(" ");
         const onLoadAttribute = mutationListener.listen("add", async (cjsEvent) => {
             if(isAsync) {
                 this._renderData = data;
                 const html = await renderHtmlFunction.call(this, () => cjsEvent.source);
 
                 cjsEvent.source.outerHTML = this.#addAttributes(
-                    this.#addLazyIdentifiers(this.#injectStyle(html, styleString)),
+                    this.#addLazyIdentifiers(style ? this.#injectStyle(html, styleString) : html),
                     [this.attribute]
                 );
             }
-            this._executeOnLoad()
+            this._executeOnLoad();
         });
 
         if(isAsync) return `<div ${this.attribute} ${onLoadAttribute.trim()}></div>`;
@@ -203,7 +200,7 @@ class CjsComponent {
         const html = renderHtmlFunction.call(this, () => document.querySelector(`[${onLoadAttribute}]`));
 
         return this.#addAttributes(
-            this.#addLazyIdentifiers(this.#injectStyle(html, styleString)),
+            this.#addLazyIdentifiers(style ? this.#injectStyle(html, styleString) : html),
             [this.attribute, onLoadAttribute.trim()]
         );
     }
