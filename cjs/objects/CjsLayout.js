@@ -9,7 +9,7 @@ class CjsLayout {
     attribute;
 
     /**
-     * @param {CjsComponent|CjsLayout[][]} elements 
+     * @param {(layoutData: object) => CjsComponent|CjsLayout[][]} elements
      */
     constructor(elements) {
         this.elements = elements;
@@ -19,7 +19,7 @@ class CjsLayout {
 
     /**
      * Set function that will be executed when layout is loaded on website
-     * @param {function} callback 
+     * @param {function} callback
      */
     onLoad(callback) {
         this.#onLoadCallback = (data) => {
@@ -33,7 +33,7 @@ class CjsLayout {
      * @param {object} data information passed to onLoad function
      */
     _executeOnLoad(data) {
-        flattenInfinite(this.elements).forEach(element => { 
+        flattenInfinite(this.elements(this.#data.active)).forEach(element => {
             const isLayout = element instanceof CjsLayout;
 
             if(isLayout) {
@@ -59,12 +59,12 @@ class CjsLayout {
      * @returns {CjsComponent|null}
      */
     select(component) {
-        const filtered = flattenInfinite(this.elements).filter(e => e.attribute === component.attribute);
+        const filtered = flattenInfinite(this.elements(this.#data.active)).filter(e => e.attribute === component.attribute);
         const componentNotExists = filtered.length === 0;
 
         if(componentNotExists) {
             console.log(`${CJS_PRETTY_PREFIX_X}Component not found when trying to use select(), make sure that provided component exists in layout`);
-        
+
             return null;
         }
 
@@ -73,7 +73,7 @@ class CjsLayout {
 
     /**
      * Provides data defined globally in layout
-     * @returns {object} 
+     * @returns {object}
      */
     get data() {
         return this.#data.active;
@@ -99,7 +99,7 @@ class CjsLayout {
 
     /**
      * Sets global layout data
-     * @param {object} data 
+     * @param {object} data
      * @returns {CjsLayout}
      */
     setData(data) {
@@ -107,7 +107,7 @@ class CjsLayout {
 
         if(isDefaultDataAlreadySet) {
             /**
-             * 
+             *
              * @param {object} existing existing default layout data
              * @param {object} provided values provided by user to overwrite layout data
              * @returns {object} merged data with overwritten data
@@ -128,19 +128,19 @@ class CjsLayout {
                     if(isPrimitive) return obj;
 
                     const isCustomClass = obj.constructor && obj.constructor !== Object
-                    
+
                     if(isCustomClass) return new obj.constructor();
 
                     const isArray = Array.isArray(obj)
-                    
+
                     if(isArray) {
                         const newArray = [];
-                        
+
                         for (let i = 0; i < obj.length; i++) { newArray[i] = deepObjectCopy(obj[i]); }
 
                         return newArray;
                     }
-                    
+
                     // If obj is a plain object, create a new object and deep copy each property
                     const newObj = {};
 
@@ -157,13 +157,13 @@ class CjsLayout {
 
                 /**
                  * Recursive function that merged two objects
-                 * @param {object} obj1 
-                 * @param {object} obj2 
+                 * @param {object} obj1
+                 * @param {object} obj2
                  */
                 const walk = (obj1, obj2) => {
                     for (const key in obj2) {
                         if(!obj2.hasOwnProperty(key)) continue;
-        
+
                         if (typeof obj2[key] === 'object' && obj2[key] !== null && obj1[key]) {
                             // If both are objects, merge them recursively
                             walk(obj1[key], obj2[key]);
@@ -173,14 +173,14 @@ class CjsLayout {
                         }
                     }
                 }
-            
+
                 walk(merged, provided);
-            
+
                 return merged;
             }
 
             this.#data.active = overwriteNotSetValues(this.#data.default, data)
-        
+
             return this;
         }
 
@@ -192,7 +192,7 @@ class CjsLayout {
 
     /**
      * Parses layout to a component using `CjsComponent.withData(...)`
-     * @param {object} data 
+     * @param {object} data
      * @returns {CjsComponent}
      */
     asComponentWithData(data) {
@@ -243,8 +243,8 @@ class CjsLayout {
         container.setAttribute(this.attribute, "");
 
         /**
-         * 
-         * @param {CjsComponent|CjsLayout[][]} elements 
+         *
+         * @param {CjsComponent|CjsLayout[][]} elements
          * @param {object} parentLayoutData
          * @returns {HTMLElement}
          */
@@ -277,8 +277,10 @@ class CjsLayout {
 
                 return document.createElement(`cjslayouterror`);
             }
-            
-            /** @type {HTMLElement} */
+
+            /**
+             * @type {HTMLElement}
+             */
             const component = layoutElement._setOnLoadData(parentLayoutData).toVirtualElement();
             const hasParentAndChild = elements.length === 2;
 
@@ -309,7 +311,7 @@ class CjsLayout {
             return component;
         }
 
-        this.elements.forEach(elements => {
+        this.elements(this.#data.active).forEach(elements => {
             if(elements === null) return;
 
             container.insertAdjacentElement(`beforeend`, walk(elements.filter(e => e !== null), this.#data.active));
