@@ -1,6 +1,6 @@
 import {Container} from "./Container.mjs";
 
-export const RootLayout = new CjsLayout(
+export const RootLayout = new CjsLayout(() =>
     [
         [Container]
     ]
