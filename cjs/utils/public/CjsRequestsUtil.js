@@ -261,7 +261,7 @@ class CjsRequest {
      */
     async doRequest() {
         const cacheEnabled = this.cacheSeconds > 0;
-        
+
         if(cacheEnabled && this.#hasCached()) {
             const cached = this.#getCached();
             return new CjsRequestResult(cached.statusCode, cached.data, false);
@@ -287,9 +287,11 @@ class CjsRequest {
             return new CjsRequestResult(0, null, true);
         }
 
-        url += `?${Object.keys(this.query).map(e => { return `${e}=${this.query[e]}` }).join("&")}`
+        const queryKeys = Object.keys(this.query);
 
-        xhr.open(this.method, url, true);
+        url += queryKeys.length > 0 ? `?${queryKeys.map(e => { return `${e}=${this.query[e]}` }).join("&")}` : "";
+
+        xhr.open(this.method.toUpperCase(), url, true);
 
         if(this.responseType) xhr.responseType = this.responseType;
 
@@ -330,7 +332,7 @@ class CjsRequest {
 
                     return new CjsRequestResult(0, null, true);
                 }
-    
+
                 if(bodyExists) formData.append(this.bodyKey, JSON.stringify(this.body));
 
                 xhr.send(formData);
