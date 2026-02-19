@@ -14,6 +14,7 @@ class CjsForm {
         "radio": (element) => element.checked ? element.value : null,
         "checkbox": (element) => element.checked,
         "file": (element) => element.files,
+        "number": (element) => element.value !== "" ? Number(element.value) : null,
         "*": (element) => element.value,
     }
 
