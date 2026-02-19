@@ -262,6 +262,11 @@ class CjsComponent {
         return clone.setData(data);
     }
 
+    /**
+     * Adds style to element using attribute `style="..."`
+     * @param {CjsStyleProperties} style 
+     * @returns {CjsComponent}
+     */
     withStyle(style) {
         const clone = Object.create(Object.getPrototypeOf(this));
         Object.assign(clone, this);

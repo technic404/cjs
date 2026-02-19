@@ -10,7 +10,7 @@ module.exports = class ComponentCommand extends Command {
     }
 
     constructor() {
-        super("component", async (args, flags) => {
+        super(["component", "c"], async (args, flags) => {
             if(args.length < 1) return this.logUsage();
 
             for(const arg of args) {

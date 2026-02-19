@@ -22,7 +22,7 @@ const path = require("path");
     /** @type {Command[]} */
     const matches = getRecursivelyDirectoryFiles("./commands", ".js")
         .map(filepath => new (require(path.join(__dirname, filepath)))())
-        .filter(command => command.name.toLowerCase() === commandName.toLowerCase());
+        .filter(command => command.names.map(e => e.toLowerCase()).includes(commandName.toLowerCase()));
 
     const foundCommand = matches.length === 1;
 

@@ -10,7 +10,7 @@ module.exports = class LayoutCommand extends Command {
     }
 
     constructor() {
-        super("layout", async (args, flags) => {
+        super(["layout", "l"], async (args, flags) => {
             if(args.length < 1) return this.logUsage();
 
             for(const arg of args) {

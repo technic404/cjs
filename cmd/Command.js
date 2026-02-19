@@ -1,8 +1,8 @@
 const { Prefix, Colors } = require("./defaults");
 
 class Command {
-    /** @type {string} Name of the command */
-    name;
+    /** @type {string[]} Name of the command */
+    names;
 
     /** @type {{ arguments: string[], flags: [] }} Usage of the command */
     structure = {
@@ -14,18 +14,18 @@ class Command {
     execute;
 
     /**
-     * @param {string} name 
+     * @param {string[]} names 
      * @param {function(string[], Object.<string, string>)} execute
      */
-    constructor(name, execute) {
-        this.name = name;
+    constructor(names, execute) {
+        this.names = names;
         this.execute = execute;
     }
 
     logUsage() {
         if(this.structure.arguments.length > 0) {
             console.log(
-                `${Prefix}Usage: ${Colors.yellow}${this.name} ` + 
+                `${Prefix}Usage: ${Colors.yellow}${this.names[0]} ` + 
                 this.structure.arguments.map((e) => `${Colors.black}[${Colors.yellow}${e}${Colors.black}]${Colors.none}`)
             );
         }
