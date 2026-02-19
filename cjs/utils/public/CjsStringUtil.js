@@ -10,12 +10,11 @@ const CjsString = {
     /**
      * Capitalizes first letter of the string
      * @param {string} str 
-     * @param {boolean} isCapitalized 
      * @returns {string}
      */
-    capitalizeFirst(str, isCapitalized = false) {
+    capitalize(str) {
         if (str.length === 0) return str;
         
-        return (isCapitalized ? str[0].toUpperCase() : str[0].toLowerCase()) + str.slice(1);
+        return str[0].toUpperCase() + str.slice(1);
     }
 };
