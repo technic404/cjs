@@ -268,8 +268,10 @@ class CjsLayout {
 
                 if(!isChildAnArray) return console.log(`${CJS_PRETTY_PREFIX_X}Layout sub components at second argument have to be Array`);
 
-                componentChildren.forEach(componentChild => {
+                componentChildren.forEach((componentChild, index) => {
                     if(componentChild === null) return;
+
+                    const isLast = index === componentChildren.length - 1;
 
                     const _walk = () => walk(componentChild);
 
@@ -281,9 +283,13 @@ class CjsLayout {
                             cjsRenderElement.remove();
                             component.insertAdjacentElement(`beforeend`, _walk());
                         } else {
+                            if(!isLast) {
+                                cjsRenderElement.insertAdjacentHTML(`afterend`,
+                                    `<${CJS_COMPONENT_FORCE_RENDER_PLACE_TAG}></${CJS_COMPONENT_FORCE_RENDER_PLACE_TAG}`
+                                );
+                            }
                             cjsRenderElement.replaceWith(_walk());
                         }
-
                     } else {
                         component.insertAdjacentElement(`beforeend`, _walk());
                     }
