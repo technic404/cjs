@@ -6,7 +6,7 @@ const { normalizePath } = require("../framework/utils/files");
 
 module.exports = class CompileCommand extends Command {
     constructor() {
-        super("compile", async (args, flags) => {
+        super(["compile"], async (args, flags) => {
             const output = normalizePath(cjsConfig.getUser().compiler.output);
             
             await Compiler.compile("../src", `../${output}`, "verbose" in flags);

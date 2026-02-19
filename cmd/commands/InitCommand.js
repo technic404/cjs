@@ -5,7 +5,7 @@ const { cjs } = require("../lib");
 
 module.exports = class InitCommand extends Command {
     constructor() {
-        super("init", (args, flags) => {
+        super(["init"], (args, flags) => {
             cjs.initEmptyProject();
             cjsConfig.create();
     

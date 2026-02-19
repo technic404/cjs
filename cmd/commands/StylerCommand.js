@@ -15,7 +15,7 @@ module.exports = class StylerCommand extends Command {
     }
 
     constructor() {
-        super("styler", async (args, flags) => {
+        super(["styler"], async (args, flags) => {
             if(!args.length === 1) return this.logUsage();
 
             const names = CjsNames.getNames(args[0], "component");

@@ -4,7 +4,7 @@ const CjsFontFaces = require("../framework/objects/modifier/CjsFontFaces");
 
 module.exports = class FontFacesCommand extends Command {
     constructor() {
-        super("fontfaces", async (args, flags) => {
+        super(["fontfaces"], async (args, flags) => {
             const fontFiles = CjsFontFaces.getFontFiles();
             const isSuccess = CjsFontFaces.appendFontFaces(fontFiles);
 

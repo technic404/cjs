@@ -11,7 +11,7 @@ module.exports = class RebuildCommand extends Command {
     }
 
     constructor() {
-        super("rebuild", async (args, flags) => {
+        super(["rebuild"], async (args, flags) => {
             if(args.length !== 1) return this.logUsage();
 
             const option = args[0].toLowerCase()
