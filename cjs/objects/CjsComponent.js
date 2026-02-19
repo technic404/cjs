@@ -164,6 +164,17 @@ class CjsComponent {
 
         return container.innerHTML;
     }
+    
+    /**
+     * Changes `camelStyle` to `kebab-case`
+     * @param {string} str
+     * @returns {string}
+     */
+    #camelToKebab = (str) => {
+        return str
+            .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+            .toLowerCase();
+    }
 
     /**
      * Returns html containing attribute in parent with data transformed into its references
@@ -180,7 +191,7 @@ class CjsComponent {
 
         const renderHtmlFunction = Object.getPrototypeOf(this)._;
         const isAsync = renderHtmlFunction[Symbol.toStringTag] === 'AsyncFunction';
-        const styleString = style && Object.entries(style).map(e => `${e[0]}: ${e[1]};`).join(" ");
+        const styleString = style && Object.entries(style).map(e => `${this.#camelToKebab(e[0])}: ${e[1]};`).join(" ");
         const onLoadAttribute = mutationListener.listen("add", async (cjsEvent) => {
             if(isAsync) {
                 this._renderData = data;
