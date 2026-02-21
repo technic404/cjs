@@ -92,7 +92,6 @@ class CjsLayout {
      */
     setData(data) {
         if(data === null) {
-            this.#data.default = null;
             this.#data.active = null;
 
             return this;
@@ -177,6 +176,9 @@ class CjsLayout {
             this.#data.active = overwriteNotSetValues(this.#data.default, data)
 
             return this;
+        } else {
+            this.#data.default = {};
+            this.#data.active = {};
         }
 
         this.#data.default = Object.assign({}, data);
