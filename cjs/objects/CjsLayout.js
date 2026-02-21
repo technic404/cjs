@@ -3,7 +3,7 @@ class CjsLayout {
     #onLoadCallback = function(data) {};
 
     /** @type {{ default: object|null, active: object|null }} */
-    #data = { default: null, active: null };
+    #data = { default: undefined, active: null };
 
     /** @type {string} attribute identifier of layout */
     attribute;
@@ -72,7 +72,7 @@ class CjsLayout {
      * @returns {CjsLayout}
      */
     resetToDefaultData() {
-        const isDefaultDataAlreadySet = this.#data.default !== null;
+        const isDefaultDataAlreadySet = this.#data.default !== undefined;
 
         if(!isDefaultDataAlreadySet) {
             console.log(`${CJS_PRETTY_PREFIX_X}Cannot reset layout data to default, because default data is not set`);
@@ -87,11 +87,18 @@ class CjsLayout {
 
     /**
      * Sets global layout data
-     * @param {object} data
+     * @param {object|null} data
      * @returns {CjsLayout}
      */
     setData(data) {
-        const isDefaultDataAlreadySet = this.#data.default !== null;
+        if(data === null) {
+            this.#data.default = null;
+            this.#data.active = null;
+
+            return this;
+        }
+
+        const isDefaultDataAlreadySet = this.#data.default !== undefined;
 
         if(isDefaultDataAlreadySet) {
             /**
@@ -173,7 +180,7 @@ class CjsLayout {
         }
 
         this.#data.default = Object.assign({}, data);
-        this.#data.active = Object.assign({}, this.#data.default)
+        this.#data.active = Object.assign({}, this.#data.default);
 
         return this;
     }
