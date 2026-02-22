@@ -261,48 +261,55 @@ class CjsLayout {
             if(layoutElement instanceof CjsLayout) return layoutElement.toElement();
 
             if(!(layoutElement instanceof CjsComponent)) {
-                console.log(`${CJS_PRETTY_PREFIX_X}The passed element inside layout is not CjsComponent and CjsLayout, expected CjsComponent or CjsLayout`);
+                console.log(`${CJS_PRETTY_PREFIX_X}The passed element inside layout is not CjsComponent and CjsLayout, expected CjsComponent or CjsLayout. Instead passed `, layoutElement);
 
                 return document.createElement(`cjslayouterror`);
             }
 
             /** @type {HTMLElement} */
             const component = layoutElement.toVirtualElement();
+
             const hasParentAndChild = elements.length === 2;
 
             if(hasParentAndChild) {
+                let cjsRenderElement = component.querySelector(CJS_COMPONENT_FORCE_RENDER_PLACE_TAG);
+                const cjsRenderElementExists = cjsRenderElement !== null;
+
                 /** @type {CjsComponent|CjsLayout[]} */
                 const componentChildren = elements[1]
                 const isChildAnArray = componentChildren instanceof Array;
 
                 if(!isChildAnArray) return console.log(`${CJS_PRETTY_PREFIX_X}Layout sub components at second argument have to be Array`);
 
-                componentChildren.forEach((componentChild, index) => {
-                    if(componentChild === null) return;
+                if(componentChildren.length > 0) {
+                    componentChildren.forEach((componentChild, index) => {
+                        if(componentChild === null) return;
 
-                    const isLast = index === componentChildren.length - 1;
+                        const isLast = index === componentChildren.length - 1;
+                        const _walk = () => walk(componentChild);
+                        const componentChildRoot = componentChild[0];
 
-                    const _walk = () => walk(componentChild);
+                        if(componentChildRoot instanceof CjsLayout) {
+                            return component.insertAdjacentElement(`beforeend`, _walk());
+                        }
 
-                    const cjsRenderElement = component.querySelector(CJS_COMPONENT_FORCE_RENDER_PLACE_TAG);
-                    const cjsRenderElementExists = cjsRenderElement !== null;
+                        cjsRenderElement = component.querySelector(CJS_COMPONENT_FORCE_RENDER_PLACE_TAG);
 
-                    if(cjsRenderElementExists) {
-                        if(componentChild.length === 2 && componentChild[1].length === 0) {
-                            cjsRenderElement.remove();
-                            component.insertAdjacentElement(`beforeend`, _walk());
-                        } else {
+                        if(cjsRenderElementExists) {
                             if(!isLast) {
-                                cjsRenderElement.insertAdjacentHTML(`afterend`,
-                                    `<${CJS_COMPONENT_FORCE_RENDER_PLACE_TAG}></${CJS_COMPONENT_FORCE_RENDER_PLACE_TAG}`
-                                );
+                                cjsRenderElement.insertAdjacentElement(
+                                    'afterend',
+                                    document.createElement(CJS_COMPONENT_FORCE_RENDER_PLACE_TAG
+                                    ));
                             }
                             cjsRenderElement.replaceWith(_walk());
+                        } else {
+                            component.insertAdjacentElement(`beforeend`, _walk());
                         }
-                    } else {
-                        component.insertAdjacentElement(`beforeend`, _walk());
-                    }
-                });
+                    });
+                } else if(cjsRenderElementExists) {
+                    cjsRenderElement.remove();
+                }
             }
 
             return component;
