@@ -9,7 +9,7 @@ class CjsLayout {
     attribute;
 
     /**
-     * @param {(layoutData: object) => CjsComponent|CjsLayout[][]} elements
+     * @param {(layoutData: object) => CjsLayoutNode[]} elements
      */
     constructor(elements) {
         this.elements = elements;

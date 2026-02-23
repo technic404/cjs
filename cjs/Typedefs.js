@@ -78,3 +78,7 @@
 "multipart/form-data"|"application/sql"
 } CommonMIMETypes
  */
+
+/**
+ * @typedef {CjsComponent | CjsLayout | CjsLayoutNode[]} CjsLayoutNode
+ */
