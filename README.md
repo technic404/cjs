@@ -306,8 +306,7 @@ export const RootLayout = new CjsLayout(
 
                     await App.users.login(name, password);
                 }
-            })],
-            [CompaniesLayout]
+            })]
         ]],
     ]
 );
