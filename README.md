@@ -28,41 +28,71 @@ index.html
 - `/src/assets` - assets directory, where images, videos, fonts and other resources can be stored
 - `/src/layouts` - contains the layouts of the project
 - `/src/layouts/{Layout name}` - includes root layout, components and styles
-- `/src/layouts/{Layout name}/styles` - styles of the components
+- `/src/layouts/{Layout name}/_styles` - styles of the components
 
-### Components
+### Base concept (components)
 Components are simple functions that return string.<br>
 Let's take a look at example component.
 
 ```js
-export const Form = new CjsComponent((data) => {
-    return `
-        <form>
-            <label>
-                <input type="email" placeholder="ex. example@cloud.com">
-            </label>
-            <label>
-                <input type="password" placeholder="ex. zaq1@WSX">
-            </label>
-        </form>
-    `;
-});
+/** @typedef {{  }} FormData */
 
-Form.importStyle('./shoppinglist/layouts/main/styles/Form.css');
+export const Form = new class Form extends CjsComponent {
+    /** @type {FormData} */
+    data = {};
+
+    _() {
+        const {  } = this._renderData;
+    
+        return `
+            <form>
+                <label>
+                    <input type="email" placeholder="ex. example@cloud.com">
+                </label>
+                <label>
+                    <input type="password" placeholder="ex. zaq1@WSX">
+                </label>
+            </form>
+        `;
+    }
+
+    /** Settings */
+    _renderData = this.data;
+    _cssStyle = './src/components/_styles/Form.css';
+
+    /** Typedefs */
+    /** @param {FormData} data */ render(data);
+    /** @param {FormData} data */ visualise(data);
+};
 ```
 
 If we would like to simplify this, and remove the duplicated `<label>` tags, we could create a `Label` component.
 
 ```js
-export const Label = new CjsComponent((data) => {
-    return `
-        <label>
-            <input type="${data.type}" placeholder="${data.placeholder}">
-        </label>
-    `;
-});
+/** @typedef {{ type: "email"|"password", placeholder: string }} LabelData */
 
-Label.importStyle('./shoppinglist/layouts/main/styles/Label.css');
+export const Label = new class Label extends CjsComponent {
+    /** @type {LabelData} */
+    data = {};
+
+    _() {
+        const { type, placeholder } = this._renderData;
+    
+        return `
+            <label>
+                <input type="${type}" placeholder="${placeholder}">
+            </label>
+        `;
+    }
+
+    /** Settings */
+    _renderData = this.data;
+    _cssStyle = './src/components/_styles/Label.css';
+
+    /** Typedefs */
+    /** @param {LabelData} data */ render(data);
+    /** @param {LabelData} data */ visualise(data);
+};
 ```
 
 Now in `Form` component we can render the `Label` component.
@@ -70,16 +100,31 @@ Now in `Form` component we can render the `Label` component.
 ```js
 import { Label } from "./Label.mjs";
 
-export const Form = new CjsComponent((data) => {
-    return `
-        <form>
-            ${Label.render({ type: "email", placeholder: "ex. example@cloud.com" })}
-            ${Label.render({ type: "password", placeholder: "ex. zaq1@WSX" })}
-        </form>
-    `;
-});
+/** @typedef {{  }} FormData */
 
-Form.importStyle('./shoppinglist/layouts/main/styles/Form.css');
+export const Form = new class Form extends CjsComponent {
+    /** @type {FormData} */
+    data = {};
+
+    _() {
+        const {  } = this._renderData;
+    
+        return `
+            <form>
+                ${Label.render({ type: "email", placeholder: "ex. example@cloud.com" })}
+                ${Label.render({ type: "password", placeholder: "ex. zaq1@WSX" })}
+            </form>
+        `;
+    }
+
+    /** Settings */
+    _renderData = this.data;
+    _cssStyle = './src/components/_styles/Form.css';
+
+    /** Typedefs */
+    /** @param {FormData} data */ render(data);
+    /** @param {FormData} data */ visualise(data);
+};
 ```
 
 In that way we can simplify our code and remove the duplicates.<br>
@@ -87,11 +132,12 @@ For creating components there is a special command that makes everything for you
 
 ```shell
 $ node c.js component {Component name} --layout={Layout name}
+$ node c.js c {Component name} --l={Layout name}
 ```
 
 Mentioned command will create:
 1. The main component file `{Component name}.mjs` (and also include basic component creation structure).
-2. Style file under the `styles/${Component name}.css`.
+2. Style file under the `_styles/${Component name}.css`.
 
 ### Layouts
 Layouts are containing components in specific scheme, that interferes with rendering.<br>
