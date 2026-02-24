@@ -51,22 +51,25 @@ class CjsComponent extends CjsElement {
 
         if(this.#imports.handler) content.push(this.#imports.handler + "\n");
 
+        const DataTypedef = `${pascalCase}Data`;
+
+        content.push(`/** @typedef {{  }} ${DataTypedef} */\n`);
+
         content.push(
             `export const ${pascalCase} = new class ${pascalCase} extends CjsComponent {`,
+            `${tab(1)}/** @type {${DataTypedef}} */`,
             `${tab(1)}data = {};`,
             ``,
             `${tab(1)}_() {`,
         );
 
+        content.push(`${tab(2)}const {  } = this._renderData;`);
+
         for(let i = 0; i < creator.topEmptyLines; i++) {
             content.push(tab(1));
         }
 
-        content.push(
-            `${tab(2)}const {  } = this._renderData;`,
-            ``,
-            `${tab(2)}return ${creator.stringReturnPrefix}\``
-        );
+        content.push(`${tab(2)}return ${creator.stringReturnPrefix}\``);
 
         if(creator.createWithSplitLines) {
             content.push(`${tab(3)}<${tagName}${className}>`);
@@ -84,6 +87,10 @@ class CjsComponent extends CjsElement {
                 `${tab(1)}/** Settings */`,
                 `${tab(1)}_renderData = this.data;`,
                 (this.#imports.style ? `${tab(1)}_cssStyle = '${this.#imports.style}';` : null),
+                ``,
+                `${tab(1)}/** Typedefs */`,
+                `${tab(1)}/** @param {${DataTypedef}} data */ render(data);`,
+                `${tab(1)}/** @param {${DataTypedef}} data */ visualise(data);`,
                 `};`
             ].filter(e => e !== null))
         );
