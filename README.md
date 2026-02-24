@@ -183,3 +183,134 @@ The provided scheme will render following html scheme.
 
 <footer> ... </footer> <!-- Nav Component -->
 ```
+
+### Inserting flexible components
+
+Let's replicate the first Form component example.
+For large applications you don't have to always define a component with other components inside rendering that way.
+If you already have many templates for Forms, Labels, etc. you can define them as components and then use it only in the layout.
+Take a look at this example.
+
+First we create a simple empty Form component.
+
+```js
+/** @typedef {{  }} FormData */
+
+export const Form = new class Form extends CjsComponent {
+    /** @type {FormData} */
+    data = {};
+
+    _() {
+        const {  } = this._renderData;
+    
+        return `
+            <form></form>
+        `;
+    }
+
+    /** Settings */
+    _renderData = this.data;
+    _cssStyle = './src/components/_styles/Form.css';
+
+    /** Typedefs */
+    /** @param {FormData} data */ render(data);
+    /** @param {FormData} data */ visualise(data);
+};
+```
+
+Next we recreate our Label components.
+
+```js
+/** @typedef {{ type: "email"|"password", name: string, placeholder: string }} LabelData */
+
+export const Label = new class Label extends CjsComponent {
+    /** @type {LabelData} */
+    data = {};
+
+    _() {
+        const { type, name, placeholder } = this._renderData;
+    
+        return `
+            <label>
+                <input type="${type}" name="${name}" placeholder="${placeholder}">
+            </label>
+        `;
+    }
+
+    /** Settings */
+    _renderData = this.data;
+    _cssStyle = './src/components/_styles/Label.css';
+
+    /** Typedefs */
+    /** @param {LabelData} data */ render(data);
+    /** @param {LabelData} data */ visualise(data);
+};
+```
+
+And for the last component let's create a Button component that will submit the Form.
+
+```js
+/** @typedef {{ text: string, click: function }} ButtonData */
+
+export const Button = new class Button extends CjsComponent {
+    /** @type {ButtonData} */
+    data = {
+        text: "Example default text",
+        click: () => console.log("Clicked!")
+    };
+
+    _() {
+        const { text, click } = this._renderData;
+    
+        return `
+            <button ${onClick(click)}>
+                ${text}
+            </button>
+        `;
+    }
+
+    /** Settings */
+    _renderData = this.data;
+    _cssStyle = './src/components/_styles/Button.css';
+
+    /** Typedefs */
+    /** @param {ButtonData} data */ render(data);
+    /** @param {ButtonData} data */ visualise(data);
+};
+```
+
+And let's combine them inside Layout.
+
+```js
+import {Form} from "./Form.mjs";
+import {Label} from "./Label.mjs";
+import {Button} from "./Button.mjs";
+
+export const RootLayout = new CjsLayout(
+    [
+        [Form, [
+            [Label.withData({
+                type: "email", 
+                name: "email",
+                placeholder: "ex. example@cloud.com"
+            })],
+            [Label.withData({
+                type: "password", 
+                name: "password",
+                placeholder: "ex. zaq1@WSX"
+            })],
+            [Button.withData({
+                text: "Submit",
+                click: async () => {
+                    const { name, password } = Form.forms[0].serialize();
+
+                    await App.users.login(name, password);
+                }
+            })],
+            [CompaniesLayout]
+        ]],
+    ]
+);
+```
+
+Like this you can create multiple pages just by defining the components flow.
