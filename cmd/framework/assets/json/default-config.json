@@ -6,7 +6,34 @@
         "includeDefaultText": true,
         "createWithSplitLines": true,
         "topEmptyLines": 1,
-        "stringReturnPrefix": ""
+        "stringReturnPrefix": "",
+        "channels": {
+            "get": {
+                "apiSuffix": "/get",
+                "query": { "id": "number" },
+                "body": { }
+            },
+            "getAll": {
+                "apiSuffix": "/get-all",
+                "query": { },
+                "body": { }
+            },
+            "create": {
+                "apiSuffix": "/create",
+                "query": { },
+                "body": { }
+            },
+            "remove": {
+                "apiSuffix": "/remove",
+                "query": {},
+                "body": { "id": "number" }
+            },
+            "edit": {
+                "apiSuffix": "/edit",
+                "query": {},
+                "body": { "id": "number" }
+            }
+        }
     },
     "compiler": {
         "globalPagesSettings": {
