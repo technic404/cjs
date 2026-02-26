@@ -1,7 +1,7 @@
-/** @typedef {{  }} ContainerData */
+/** @typedef {{  }} Data */
 
-export const Container = new class Container extends CjsComponent {
-    /** @type {ContainerData} */
+/** @type {CjsComponent<Data>} */
+export const Container = new class CjsComponent {
     data = { };
 
     _() {
@@ -13,10 +13,6 @@ export const Container = new class Container extends CjsComponent {
     /** Settings */
     _renderData = this.data;
     _cssStyle = './src/layouts/root/_styles/Container.css';
-
-    /** Typedefs */
-    /** @param {ContainerData} data */ render(data);
-    /** @param {ContainerData} data */ visualise(data);
 }
 
 Container.fillHeight();

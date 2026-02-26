@@ -53,11 +53,19 @@ class CjsComponent extends CjsElement {
 
         const DataTypedef = `${pascalCase}Data`;
 
-        content.push(`/** @typedef {{  }} ${DataTypedef} */\n`);
+        // content.push(`/** @typedef {{  }} ${DataTypedef} */\n`);
 
         content.push(
-            `export const ${pascalCase} = new class ${pascalCase} extends CjsComponent {`,
-            `${tab(1)}/** @type {${DataTypedef}} */`,
+            `/**`,
+            ` * @typedef {Data} Object`,
+            ` */`,
+            ``
+        );
+
+        content.push(
+            `/** @type {CjsComponent<${DataTypedef}>} */`,
+            `export const ${pascalCase} = new class CjsComponent {`,
+            // `${tab(1)}/** @type {${DataTypedef}} */`,
             `${tab(1)}data = {};`,
             ``,
             `${tab(1)}_() {`,
@@ -87,10 +95,6 @@ class CjsComponent extends CjsElement {
                 `${tab(1)}/** Settings */`,
                 `${tab(1)}_renderData = this.data;`,
                 (this.#imports.style ? `${tab(1)}_cssStyle = '${this.#imports.style}';` : null),
-                ``,
-                `${tab(1)}/** Typedefs */`,
-                `${tab(1)}/** @param {${DataTypedef}} data */ render(data);`,
-                `${tab(1)}/** @param {${DataTypedef}} data */ visualise(data);`,
                 `};`
             ].filter(e => e !== null))
         );

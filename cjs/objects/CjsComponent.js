@@ -2,6 +2,7 @@
  * @class
  * @classdesc Class for creating a Component used for styling in website
  * @description
+ * @template T
  * You can use that element to set the website layout and flow.
  */
 class CjsComponent {
@@ -238,9 +239,9 @@ class CjsComponent {
      * Creates the component type element
      */
     constructor() {
-        /** @type {object} Contains the default data (init data) of the component */
+        /** @type {T} Contains the default data (init data) of the component */
         this.data = {};
-        /** @type {object} Intended to be an typedef for data declared in `this.data` - stores last rendered component data */
+        /** @type {T} Intended to be an typedef for data declared in `this.data` - stores last rendered component data */
         this._renderData = {};
         this.preSetData = {};
 
@@ -263,7 +264,7 @@ class CjsComponent {
 
     /**
      * Clones an component and sets data with argument (used for Layouts)
-     * @param {object} data
+     * @param {T} data
      * @returns {CjsComponent}
      */
     withData(data) {
@@ -335,7 +336,7 @@ class CjsComponent {
 
     /**
      * Renders the html string from provided data
-     * @param {object} data
+     * @param {T} data
      * @returns {string}
      */
     render(data = {}) {
@@ -344,7 +345,7 @@ class CjsComponent {
 
     /**
      * Visualises component as HTMLElement
-     * @param {object} data
+     * @param {T} data
      * @returns {HTMLElement}
      */
     visualise(data = {}) {
@@ -353,7 +354,7 @@ class CjsComponent {
 
     /**
      * Sets data for component and reload the old component occurrence
-     * @param {object} data information that should be inserted to component
+     * @param {T} data information that should be inserted to component
      * @returns {CjsComponent}
      */
     setData(data) {
@@ -408,7 +409,7 @@ class CjsComponent {
 
     /**
      * Redenders all components this type
-     * @param {object} data
+     * @param {T} data
      * @param {{ useSmartRender: boolean }} options
      * @returns {CjsComponent}
      */
@@ -597,7 +598,7 @@ class CjsComponent {
 
     /**
      * Sets default data, so if there is no values in original data, the missing values will be replaced with defaults
-     * @param {object} data
+     * @param {T} data
      * @returns {CjsComponent}
      */
     setDefaultData(data) {
