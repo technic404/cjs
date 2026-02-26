@@ -57,7 +57,7 @@ class CjsComponent extends CjsElement {
 
         content.push(
             `/**`,
-            ` * @typedef {Data} Object`,
+            ` * @typedef {Object} ${DataTypedef}`,
             ` */`,
             ``
         );
