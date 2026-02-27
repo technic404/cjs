@@ -35,10 +35,10 @@ Components are simple functions that return string.<br>
 Let's take a look at example component.
 
 ```js
-/** @typedef {{  }} FormData */
+/** @typedef {{  }} Data */
 
-export const Form = new class Form extends CjsComponent {
-    /** @type {FormData} */
+/** @type {CjsComponent<Data>} */
+export const Form = new class CjsComponent {
     data = {};
 
     _() {
@@ -59,20 +59,16 @@ export const Form = new class Form extends CjsComponent {
     /** Settings */
     _renderData = this.data;
     _cssStyle = './src/components/_styles/Form.css';
-
-    /** Typedefs */
-    /** @param {FormData} data */ render(data);
-    /** @param {FormData} data */ visualise(data);
 };
 ```
 
 If we would like to simplify this, and remove the duplicated `<label>` tags, we could create a `Label` component.
 
 ```js
-/** @typedef {{ type: "email"|"password", placeholder: string }} LabelData */
+/** @typedef {{ type: "email"|"password", placeholder: string }} Data */
 
-export const Label = new class Label extends CjsComponent {
-    /** @type {LabelData} */
+/** @type {CjsComponent<Data>} */
+export const Label = new class CjsComponent {
     data = {};
 
     _() {
@@ -88,10 +84,6 @@ export const Label = new class Label extends CjsComponent {
     /** Settings */
     _renderData = this.data;
     _cssStyle = './src/components/_styles/Label.css';
-
-    /** Typedefs */
-    /** @param {LabelData} data */ render(data);
-    /** @param {LabelData} data */ visualise(data);
 };
 ```
 
@@ -100,10 +92,10 @@ Now in `Form` component we can render the `Label` component.
 ```js
 import { Label } from "./Label.mjs";
 
-/** @typedef {{  }} FormData */
+/** @typedef {{  }} Data */
 
-export const Form = new class Form extends CjsComponent {
-    /** @type {FormData} */
+/** @type {CjsComponent<Data>} */
+export const Form = new class CjsComponent {
     data = {};
 
     _() {
@@ -120,10 +112,6 @@ export const Form = new class Form extends CjsComponent {
     /** Settings */
     _renderData = this.data;
     _cssStyle = './src/components/_styles/Form.css';
-
-    /** Typedefs */
-    /** @param {FormData} data */ render(data);
-    /** @param {FormData} data */ visualise(data);
 };
 ```
 
@@ -194,10 +182,10 @@ Take a look at this example.
 First we create a simple empty Form component.
 
 ```js
-/** @typedef {{  }} FormData */
+/** @typedef {{  }} Data */
 
+/** @type {CjsComponent<Data>} */
 export const Form = new class Form extends CjsComponent {
-    /** @type {FormData} */
     data = {};
 
     _() {
@@ -211,20 +199,16 @@ export const Form = new class Form extends CjsComponent {
     /** Settings */
     _renderData = this.data;
     _cssStyle = './src/components/_styles/Form.css';
-
-    /** Typedefs */
-    /** @param {FormData} data */ render(data);
-    /** @param {FormData} data */ visualise(data);
 };
 ```
 
 Next we recreate our Label components.
 
 ```js
-/** @typedef {{ type: "email"|"password", name: string, placeholder: string }} LabelData */
+/** @typedef {{ type: "email"|"password", name: string, placeholder: string }} Data */
 
-export const Label = new class Label extends CjsComponent {
-    /** @type {LabelData} */
+/** @type {CjsComponent<Data>} */
+export const Label = new class CjsComponent {
     data = {};
 
     _() {
@@ -240,20 +224,16 @@ export const Label = new class Label extends CjsComponent {
     /** Settings */
     _renderData = this.data;
     _cssStyle = './src/components/_styles/Label.css';
-
-    /** Typedefs */
-    /** @param {LabelData} data */ render(data);
-    /** @param {LabelData} data */ visualise(data);
 };
 ```
 
 And for the last component let's create a Button component that will submit the Form.
 
 ```js
-/** @typedef {{ text: string, click: function }} ButtonData */
+/** @typedef {{ text: string, click: function }} Data */
 
-export const Button = new class Button extends CjsComponent {
-    /** @type {ButtonData} */
+/** @type {CjsComponent<Data>} */
+export const Button = new class CjsComponent {
     data = {
         text: "Example default text",
         click: () => console.log("Clicked!")
@@ -272,10 +252,6 @@ export const Button = new class Button extends CjsComponent {
     /** Settings */
     _renderData = this.data;
     _cssStyle = './src/components/_styles/Button.css';
-
-    /** Typedefs */
-    /** @param {ButtonData} data */ render(data);
-    /** @param {ButtonData} data */ visualise(data);
 };
 ```
 
