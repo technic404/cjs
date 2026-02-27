@@ -18,6 +18,14 @@
  */
 
 /**
+ * @typedef {Object} CreatorChannel
+ * @property {string} apiSuffix
+ * @property {string} method
+ * @property {Object.<string, string>} query
+ * @property {Object.<string, string>} body
+ */
+
+/**
  * @typedef {object} CreatorConfig
  * @property {boolean} autoAddClassNames
  * @property {boolean} autoSetTagNames
@@ -25,6 +33,8 @@
  * @property {boolean} createWithSplitLines
  * @property {number} topEmptyLines
  * @property {string} stringReturnPrefix
+ * @property {string} channelsOnErrorCallback
+ * @property {Object.<string, CreatorChannel>} channels
  */
 
 /**
@@ -80,6 +90,7 @@
  * @typedef {object} CjsCreatorNames
  * @property {string} camelStyle
  * @property {string} pascalCase
+ * @property {string} kebabCase
  */
 
 /**

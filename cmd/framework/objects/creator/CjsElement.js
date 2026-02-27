@@ -29,6 +29,13 @@ class CjsElement {
     }
 
     /**
+     * Adds tabulator(s) spaces
+     * @param {number} count
+     * @returns {string}
+     */
+    _tab = (count) => "    ".repeat(count);
+
+    /**
      * Provides directory where the element contents are located
      * @returns {string}
      */

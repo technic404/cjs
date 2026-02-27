@@ -7,31 +7,37 @@
         "createWithSplitLines": true,
         "topEmptyLines": 1,
         "stringReturnPrefix": "",
+        "channelsOnErrorCallback": "r => CjsNotification.error(r.json().error)",
         "channels": {
             "get": {
                 "apiSuffix": "/get",
+                "method": "GET",
                 "query": { "id": "number" },
                 "body": { }
             },
             "getAll": {
                 "apiSuffix": "/get-all",
+                "method": "GET",
                 "query": { },
                 "body": { }
             },
             "create": {
                 "apiSuffix": "/create",
+                "method": "POST",
                 "query": { },
-                "body": { }
+                "body": { "data": "object" }
             },
             "remove": {
                 "apiSuffix": "/remove",
+                "method": "DELETE",
                 "query": {},
                 "body": { "id": "number" }
             },
             "edit": {
                 "apiSuffix": "/edit",
+                "method": "PATCH",
                 "query": {},
-                "body": { "id": "number" }
+                "body": { "id": "number", "data": "object" }
             }
         }
     },

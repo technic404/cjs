@@ -42,13 +42,6 @@ class CjsComponent extends CjsElement {
             ? `${pascalCase} component works!`
             : ''
 
-        /**
-         * Adds tabulator(s) spaces
-         * @param {number} count
-         * @returns {string}
-         */
-        const tab = (count) => "    ".repeat(count);
-
         if(this.#imports.handler) content.push(this.#imports.handler + "\n");
 
         const DataTypedef = `${pascalCase}Data`;
@@ -65,36 +58,36 @@ class CjsComponent extends CjsElement {
         content.push(
             `/** @type {CjsComponent<${DataTypedef}>} */`,
             `export const ${pascalCase} = new class CjsComponent {`,
-            // `${tab(1)}/** @type {${DataTypedef}} */`,
-            `${tab(1)}data = {};`,
+            // `${this._tab(1)}/** @type {${DataTypedef}} */`,
+            `${this._tab(1)}data = {};`,
             ``,
-            `${tab(1)}_() {`,
+            `${this._tab(1)}_() {`,
         );
 
-        content.push(`${tab(2)}const {  } = this._renderData;`);
+        content.push(`${this._tab(2)}const {  } = this._renderData;`);
 
         for(let i = 0; i < creator.topEmptyLines; i++) {
-            content.push(tab(1));
+            content.push(this._tab(1));
         }
 
-        content.push(`${tab(2)}return ${creator.stringReturnPrefix}\``);
+        content.push(`${this._tab(2)}return ${creator.stringReturnPrefix}\``);
 
         if(creator.createWithSplitLines) {
-            content.push(`${tab(3)}<${tagName}${className}>`);
-            content.push(`${tab(4)}${defaultText}`);
-            content.push(`${tab(3)}</${tagName}>`);
+            content.push(`${this._tab(3)}<${tagName}${className}>`);
+            content.push(`${this._tab(4)}${defaultText}`);
+            content.push(`${this._tab(3)}</${tagName}>`);
         } else {
-            content.push(`${tab(3)}<${tagName}${className}>${defaultText}</${tagName}>`);
+            content.push(`${this._tab(3)}<${tagName}${className}>${defaultText}</${tagName}>`);
         }
 
         content.push(
             ...([
-                `${tab(2)}\`;`,
-                `${tab(1)}}`,
+                `${this._tab(2)}\`;`,
+                `${this._tab(1)}}`,
                 ``,
-                `${tab(1)}/** Settings */`,
-                `${tab(1)}_renderData = this.data;`,
-                (this.#imports.style ? `${tab(1)}_cssStyle = '${this.#imports.style}';` : null),
+                `${this._tab(1)}/** Settings */`,
+                `${this._tab(1)}_renderData = this.data;`,
+                (this.#imports.style ? `${this._tab(1)}_cssStyle = '${this.#imports.style}';` : null),
                 `};`
             ].filter(e => e !== null))
         );

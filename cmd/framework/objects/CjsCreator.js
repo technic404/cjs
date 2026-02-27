@@ -5,6 +5,7 @@ const fs = require('fs');
 const CjsStyle = require("./creator/CjsStyle");
 const CjsLayout = require("./creator/CjsLayout");
 const CjsNames = require("./CjsNames");
+const CjsRequestsCollection = require("./creator/CjsRequestsCollection");
 
 class CjsCreator {
 
@@ -17,14 +18,30 @@ class CjsCreator {
 
     /**
      * 
-     * @param {"component"|"layout"} element 
+     * @param {"component"|"layout"|"requestsCollection"} element 
      * @param {string} name 
      * @param {import("../../types").CjsCommandFlags} flags
-     * @returns {CjsComponent|CjsLayout|null}
+     * @returns {CjsComponent|CjsLayout|CjsRequestsCollection|null}
      */
     create(element, name, flags = {}) {
         const names = CjsNames.getNames(name, element);
         const hasDirFlat = "dir" in flags && flags.dir !== null;
+
+        if(element === "requestsCollection") {
+            const path = `../src/requests/channels/${hasDirFlat ? `${flags.dir}/` : ''}`;
+            const requestsCollection = new CjsRequestsCollection(names, path);
+
+            if(fs.existsSync(requestsCollection.getFilePath())) {
+                console.log(`${PrefixError}Requests collection file already exists, cannot create requests collection`)
+
+                return null;
+            }
+
+            fs.mkdirSync(requestsCollection.getDirectory(), { recursive: true })
+            fs.writeFileSync(requestsCollection.getFilePath(), requestsCollection.getContent());
+
+            return requestsCollection;
+        }
 
         if(element === "component") {
             const { pascalCase } = names;
@@ -78,7 +95,6 @@ class CjsCreator {
             }
 
             fs.mkdirSync(layout.getDirectory(), { recursive: true })
-
             fs.writeFileSync(layout.getFilePath(), layout.getContent());
 
             return layout;
