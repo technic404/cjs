@@ -2,10 +2,16 @@
  * @class
  * @classdesc Class for creating a Component used for styling in website
  * @description
- * @template T
+ * @template _CjsDataTemplate
  * You can use that element to set the website layout and flow.
  */
 class CjsComponent {
+    /** @type {_CjsDataTemplate} Contains the default data (init data) of the component */
+    data = {};
+
+    /** @type {_CjsDataTemplate} Intended to be an typedef for data declared in `this.data` - stores last rendered component data */
+    _renderData = {};
+
     /** @type {string} attribute that indicated the element on the website */
     attribute;
 
@@ -25,7 +31,7 @@ class CjsComponent {
     #fillHeightData;
 
     /** @type {(find: () => HTMLElement, layoutData: object) => string} function that will return component html. The object argument is data provided by parent layout */
-    _;
+    _(find, layoutData) { return ""; };
 
     /**
      * Returns data that will be passed to html
@@ -190,7 +196,8 @@ class CjsComponent {
             this.#renderedCssStyle = true;
         }
 
-        const renderHtmlFunction = Object.getPrototypeOf(this)._;
+        // const renderHtmlFunction = Object.getPrototypeOf(this)._;
+        const renderHtmlFunction = this._;
         const isAsync = renderHtmlFunction[Symbol.toStringTag] === 'AsyncFunction';
         const styleString = style && Object.entries(style).map(e => `${this.#camelToKebab(e[0])}: ${e[1]};`).join(" ");
         const onLoadAttribute = mutationListener.listen("add", async (cjsEvent) => {
@@ -239,10 +246,6 @@ class CjsComponent {
      * Creates the component type element
      */
     constructor() {
-        /** @type {T} Contains the default data (init data) of the component */
-        this.data = {};
-        /** @type {T} Intended to be an typedef for data declared in `this.data` - stores last rendered component data */
-        this._renderData = {};
         this.preSetData = {};
 
         this.attribute = Cjs.generateAttribute(CJS_COMPONENT_PREFIX, CjsTakenAttributes.components);
@@ -264,8 +267,8 @@ class CjsComponent {
 
     /**
      * Clones an component and sets data with argument (used for Layouts)
-     * @param {T} data
-     * @returns {CjsComponent}
+     * @param {_CjsDataTemplateT} data
+     * @returns {this}
      */
     withData(data) {
         const clone = Object.create(Object.getPrototypeOf(this));
@@ -277,7 +280,7 @@ class CjsComponent {
     /**
      * Adds style to element using attribute `style="..."`
      * @param {CjsStyleProperties} style 
-     * @returns {CjsComponent}
+     * @returns {this}
      */
     withStyle(style) {
         const clone = Object.create(Object.getPrototypeOf(this));
@@ -336,7 +339,7 @@ class CjsComponent {
 
     /**
      * Renders the html string from provided data
-     * @param {T} data
+     * @param {_CjsDataTemplate} data
      * @returns {string}
      */
     render(data = {}) {
@@ -345,7 +348,7 @@ class CjsComponent {
 
     /**
      * Visualises component as HTMLElement
-     * @param {T} data
+     * @param {_CjsDataTemplate} data
      * @returns {HTMLElement}
      */
     visualise(data = {}) {
@@ -354,8 +357,8 @@ class CjsComponent {
 
     /**
      * Sets data for component and reload the old component occurrence
-     * @param {T} data information that should be inserted to component
-     * @returns {CjsComponent}
+     * @param {_CjsDataTemplate} data information that should be inserted to component
+     * @returns {CjsComponent<_CjsDataTemplate>}
      */
     setData(data) {
         const isObject = (any) => { return any instanceof Object; }
@@ -399,7 +402,7 @@ class CjsComponent {
     /**
      * Redenders all components this type when search changed
      * @param {{ useSmartRender: boolean }} data
-     * @returns {CjsComponent}
+     * @returns {CjsComponent<_CjsDataTemplate>}
      */
     rerenderOnSearch(data = { useSmartRender: false }) {
         Search.onChange(() => this.rerenderComponents(data));
@@ -409,9 +412,9 @@ class CjsComponent {
 
     /**
      * Redenders all components this type
-     * @param {T} data
+     * @param {_CjsDataTemplate} data
      * @param {{ useSmartRender: boolean }} options
-     * @returns {CjsComponent}
+     * @returns {CjsComponent<_CjsDataTemplate>}
      */
     rerenderComponents(data = {}, options = { useSmartRender: false }) {
         const components = Array.from(document.body.querySelectorAll(`[${this.attribute}]`));

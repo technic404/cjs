@@ -1,6 +1,6 @@
 /**
  * Executes when mouse moves on the element
- * @param {function(CjsEvent)} f
+ * @param {(cjsEvent: CjsEvent) => any} f
  * @returns {string}
  */
 function onMouseMove(f) {

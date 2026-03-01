@@ -1,6 +1,6 @@
 /**
  * Executes when scrolled in the element
- * @param {function(CjsEvent)} f
+ * @param {(cjsEvent: CjsEvent) => any} f
  * @returns {string}
  */
 function onScroll(f) {

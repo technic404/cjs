@@ -1,6 +1,6 @@
 /**
  * Extecutes when slided by touch of mouse drag down by certain threshold
- * @param {function(CjsEvent)} f
+ * @param {(cjsEvent: CjsEvent) => any} f
  * @param {number} slideThreshold
  * @returns {string}
  */

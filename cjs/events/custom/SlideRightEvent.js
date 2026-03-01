@@ -1,6 +1,6 @@
 /**
  * Extecutes when slided by touch of mouse drag to right by certain threshold
- * @param {function(CjsEvent)} f
+ * @param {(cjsEvent: CjsEvent) => any} f
  * @param {number} slideThreshold triggers event when user slides by that amount of pixels
  * @param {number} cancelUpDownThreshold cancels event when user slides down or up too much (if disable just set -1)
  * @returns {string}

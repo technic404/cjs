@@ -1,6 +1,6 @@
 /**
  * Executes when window is being resized
- * @param {function(CjsEvent)} f
+ * @param {(cjsEvent: CjsEvent) => any} f
  * @returns {string}
  */
 function onResize(f) {

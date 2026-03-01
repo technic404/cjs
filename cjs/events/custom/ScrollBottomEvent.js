@@ -1,6 +1,6 @@
 /**
  * Executes when scrolled on the bottom of the element
- * @param {function(CjsEvent)} f
+ * @param {(cjsEvent: CjsEvent) => any} f
  * @returns {string}
  */
 function onScrollBottom(f) {

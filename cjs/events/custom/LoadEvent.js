@@ -1,6 +1,6 @@
 /**
  * Executes when element is being loaded into website
- * @param {function(CjsEvent)} f
+ * @param {(cjsEvent: CjsEvent) => any} f
  * @returns {string}
  */
 function onLoad(f) {

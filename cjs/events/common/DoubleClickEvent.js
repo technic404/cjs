@@ -1,6 +1,6 @@
 /**
  * Executes when double-clicked on the element
- * @param {function(CjsEvent)} f
+ * @param {(cjsEvent: CjsEvent) => any} f
  * @returns {string}
  */
 function onDblclick(f) {

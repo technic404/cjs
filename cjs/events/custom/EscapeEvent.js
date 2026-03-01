@@ -1,7 +1,7 @@
 
 /**
  * Executes when clicked ESC (Escape) keyboard key
- * @param {function(CjsEvent)} f
+ * @param {(cjsEvent: CjsEvent) => any} f
  * @returns {string}
  */
 function onEscape(f) {

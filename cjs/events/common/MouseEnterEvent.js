@@ -1,6 +1,6 @@
 /**
  * Executes when mouse enter the element
- * @param {function(CjsEvent)} f
+ * @param {(cjsEvent: CjsEvent) => any} f
  * @returns {string}
  */
 function onMouseenter(f) {

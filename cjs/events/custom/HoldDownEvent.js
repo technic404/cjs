@@ -1,6 +1,6 @@
 /**
  * Executes when hold down in touch or click on specific element
- * @param {function(CjsEvent)} f
+ * @param {(cjsEvent: CjsEvent) => any} f
  * @param {number} time time of hold down in ms
  * @returns {string}
  */

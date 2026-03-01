@@ -82,3 +82,7 @@
 /**
  * @typedef {CjsComponent | CjsLayout | CjsLayoutNode[]} CjsLayoutNode
  */
+
+/**
+ * @typedef {HTMLElementTagNameMap[keyof HTMLElementTagNameMap]} AnyHTMLElement
+ */

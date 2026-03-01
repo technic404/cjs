@@ -1,6 +1,6 @@
 /**
  * Executes when mouse leave the element
- * @param {function(CjsEvent)} f
+ * @param {(cjsEvent: CjsEvent) => any} f
  * @returns {string}
  */
 function onMouseleave(f) {

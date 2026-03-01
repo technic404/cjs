@@ -1,6 +1,6 @@
 /**
  * Executes when move-touched the element
- * @param {function(CjsEvent)} f
+ * @param {(cjsEvent: CjsEvent) => any} f
  * @returns {string}
  */
 function onTouchMove(f) {

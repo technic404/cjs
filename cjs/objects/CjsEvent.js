@@ -5,7 +5,7 @@
 class CjsEvent {
     /**
      * @param {Event|CjsMutationEvent} event
-     * @param {HTMLElement} source element to witch the event was applied
+     * @param {AnyHTMLElement} source element to witch the event was applied
      */
     constructor(event, source) {
         this.event = event;

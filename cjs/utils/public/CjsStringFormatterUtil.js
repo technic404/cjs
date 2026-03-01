@@ -10,8 +10,8 @@
  *     `)}
  * </div>
  * ```
- * @param {[]} array 
- * @param {function(any, number)} callback 
+ * @param {any[]} array 
+ * @param {(element: any, index: number) => any} callback 
  * @returns {string}
  */
 function strmap(array, callback) {

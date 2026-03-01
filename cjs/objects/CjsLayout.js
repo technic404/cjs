@@ -195,8 +195,9 @@ class CjsLayout {
     asComponentWithData(data) {
         this.setData(data);
 
-        const component = new CjsComponent(_ => `<div></div>`)
-
+        const component = new CjsComponent();
+        
+        component._ = () => `<div></div>`;
         component.onLoad(_ => component.loadLayout(this.setData(data)));
 
         return component;

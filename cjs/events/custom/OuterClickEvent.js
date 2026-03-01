@@ -1,6 +1,6 @@
 /**
  * Executes when clicked outside the element
- * @param {function(CjsEvent)} f
+ * @param {(cjsEvent: CjsEvent) => any} f
  * @returns {string}
  */
 function onOuterclick(f) {

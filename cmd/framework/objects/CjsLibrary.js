@@ -85,6 +85,7 @@ class CjsLibrary {
         "events/custom/HoldDownEvent.js", 
         "events/custom/LoadEvent.js", 
         "events/custom/OuterClickEvent.js", 
+        "events/custom/ScrollBottomEvent.js",
         "events/custom/SlideDownEvent.js", 
         "events/custom/SlideLeftEvent.js", 
         "events/custom/SlideRightEvent.js", 
