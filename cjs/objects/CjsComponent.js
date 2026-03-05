@@ -2,14 +2,13 @@
  * @class
  * @classdesc Class for creating a Component used for styling in website
  * @description
- * @template _CjsDataTemplate
  * You can use that element to set the website layout and flow.
  */
 class CjsComponent {
-    /** @type {_CjsDataTemplate} Contains the default data (init data) of the component */
+    /** @type {object} Contains the default data (init data) of the component */
     data = {};
 
-    /** @type {_CjsDataTemplate} Intended to be an typedef for data declared in `this.data` - stores last rendered component data */
+    /** @type {object} Intended to be an typedef for data declared in `this.data` - stores last rendered component data */
     _renderData = {};
 
     /** @type {string} attribute that indicated the element on the website */
@@ -267,7 +266,7 @@ class CjsComponent {
 
     /**
      * Clones an component and sets data with argument (used for Layouts)
-     * @param {_CjsDataTemplateT} data
+     * @param {object} data
      * @returns {this}
      */
     withData(data) {
@@ -339,7 +338,7 @@ class CjsComponent {
 
     /**
      * Renders the html string from provided data
-     * @param {_CjsDataTemplate} data
+     * @param {object} data
      * @returns {string}
      */
     render(data = {}) {
@@ -348,7 +347,7 @@ class CjsComponent {
 
     /**
      * Visualises component as HTMLElement
-     * @param {_CjsDataTemplate} data
+     * @param {object} data
      * @returns {HTMLElement}
      */
     visualise(data = {}) {
@@ -357,8 +356,8 @@ class CjsComponent {
 
     /**
      * Sets data for component and reload the old component occurrence
-     * @param {_CjsDataTemplate} data information that should be inserted to component
-     * @returns {CjsComponent<_CjsDataTemplate>}
+     * @param {object} data information that should be inserted to component
+     * @returns {this}
      */
     setData(data) {
         const isObject = (any) => { return any instanceof Object; }
@@ -402,7 +401,7 @@ class CjsComponent {
     /**
      * Redenders all components this type when search changed
      * @param {{ useSmartRender: boolean }} data
-     * @returns {CjsComponent<_CjsDataTemplate>}
+     * @returns {this}
      */
     rerenderOnSearch(data = { useSmartRender: false }) {
         Search.onChange(() => this.rerenderComponents(data));
@@ -412,9 +411,9 @@ class CjsComponent {
 
     /**
      * Redenders all components this type
-     * @param {_CjsDataTemplate} data
+     * @param {object} data
      * @param {{ useSmartRender: boolean }} options
-     * @returns {CjsComponent<_CjsDataTemplate>}
+     * @returns {this}
      */
     rerenderComponents(data = {}, options = { useSmartRender: false }) {
         const components = Array.from(document.body.querySelectorAll(`[${this.attribute}]`));
