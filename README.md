@@ -12,7 +12,7 @@ src
 │
 └───layouts
 │   └───root
-│   │   └───styles
+│   │   └───_styles
 │   │   │   │   Container.css
 │   │   │
 │   │   │   Container.mjs
@@ -35,15 +35,8 @@ Components are simple functions that return string.<br>
 Let's take a look at example component.
 
 ```js
-/** @typedef {{  }} Data */
-
-/** @type {CjsComponent<Data>} */
 export const Form = new class CjsComponent {
-    data = {};
-
     _() {
-        const {  } = this._renderData;
-    
         return `
             <form>
                 <label>
@@ -67,7 +60,7 @@ If we would like to simplify this, and remove the duplicated `<label>` tags, we 
 ```js
 /** @typedef {{ type: "email"|"password", placeholder: string }} Data */
 
-/** @type {CjsComponent<Data>} */
+/** @cjs {Data} */
 export const Label = new class CjsComponent {
     data = {};
 
@@ -92,15 +85,8 @@ Now in `Form` component we can render the `Label` component.
 ```js
 import { Label } from "./Label.mjs";
 
-/** @typedef {{  }} Data */
-
-/** @type {CjsComponent<Data>} */
 export const Form = new class CjsComponent {
-    data = {};
-
     _() {
-        const {  } = this._renderData;
-    
         return `
             <form>
                 ${Label.render({ type: "email", placeholder: "ex. example@cloud.com" })}
@@ -182,15 +168,8 @@ Take a look at this example.
 First we create a simple empty Form component.
 
 ```js
-/** @typedef {{  }} Data */
-
-/** @type {CjsComponent<Data>} */
 export const Form = new class Form extends CjsComponent {
-    data = {};
-
     _() {
-        const {  } = this._renderData;
-    
         return `
             <form></form>
         `;
@@ -207,7 +186,7 @@ Next we recreate our Label components.
 ```js
 /** @typedef {{ type: "email"|"password", name: string, placeholder: string }} Data */
 
-/** @type {CjsComponent<Data>} */
+/** @cjs {Data} */
 export const Label = new class CjsComponent {
     data = {};
 
@@ -232,7 +211,7 @@ And for the last component let's create a Button component that will submit the 
 ```js
 /** @typedef {{ text: string, click: function }} Data */
 
-/** @type {CjsComponent<Data>} */
+/** @cjs {Data} */
 export const Button = new class CjsComponent {
     data = {
         text: "Example default text",
