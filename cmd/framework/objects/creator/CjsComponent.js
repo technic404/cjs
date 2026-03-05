@@ -56,8 +56,8 @@ class CjsComponent extends CjsElement {
         );
 
         content.push(
-            `/** @type {CjsComponent<${DataTypedef}>} */`,
-            `export const ${pascalCase} = new class CjsComponent {`,
+            `/** @cjs {${DataTypedef}} */`,
+            `export const ${pascalCase} = new class ${pascalCase} extends CjsComponent {`,
             // `${this._tab(1)}/** @type {${DataTypedef}} */`,
             `${this._tab(1)}data = {};`,
             ``,
