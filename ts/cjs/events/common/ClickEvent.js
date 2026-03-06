@@ -6,3 +6,4 @@
 function onClick(f) {
     return functionMappings.add("click", (e, s) => f(new CjsEvent(e, s)))
 }
+

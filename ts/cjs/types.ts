@@ -1,0 +1,1 @@
+export type AnyHTMLElement = HTMLElementTagNameMap[keyof HTMLElementTagNameMap];
