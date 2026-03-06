@@ -1,7 +1,7 @@
 /** @typedef {{  }} Data */
 
 /** @type {CjsComponent<Data>} */
-export const Container = new class CjsComponent {
+export const Container = new class Container extends CjsComponent {
     data = { };
 
     _() {
