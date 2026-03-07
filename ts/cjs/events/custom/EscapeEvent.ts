@@ -1,10 +1,10 @@
+import { CjsEventCallback } from "../../types";
+import { onLoad } from "./LoadEvent";
 
 /**
  * Executes when clicked ESC (Escape) keyboard key
- * @param {(cjsEvent: CjsEvent) => any} f
- * @returns {string}
  */
-function onEscape(f) {
+export function onEscape(f: CjsEventCallback) {
     return onLoad(cjsEvent => {
         document.addEventListener('keydown', (event) => {
             const isEscape = event.key === "Escape" || event.key == "Esc";

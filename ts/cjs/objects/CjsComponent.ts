@@ -1,7 +1,9 @@
 import { CJS_COMPONENT_PREFIX, CJS_ID_LENGTH, CJS_PRETTY_PREFIX_X, CjsFrameworkEvents, CjsLazyClassPrefix, CjsLazyElementPrefix, CjsTakenAttributes } from "../Constants";
+import { AttributeHelper } from "../helpers/AttributeHelper";
 import { getAttributeStartingWith, htmlToElement } from "../utils/ElementUtil";
 import { CjsObject } from "../utils/shared/CjsObjectUtil";
 import { getRandomCharacters } from "../utils/StringUtil";
+import { addRootStyle } from "../utils/StyleUtil";
 import { CjsLayout } from "./CjsLayout";
 
 export class CjsComponent<TData = any> {
@@ -9,7 +11,7 @@ export class CjsComponent<TData = any> {
     public _renderData: TData = {} as TData
     public attribute: string;
     public _cssStyle: string | null = null;
-    public _setStyle: CjsStyleProperties | null = null;
+    public _setStyle: Partial<CSSStyleDeclaration> | null = null;
 
     private renderedCssStyle = false;
     private onLoadCallback: () => void = () => {};
@@ -23,7 +25,7 @@ export class CjsComponent<TData = any> {
     public _: (find: () => HTMLElement | null, layoutData: object) => string = () => "";
 
     constructor() {
-        this.attribute = Cjs.generateAttribute(
+        this.attribute = AttributeHelper.generateAttribute(
             CJS_COMPONENT_PREFIX,
             CjsTakenAttributes.components
         );
@@ -133,7 +135,7 @@ export class CjsComponent<TData = any> {
         return container.innerHTML;
     }
 
-    private getHtml(data: any, style: CjsStyleProperties | null): string {
+    private getHtml(data: any, style: Partial<CSSStyleDeclaration> | null): string {
         if (!this.renderedCssStyle && this._cssStyle) {
             addRootStyle(this.attribute, this._cssStyle, {
                 prefixStyleRules: true,

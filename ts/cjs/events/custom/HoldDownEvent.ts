@@ -1,16 +1,16 @@
+import { CjsEventCallback } from "../../types";
+import { onLoad } from "./LoadEvent";
+
 /**
  * Executes when hold down in touch or click on specific element
- * @param {(cjsEvent: CjsEvent) => any} f
- * @param {number} time time of hold down in ms
- * @returns {string}
  */
-function onHoldDown(f, time = 500) {
+export function onHoldDown(f: CjsEventCallback, time = 500) {
     return onLoad(cjsEvent => {
-        let timeout;
+        let timeoutId = -1;
 
-        const cancel = () => { clearTimeout(timeout); }
+        const cancel = () => { clearTimeout(timeoutId); }
         const down = () => {
-            timeout = setTimeout(() => {
+            timeoutId = setTimeout(() => {
                 f(cjsEvent);
             }, time);
         }

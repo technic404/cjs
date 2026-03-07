@@ -1,4 +1,6 @@
 import { CJS_COMPONENT_FORCE_RENDER_PLACE_TAG, CJS_LAYOUT_PREFIX, CJS_PRETTY_PREFIX_X, CJS_ROOT_CONTAINER_PREFIX, CjsFrameworkEvents, CjsTakenAttributes } from "../Constants";
+import { AttributeHelper } from "../helpers/AttributeHelper";
+import { CjsLayoutNode } from "../types";
 import { CjsComponent } from "./CjsComponent";
 
 export class CjsLayout {
@@ -22,7 +24,7 @@ export class CjsLayout {
      */
     constructor(elements: (layoutData: object | null) => CjsLayoutNode[][]) {
         this.elements = elements;
-        this.attribute = Cjs.generateAttribute(
+        this.attribute = AttributeHelper.generateAttribute(
             CJS_LAYOUT_PREFIX,
             CjsTakenAttributes.layouts
         );
@@ -42,7 +44,7 @@ export class CjsLayout {
      * Executes the onLoad function and sub components/layouts onLoad
      */
     public _executeOnLoad(data: object): void {
-        flattenInfinite(this.elements(this.dataState.active)).forEach(element => {
+        this.elements(this.dataState.active).flat().forEach(element => {
             if (element instanceof CjsLayout) {
                 element._executeOnLoad(this.dataState.active as object);
             }
@@ -55,13 +57,12 @@ export class CjsLayout {
      * Finds component in layout
      */
     public select(component: CjsComponent): CjsComponent | null {
-        const filtered = flattenInfinite(
-            this.elements(this.dataState.active)
-        ).filter(e => (e as CjsComponent).attribute === component.attribute);
+        const filtered = this.elements(this.dataState.active)
+            .flat()
+            .filter(e => (e as CjsComponent).attribute === component.attribute);
 
         if (filtered.length === 0) {
             console.log(`${CJS_PRETTY_PREFIX_X}Component not found when trying to use select(), make sure that provided component exists in layout`);
-            
             return null;
         }
 
@@ -79,7 +80,6 @@ export class CjsLayout {
     public resetToDefaultData(): this {
         if (this.dataState.default === undefined) {
             console.log(`${CJS_PRETTY_PREFIX_X}Cannot reset layout data to default, because default data is not set`);
-
             return this;
         }
 

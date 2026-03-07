@@ -1,9 +1,10 @@
+import { CjsEventCallback } from "../../types";
+import { onLoad } from "./LoadEvent";
+
 /**
  * Executes when scrolled on the bottom of the element
- * @param {(cjsEvent: CjsEvent) => any} f
- * @returns {string}
  */
-function onScrollBottom(f) {
+export function onScrollBottom(f: CjsEventCallback) {
     return onLoad(cjsEvent => {
         cjsEvent.source.addEventListener("scroll", () => {
             if (cjsEvent.source.scrollTop + cjsEvent.source.clientHeight >= cjsEvent.source.scrollHeight) {

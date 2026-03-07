@@ -1,3 +1,4 @@
+import { CjsLayoutNode } from "../types";
 import { CjsComponent } from "./CjsComponent";
 import { CjsLayout } from "./CjsLayout";
 
@@ -11,7 +12,7 @@ export class CjsPage extends CjsLayout {
      * @param basename Page URL basename
      * @param elements Layout / Components
      */
-    constructor(basename: string, elements: CjsComponent<any> | CjsLayout[][]) {
+    constructor(basename: string, elements: CjsLayoutNode[][]) {
         super(() => elements);
 
         this.basename = basename;

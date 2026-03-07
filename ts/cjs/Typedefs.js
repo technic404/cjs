@@ -1,13 +1,5 @@
 /**
- * @typedef {"alias"|"all-scroll"|"auto"|"cell"|"context-menu"|"col-resize"|"copy"|"crosshair"|"default"|"e-resize"|"ew-resize"|"grab"|"grabbing"|"help"|"move"|"n-resize"|"ne-resize"|"nesw-resize"|"ns-resize"|"nw-resize"|"nwse-resize"|"no-drop"|"none"|"not-allowed"|"pointer"|"progress"|"row-resize"|"s-resize"|"se-resize"|"sw-resize"|"text"|"url"|"w-resize"|"wait"|"zoom-in"|"zoom-out"} CjsCursorTypes
- */
-
-/**
  * @typedef {"click"|"contextmenu"|"dblclick"|"mousedown"|"mouseenter"|"mouseleave"|"mousemove"|"mouseout"|"mouseover"|"mouseup"|"keydown"|"keypress"|"keyup"|"blur"|"change"|"focus"|"focusin"|"focusout"|"input"|"invalid"|"reset"|"search"|"select"|"submit"|"drag"|"dragend"|"dragenter"|"dragleave"|"dragover"|"dragstart"|"drop"|"copy"|"cut"|"paste"|"animationend"|"animationiteration"|"animationstart"|"transitionend"|"abort"|"canplay"|"canplaythrough"|"durationchange"|"emptied"|"ended"|"loadeddata"|"loadedmetadata"|"loadstart"|"pause"|"play"|"playing"|"progress"|"ratechange"|"seeked"|"seeking"|"stalled"|"suspend"|"timeupdate"|"volumechange"|"waiting"|"beforeinput"|"fullscreenchange"|"fullscreenerror"|"resize"|"scroll"|"hashchange"|"load"|"unload"|"online"|"offline"|"popstate"|"storage"|"touchcancel"|"touchend"|"touchmove"|"touchstart"|"webkitfullscreenchange"|"webkitfullscreenerror"} CjsCommonEvents
- */
-
-/**
- * @typedef {"outerclick"} CjsCustomEvents
  */
 
 /**
@@ -66,10 +58,6 @@
 "video/mp4"|"video/webm"|"video/ogg"|"video/x-msvideo"|
 "multipart/form-data"|"application/sql"
 } CommonMIMETypes
- */
-
-/**
- * @typedef {CjsComponent | CjsLayout | CjsLayoutNode[]} CjsLayoutNode
  */
 
 /**

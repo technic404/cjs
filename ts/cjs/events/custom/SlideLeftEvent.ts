@@ -1,15 +1,17 @@
+import { CjsEventCallback } from "../../types";
+import { onLoad } from "./LoadEvent";
+
 /**
  * Extecutes when slided by touch of mouse drag to left by certain threshold
- * @param {(cjsEvent: CjsEvent) => any} f
- * @param {number} slideThreshold triggers event when user slides by that amount of pixels
- * @param {number} cancelUpDownThreshold cancels event when user slides down or up too much (if disable just set -1)
- * @returns {string}
+ * @param slideThreshold triggers event when user slides by that amount of pixels
+ * @param cancelUpDownThreshold cancels event when user slides down or up too much (if disable just set -1)
  */
-function onSlideLeft(f, slideThreshold = 50, cancelUpDownThreshold = 50) {
+export function onSlideLeft(f: CjsEventCallback, slideThreshold = 50, cancelUpDownThreshold = 50) {
     return onLoad((cjsEvent) => {
-        let mouse = { startX: null, startY: null, lastX: null, lastY: null }
+        let mouse = { startX: 0, startY: 0, lastX: 0, lastY: 0 };
 
-        const start = (e) => {
+        const start = (event: Event) => {
+            const e = event as TouchEvent | MouseEvent;
             const clientX = (!("touches" in e) ? e.clientX : e.touches[0].clientX);
             const clientY = (!("touches" in e) ? e.clientY : e.touches[0].clientY);
 
@@ -19,7 +21,8 @@ function onSlideLeft(f, slideThreshold = 50, cancelUpDownThreshold = 50) {
             mouse.startY = clientY;
         }
 
-        const move = (e) => {
+        const move = (event: Event) => {
+            const e = event as TouchEvent | MouseEvent;
             const clientX = (!("touches" in e) ? e.clientX : e.touches[0].clientX);
             const clientY = (!("touches" in e) ? e.clientY : e.touches[0].clientY);
             const moveProgressed = clientX - 1 <= mouse.lastX;
@@ -27,28 +30,30 @@ function onSlideLeft(f, slideThreshold = 50, cancelUpDownThreshold = 50) {
             const deltaY = clientY - mouse.startY;
 
             if(cancelUpDownThreshold !== -1 && cancelUpDownThreshold < Math.abs(deltaY)) {
-                mouse.startX = undefined;
+                mouse.startX = 0;
                 return;
             }
 
             if(!moveProgressed) {
-                mouse.startX = undefined;
+                mouse.startX = 0;
                 return;
             }
 
             if(deltaX < -1 * slideThreshold) {
                 f(cjsEvent)
 
-                mouse.startX = undefined;
+                mouse.startX = 0;
             }
 
             mouse.lastX = clientX;
         }
 
-        cjsEvent.target.addEventListener('mousedown', start)
-        cjsEvent.target.addEventListener('touchstart', start)
+        const target = cjsEvent.target as EventTarget;
 
-        cjsEvent.target.addEventListener('mousemove', move);
-        cjsEvent.target.addEventListener('touchmove', move);
+        target.addEventListener('mousedown', start)
+        target.addEventListener('touchstart', start)
+
+        target.addEventListener('mousemove', move);
+        target.addEventListener('touchmove', move);
     });
 }

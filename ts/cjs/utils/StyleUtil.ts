@@ -1,4 +1,5 @@
 import { CJS_PRETTY_PREFIX_X, CJS_STYLE_PREFIX } from "../Constants";
+import { cjsRunnable } from "../Runnable";
 import { Colors } from "../utils/ConsoleColorsUtil";
 import { addPrefixToSelectors } from "../utils/StyleUtil";
 import { CjsRequest } from "../utils/public/CjsRequestsUtil";
@@ -25,7 +26,6 @@ export async function addRootStyle(
         enableMultiSelector: true
     }
 ): Promise<void> {
-
     if (!("prefixStyleRules" in options)) options.prefixStyleRules = true;
     if (!("encodeKeyframes" in options)) options.encodeKeyframes = true;
     if (!("enableMultiSelector" in options)) options.enableMultiSelector = true;
