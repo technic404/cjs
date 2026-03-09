@@ -1,7 +1,7 @@
 import { CJS_ELEMENT_PREFIX, CJS_ID_LENGTH, CJS_OBSERVER_PREFIX, CJS_PRETTY_PREFIX_X } from "../Constants";
 import { functionMappings } from "../FunctionMappings";
 import { CjsEvent } from "../objects/CjsEvent";
-import { cjsRunnable } from "../Runnable";
+import { cjsRunnable, CjsRunnableDetails } from "../Runnable";
 import { getAttributeStartingWith } from "../utils/ElementUtil";
 import { getRandomCharacters } from "../utils/StringUtil";
 import { CjsRunnableStyleWatcher } from "../utils/StyleUtil";
@@ -253,7 +253,7 @@ export class CjsMutationListener {
 
         const registered = this.executedFunctions.get(attribute);
 
-        if (registered?.elements.includes(element)) return;
+        if (registered?.elements.includes(element as Element)) return;
 
         const obj = this.map.get(attribute);
 
@@ -272,6 +272,6 @@ export class CjsMutationListener {
 
         this.executedFunctions
             .get(attribute)!
-            .elements.push(element);
+            .elements.push(element as Element);
     }
 }

@@ -1,0 +1,20 @@
+{
+  "name": "ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:lib": "vite build && npx rollup -c ./rollup.dts.config.js && robocopy ./lib ./website/lib /E"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "vite": "^7.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.5",
+    "rollup": "^4.59.0",
+    "rollup-plugin-dts": "^6.3.0"
+  }
+}

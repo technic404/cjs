@@ -1,6 +1,7 @@
 import { CJS_COMPONENT_PREFIX, CJS_ID_LENGTH, CJS_PRETTY_PREFIX_X, CjsFrameworkEvents, CjsLazyClassPrefix, CjsLazyElementPrefix, CjsTakenAttributes } from "../Constants";
 import { AttributeHelper } from "../helpers/AttributeHelper";
-import { getAttributeStartingWith, htmlToElement } from "../utils/ElementUtil";
+import { mutationListener } from "../listeners/Listeners";
+import { createVirtualContainer, getAttributeStartingWith, htmlToElement } from "../utils/ElementUtil";
 import { CjsObject } from "../utils/shared/CjsObjectUtil";
 import { getRandomCharacters } from "../utils/StringUtil";
 import { addRootStyle } from "../utils/StyleUtil";
@@ -11,7 +12,7 @@ export class CjsComponent<TData = any> {
     public _renderData: TData = {} as TData
     public attribute: string;
     public _cssStyle: string | null = null;
-    public _setStyle: Partial<CSSStyleDeclaration> | null = null;
+    public _setStyle: Partial<CSSStyleDeclaration> = {};
 
     private renderedCssStyle = false;
     private onLoadCallback: () => void = () => {};
@@ -22,7 +23,9 @@ export class CjsComponent<TData = any> {
     /**
      * Function that renders html.
      */
-    public _: (find: () => HTMLElement | null, layoutData: object) => string = () => "";
+    public _(find: () => HTMLElement | null, layoutData: object): string {
+        return "";
+    };
 
     constructor() {
         this.attribute = AttributeHelper.generateAttribute(
@@ -103,7 +106,9 @@ export class CjsComponent<TData = any> {
     }
 
     private addAttributes(html: string, attributes: string[]): string {
-        const element = htmlToElement(html);
+        console.log('a', html);
+        
+        const element = createVirtualContainer(htmlToElement(html));
 
         if (!element.firstElementChild) return "";
 
@@ -115,7 +120,7 @@ export class CjsComponent<TData = any> {
     }
 
     private addLazyIdentifiers(html: string): string {
-        const container = htmlToElement(html);
+        const container = createVirtualContainer(htmlToElement(html));
 
         const elements = Array.from(container.querySelectorAll(`[class*='${CjsLazyClassPrefix}']`))
             .filter(e => getAttributeStartingWith(e, CjsLazyElementPrefix).length === 0) as HTMLElement[];
@@ -135,7 +140,7 @@ export class CjsComponent<TData = any> {
         return container.innerHTML;
     }
 
-    private getHtml(data: any, style: Partial<CSSStyleDeclaration> | null): string {
+    private getHtml(data: any, style: Partial<CSSStyleDeclaration> = {}): string {
         if (!this.renderedCssStyle && this._cssStyle) {
             addRootStyle(this.attribute, this._cssStyle, {
                 prefixStyleRules: true,
@@ -147,29 +152,39 @@ export class CjsComponent<TData = any> {
         }
 
         const renderFn = this._;
-        const isAsync =
-            (renderFn as any)[Symbol.toStringTag] === "AsyncFunction";
-
-        const styleString =
-            style &&
-            Object.entries(style)
+        
+        const isAsync = (renderFn as any)[Symbol.toStringTag] === "AsyncFunction";
+        const styleString = Object.entries(style)
                 .map(
                     ([key, value]) =>
                         `${this.camelToKebab(key)}: ${value};`
                 )
                 .join(" ");
+        const onLoadAttribute = mutationListener.listen("add", async (cjsEvent) => {
+            if(isAsync) {
+                this._renderData = data;
+                const html = await renderFn.call(this, () => cjsEvent.source, {});
 
-        const html = isAsync
-            ? `<div ${this.attribute}></div>`
-            : renderFn.call(this, () => document.querySelector(`[${this.attribute}]`), {});
+                cjsEvent.source.outerHTML = this.addAttributes(
+                    this.addLazyIdentifiers(style ? this.injectStyle(html, styleString) : html),
+                    [this.attribute]
+                );
+            }
+            this.executeOnLoad();
+        }) as string;
 
-        const processed = style
+        if(isAsync) return `<div ${this.attribute} ${onLoadAttribute.trim()}></div>`;
+
+        this._renderData = data;
+        const html = renderFn.call(this, () => document.querySelector(`[${this.attribute}]`), {});
+
+        const processed = !CjsObject.isEmpty(style)
             ? this.injectStyle(html, styleString!)
             : html;
 
         return this.addAttributes(
             this.addLazyIdentifiers(processed),
-            [this.attribute]
+            [this.attribute, onLoadAttribute.trim()]
         );
     }
 
@@ -199,6 +214,27 @@ export class CjsComponent<TData = any> {
 
     public visualise(data: Partial<TData> = {}): HTMLElement {
         return htmlToElement(this.render(data));
+    }
+
+    /**
+     * Clones an component and sets data with argument (used for Layouts)
+     */
+    public withData(data: Partial<TData> = {}) {
+        const clone = Object.create(Object.getPrototypeOf(this)) as this;
+        Object.assign(clone, this);
+        clone.attribute = AttributeHelper.generateAttribute(CJS_COMPONENT_PREFIX, CjsTakenAttributes.components);
+        return clone.setData(data);
+    }
+
+    /**
+     * Adds style to element using attribute `style="..."`
+     */
+    public withStyle(style: Partial<Record<keyof CSSStyleDeclaration, string>>) {
+        const clone = Object.create(Object.getPrototypeOf(this));
+        Object.assign(clone, this);
+        clone.attribute = AttributeHelper.generateAttribute(CJS_COMPONENT_PREFIX, CjsTakenAttributes.components)
+        clone._setStyle = style;
+        return clone;
     }
 
     public toVirtualElement(): HTMLElement {

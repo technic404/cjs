@@ -8,7 +8,7 @@
 /src/
 /node/
 /compiled/
-/cmd/node_modules
+node_modules
 /cmd/package-lock.json
 /cmd/compiler/src/server/public/temp/script.js
 /pytania.json

@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "cjs": ["cjs"]
+    },
+    "declaration": true,       // generates .d.ts files
+    "declarationDir": "lib/types",
+    "outDir": "lib",
+    "sourceMap": true,
+    "skipLibCheck": true
+  },
+  "include": ["cjs/**/*", "website/**/*"]
+}

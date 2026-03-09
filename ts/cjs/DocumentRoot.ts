@@ -5,6 +5,7 @@
 import { CJS_PRETTY_PREFIX_X, CJS_STYLE_PREFIX } from "./Constants";
 import { CjsCursorTypes } from "./types";
 import { CjsRequest } from "./utils/public/CjsRequestsUtil";
+import { addPrefixToSelectors } from "./utils/StyleUtil";
 
 type WebsiteData = {
     title: string;

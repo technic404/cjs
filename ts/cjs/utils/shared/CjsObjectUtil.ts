@@ -129,5 +129,9 @@ export const CjsObject = {
         }
 
         return object;
+    },
+
+    isEmpty(object: object) {
+        return Object.keys(object).length > 0;
     }
 };

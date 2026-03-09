@@ -8,7 +8,7 @@ import { CjsGlobals } from "./utils/public/CjsGlobalsUtil";
 /**
  * Inits a webpage by a provided layout scheme
  */
-async function init(layout: CjsLayout | CjsPage): Promise<void> {
+export async function init(layout: CjsLayout | CjsPage): Promise<void> {
     const sleep = async (ms: number): Promise<void> =>
         new Promise((res) => {
             setTimeout(res, ms);

@@ -1,4 +1,4 @@
-export class CjsRequestResult<T = any> {
+class CjsRequestResult<T = any> {
     constructor(
         private statusCode: number,
         private response: T,

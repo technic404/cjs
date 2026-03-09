@@ -1,3 +1,6 @@
+import { cjsRunnable } from "../../Runnable";
+import { toFixedPath } from "../PathUtil";
+
 /**
  * Base asset resolver
  *

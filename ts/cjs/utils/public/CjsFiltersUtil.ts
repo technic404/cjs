@@ -1,7 +1,3 @@
-/* ========================================================= */
-/* Types                                                      */
-/* ========================================================= */
-
 import { CJS_STYLE_FILTERS_PREFIX } from "../../Constants";
 import { getRandomCharacters } from "../StringUtil";
 import { CjsTimings } from "./CjsTimingsUtil";
@@ -26,10 +22,6 @@ export interface CjsFilterOptions {
     time?: number;
 }
 
-/* ========================================================= */
-/* Filter Class                                               */
-/* ========================================================= */
-
 export class CjsFilter {
     constructor(
         private name: CjsFilterTypes,
@@ -43,10 +35,6 @@ export class CjsFilter {
         return this.className;
     }
 }
-
-/* ========================================================= */
-/* Style Generator                                            */
-/* ========================================================= */
 
 function buildFilterAnimation(
     filterName: CjsFilterTypes,
@@ -160,11 +148,7 @@ const ACTIVE_FILTERS: Record<CjsFilterTypes, CjsFilter[]> = {
     sepia: []
 };
 
-/* ========================================================= */
-/* Apply Filter To Element                                    */
-/* ========================================================= */
-
-export async function passFilterToElement(
+async function passFilterToElement(
     el: HTMLElement,
     name: CjsFilterTypes,
     amount: number = 10,
@@ -194,10 +178,6 @@ export async function passFilterToElement(
 
     el.classList.remove(filter.getClassName());
 }
-
-/* ========================================================= */
-/* Public API                                                  */
-/* ========================================================= */
 
 export async function createFilter(
     element: HTMLElement,

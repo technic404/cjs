@@ -8,16 +8,21 @@ type CjsRunnableData = {
     compiled?: boolean;
     relativePathPosition?: number;
     tempWebServerPort?: number;
-    style?: CjsRunnableStyle;
+    style: CjsRunnableStyle;
 };
 
-declare const CjsRunnableDetails: CjsRunnableData | undefined;
+export const CjsRunnableDetails: CjsRunnableData = {
+    compiled: false,
+    relativePathPosition: 0,
+    tempWebServerPort: 0,
+    style: { map: new Map<any, any>() }
+};
 
 class CjsRunnable {
-    data: CjsRunnableData;
+    data: CjsRunnableData | null;
 
     constructor() {
-        this.data = {};
+        this.data = null;
     }
 
     /**
@@ -34,22 +39,30 @@ class CjsRunnable {
     }
 
     isCompiled(): boolean {
-        return "compiled" in this.data && !!this.data.compiled;
-    }
+    return this.data !== null && "compiled" in this.data ? !!this.data.compiled : false;
+}
 
     getTempWebServerPort(): number | undefined {
-        return this.data.tempWebServerPort;
+        if(this.data == null) return 0;
+
+        return  this.data.tempWebServerPort;
     }
 
     hasStyle(): boolean {
+        if(this.data == null) return false;
+
         return "style" in this.data && this.data.style !== undefined;
     }
 
     isStyleValid(): boolean {
+        if(this.data == null) return false;
+
         return this.hasStyle() && this.data.style !== undefined && "map" in this.data.style;
     }
 
     validateStyle(): void {
+        if(this.data == null) return;
+
         if (!this.data.style || !("map" in this.data.style)) {
             console.log(
                 `${CJS_PRETTY_PREFIX_X}Map is not present in runnable style configuration`
@@ -58,6 +71,8 @@ class CjsRunnable {
     }
 
     validate(): void {
+        if(this.data == null) return;
+
         if (this.hasStyle()) {
             this.validateStyle();
 

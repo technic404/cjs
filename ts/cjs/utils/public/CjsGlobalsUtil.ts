@@ -29,10 +29,6 @@ export const CjsGlobals: CjsGlobalsOptions = {
 
 };
 
-/* ------------------------------------------------ */
-/* Event listeners                                  */
-/* ------------------------------------------------ */
-
 window.addEventListener("mousedown", () => {
     CjsGlobals.mouse.up = false;
     CjsGlobals.mouse.down = true;

@@ -6,7 +6,7 @@ import { onLoad } from "./LoadEvent";
  */
 export function onHoldDown(f: CjsEventCallback, time = 500) {
     return onLoad(cjsEvent => {
-        let timeoutId = -1;
+        let timeoutId: any = 0;
 
         const cancel = () => { clearTimeout(timeoutId); }
         const down = () => {
