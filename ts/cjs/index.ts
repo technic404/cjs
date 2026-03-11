@@ -39,6 +39,10 @@ export { CjsAnimation } from "./utils/public/CjsAnimationsUtil";
 // Assets
 export { asset, svg, png, jpg, gif } from "./utils/public/CjsAssetsUtil";
 
+// CjsComponent
+
+export { wrap } from "./utils/public/CjsComponentUtil";
+
 // Download
 export { CjsDownload } from "./utils/public/CjsDownloadUtil";
 

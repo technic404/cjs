@@ -47,6 +47,8 @@ export type CjsEventTypes = {
     events: (CjsCustomEvents|keyof HTMLElementEventMap)[];
 };
 
-export type CjsLayoutNode = CjsComponent | CjsLayout | CjsLayoutNode[];
+export type Constructor<T> = new (...args: any[]) => T;
+
+export type CjsLayoutNode = Constructor<CjsComponent> | CjsComponent | CjsLayout | CjsLayoutNode[];
 
 export type CjsEventCallback = (cjsEvent: CjsEvent) => any;

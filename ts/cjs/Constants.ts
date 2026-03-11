@@ -21,6 +21,7 @@ export const CJS_LAYOUT_PREFIX = `${CJS_PREFIX}layout-`;
 export const CJS_ELEMENT_PREFIX = `${CJS_PREFIX}element-`;
 export const CJS_ELEMENT_DISABLED_PREFIX = `${CJS_PREFIX}elementdisabled-`;
 export const CJS_OBSERVER_PREFIX = `${CJS_PREFIX}observer-`;
+export const CJS_ELEMENT_ACTION_FILL_PREFIX = `${CJS_PREFIX}fill-`;
 
 export const CjsLazyElementPrefix = `${CJS_PREFIX}lazy-`;
 export const CjsLazyClassPrefix = "lazy:";

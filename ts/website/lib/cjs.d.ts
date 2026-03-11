@@ -1,4 +1,22 @@
 declare module "cjs" {
+declare class CjsMutationEvent {
+    target: HTMLElement;
+    date: Date;
+    constructor(target: HTMLElement, date: Date);
+}
+
+type AnyHTMLElement = HTMLElementTagNameMap[keyof HTMLElementTagNameMap];
+/**
+ * Class that determines the basic event
+ */
+declare class CjsEvent {
+    event: Event | CjsMutationEvent;
+    target: EventTarget | null;
+    component: AnyHTMLElement | null;
+    source: AnyHTMLElement;
+    constructor(event: Event | CjsMutationEvent, source: AnyHTMLElement);
+}
+
 declare class CjsLayout {
     private onLoadCallback;
     private dataState;
@@ -52,20 +70,23 @@ declare class CjsLayout {
 }
 
 declare class CjsComponent<TData = any> {
-    data: Partial<TData>;
-    _renderData: TData;
+    data: TData;
+    _defaultData: Partial<TData>;
     attribute: string;
     _cssStyle: string | null;
     _setStyle: Partial<CSSStyleDeclaration>;
+    __actions: Record<string, unknown>;
     private renderedCssStyle;
     private onLoadCallback;
     private fillHeightData?;
     preSetData: Partial<TData>;
-    /**
-     * Function that renders html.
-     */
-    _(find: () => HTMLElement | null, layoutData: object): string;
+    /** Function that provides template for base html structure */
+    _template(): string;
+    /** Function that provides actions for the component */
+    _actions(): Record<string, (event: CjsEvent) => void>;
     constructor();
+    get actions(): Record<string, unknown>;
+    wrapActions(actions: Record<string, (event: CjsEvent) => void>): Record<string, (event: CjsEvent) => void>;
     private mergeObjects;
     private getData;
     private camelToKebab;
@@ -92,27 +113,9 @@ declare class CjsComponent<TData = any> {
     hide(): void;
     show(): void;
     exists(): boolean;
-    setDefaultData(data: Partial<TData>): this;
+    setDefaultData(defaultData: Partial<TData>): this;
     querySelector<T extends HTMLElement = HTMLElement>(...selectors: string[]): (T | null) | (Array<T | null>);
     querySelectorAll(selector: string): HTMLElement[];
-}
-
-declare class CjsMutationEvent {
-    target: HTMLElement;
-    date: Date;
-    constructor(target: HTMLElement, date: Date);
-}
-
-type AnyHTMLElement = HTMLElementTagNameMap[keyof HTMLElementTagNameMap];
-/**
- * Class that determines the basic event
- */
-declare class CjsEvent {
-    event: Event | CjsMutationEvent;
-    target: EventTarget | null;
-    component: AnyHTMLElement | null;
-    source: AnyHTMLElement;
-    constructor(event: Event | CjsMutationEvent, source: AnyHTMLElement);
 }
 
 type CjsCursorTypes = "auto" | "default" | "none" | "context-menu" | "help" | "pointer" | "progress" | "wait" | "cell" | "crosshair" | "text" | "vertical-text" | "alias" | "copy" | "move" | "no-drop" | "not-allowed" | "grab" | "grabbing" | "e-resize" | "n-resize" | "ne-resize" | "nw-resize" | "s-resize" | "se-resize" | "sw-resize" | "w-resize" | "ew-resize" | "ns-resize" | "nesw-resize" | "nwse-resize" | "col-resize" | "row-resize" | "all-scroll" | "zoom-in" | "zoom-out";
@@ -120,7 +123,8 @@ type CjsCustomEvents = "outerclick";
 type CjsEventTypes = {
     events: (CjsCustomEvents | keyof HTMLElementEventMap)[];
 };
-type CjsLayoutNode = CjsComponent | CjsLayout | CjsLayoutNode[];
+type Constructor<T> = new (...args: any[]) => T;
+type CjsLayoutNode = Constructor<CjsComponent> | CjsComponent | CjsLayout | CjsLayoutNode[];
 type CjsEventCallback = (cjsEvent: CjsEvent) => any;
 
 /**
@@ -240,6 +244,8 @@ declare function jpg(path: string): string;
  * Shortcut of asset method, by default adds `gif/` prefix and `.gif` suffix.
  */
 declare function gif(path: string): string;
+
+declare function wrap<T extends CjsComponent>(prototype: new () => T): T;
 
 /**
  * Global runtime state for the website
@@ -657,6 +663,6 @@ declare class CjsRoot {
 }
 declare const Root: CjsRoot;
 
-export { CjsAnimation, CjsComponent, CjsDebug, CjsDownload, CjsFrameworkEvents, CjsGlobals, CjsKeyFrame, CjsLayout, CjsMobile, CjsNotificationPlugin, CjsObject, CjsPluginManager, CjsRequest, CjsRequestsUtil, CjsRipplePlugin, CjsScaleClickPlugin, CjsScaleHoverPlugin, CjsString, CjsTimings, CjsValidator, CjsWebSocket, CjsWindow, Root, Search, asset, createFilter, createHandle, getRandom, gif, init, jpg, off, onChange, onClick, onDoubleClick, onEscape, onFocus, onFocusOut, onHoldDown, onInput, onLoad, onMouseEnter, onMouseLeave, onMouseMove, onOuterclick, onResize, onScroll, onScrollBottom, onSlideDown, onSlideLeft, onSlideRight, onSlideUp, onTouchMove, png, strif, strmap, strmax, stror, svg };
+export { CjsAnimation, CjsComponent, CjsDebug, CjsDownload, CjsFrameworkEvents, CjsGlobals, CjsKeyFrame, CjsLayout, CjsMobile, CjsNotificationPlugin, CjsObject, CjsPluginManager, CjsRequest, CjsRequestsUtil, CjsRipplePlugin, CjsScaleClickPlugin, CjsScaleHoverPlugin, CjsString, CjsTimings, CjsValidator, CjsWebSocket, CjsWindow, Root, Search, asset, createFilter, createHandle, getRandom, gif, init, jpg, off, onChange, onClick, onDoubleClick, onEscape, onFocus, onFocusOut, onHoldDown, onInput, onLoad, onMouseEnter, onMouseLeave, onMouseMove, onOuterclick, onResize, onScroll, onScrollBottom, onSlideDown, onSlideLeft, onSlideRight, onSlideUp, onTouchMove, png, strif, strmap, strmax, stror, svg, wrap };
 
 }

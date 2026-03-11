@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:lib": "vite build && npx rollup -c ./rollup.dts.config.js && robocopy ./lib ./website/lib /E"
+    "winb:lib": "vite build && npx rollup -c ./rollup.dts.config.js && robocopy ./lib ./website/lib /E",
+    "linuxb:lib": "vite build && npx rollup -c ./rollup.dts.config.js && cp -r ./lib ./website"
   },
   "author": "",
   "license": "ISC",

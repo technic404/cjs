@@ -1,6 +1,6 @@
 import { CJS_COMPONENT_FORCE_RENDER_PLACE_TAG, CJS_LAYOUT_PREFIX, CJS_PRETTY_PREFIX_X, CJS_ROOT_CONTAINER_PREFIX, CjsFrameworkEvents, CjsTakenAttributes } from "../Constants";
 import { AttributeHelper } from "../helpers/AttributeHelper";
-import { CjsLayoutNode } from "../types";
+import { CjsLayoutNode, Constructor } from "../types";
 import { CjsComponent } from "./CjsComponent";
 
 export class CjsLayout {
@@ -169,7 +169,7 @@ export class CjsLayout {
 
         const component = new CjsComponent();
 
-        component._ = () => `<div></div>`;
+        component._template = () => `<div></div>`;
         component.onLoad(() => component.loadLayout(this.setData(data)));
 
         return component;
@@ -202,7 +202,11 @@ export class CjsLayout {
         const container = document.createElement("div");
         container.setAttribute(this.attribute, "");
 
-        const walk = (elements: any[]): HTMLElement => {
+        function isConstructable(v: any): boolean {
+            return typeof v === "function" && v.prototype?.constructor === v;
+        }
+
+        const walk = (elements: CjsLayoutNode): HTMLElement => {
             if (!Array.isArray(elements)) {
                 console.log(`${CJS_PRETTY_PREFIX_X}Layout have wrong pattern, component should be in array`);
 
@@ -227,7 +231,9 @@ export class CjsLayout {
                 return document.createElement("cjslayouterror");
             }
 
-            const component = layoutElement.toVirtualElement();
+            const component = layoutElement instanceof CjsComponent
+                 ? layoutElement.toVirtualElement() 
+                 : new (layoutElement as unknown as Constructor<CjsComponent>)().toVirtualElement();
             const hasParentAndChild = elements.length === 2;
 
             if (hasParentAndChild) {

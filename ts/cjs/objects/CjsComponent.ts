@@ -1,18 +1,20 @@
-import { CJS_COMPONENT_PREFIX, CJS_ID_LENGTH, CJS_PRETTY_PREFIX_X, CjsFrameworkEvents, CjsLazyClassPrefix, CjsLazyElementPrefix, CjsTakenAttributes } from "../Constants";
+import { CJS_COMPONENT_PREFIX, CJS_ELEMENT_ACTION_FILL_PREFIX, CJS_ID_LENGTH, CJS_PRETTY_PREFIX_X, CjsFrameworkEvents, CjsLazyClassPrefix, CjsLazyElementPrefix, CjsTakenAttributes } from "../Constants";
 import { AttributeHelper } from "../helpers/AttributeHelper";
 import { mutationListener } from "../listeners/Listeners";
 import { createVirtualContainer, getAttributeStartingWith, htmlToElement } from "../utils/ElementUtil";
 import { CjsObject } from "../utils/shared/CjsObjectUtil";
 import { getRandomCharacters } from "../utils/StringUtil";
 import { addRootStyle } from "../utils/StyleUtil";
+import { CjsEvent } from "./CjsEvent";
 import { CjsLayout } from "./CjsLayout";
 
 export class CjsComponent<TData = any> {
-    public data: Partial<TData> = {} as Partial<TData>;
-    public _renderData: TData = {} as TData
+    public data: TData = {} as TData;
+    public _defaultData: Partial<TData> = {} as Partial<TData>;
     public attribute: string;
     public _cssStyle: string | null = null;
     public _setStyle: Partial<CSSStyleDeclaration> = {};
+    public __actions: Record<string, unknown> = {};
 
     private renderedCssStyle = false;
     private onLoadCallback: () => void = () => {};
@@ -20,18 +22,36 @@ export class CjsComponent<TData = any> {
 
     public preSetData: Partial<TData> = {};
 
-    /**
-     * Function that renders html.
-     */
-    public _(find: () => HTMLElement | null, layoutData: object): string {
+    /** Function that provides template for base html structure */
+    public _template(): string {
         return "";
-    };
+    }
+
+    /** Function that provides actions for the component */
+    public _actions(): Record<string, (event: CjsEvent) => void> {
+        return {};
+    }
 
     constructor() {
         this.attribute = AttributeHelper.generateAttribute(
             CJS_COMPONENT_PREFIX,
             CjsTakenAttributes.components
         );
+    }
+
+    get actions() : Record<string, unknown> {
+        return new Proxy(this.__actions, {
+            get(target, prop: string) {
+                if (prop in target) {
+                    return target[prop];
+                }
+                return `${CJS_ELEMENT_ACTION_FILL_PREFIX}${prop}`;
+            }
+        }) as Record<string, unknown>;
+    }
+
+    public wrapActions(actions: Record<string, (event: CjsEvent) => void>) {
+        return actions;
     }
 
     private mergeObjects(target: any, source: any) {
@@ -55,7 +75,7 @@ export class CjsComponent<TData = any> {
         const merged: any = {};
 
         this.mergeObjects(merged, data);
-        this.mergeObjects(merged, this.data);
+        this.mergeObjects(merged, this._defaultData);
 
         return CjsObject.copy(merged);
     }
@@ -106,8 +126,6 @@ export class CjsComponent<TData = any> {
     }
 
     private addAttributes(html: string, attributes: string[]): string {
-        console.log('a', html);
-        
         const element = createVirtualContainer(htmlToElement(html));
 
         if (!element.firstElementChild) return "";
@@ -151,7 +169,9 @@ export class CjsComponent<TData = any> {
             this.renderedCssStyle = true;
         }
 
-        const renderFn = this._;
+        this.data = data;
+
+        const renderFn = this._template;
         
         const isAsync = (renderFn as any)[Symbol.toStringTag] === "AsyncFunction";
         const styleString = Object.entries(style)
@@ -162,8 +182,7 @@ export class CjsComponent<TData = any> {
                 .join(" ");
         const onLoadAttribute = mutationListener.listen("add", async (cjsEvent) => {
             if(isAsync) {
-                this._renderData = data;
-                const html = await renderFn.call(this, () => cjsEvent.source, {});
+                const html = await renderFn.call(this);
 
                 cjsEvent.source.outerHTML = this.addAttributes(
                     this.addLazyIdentifiers(style ? this.injectStyle(html, styleString) : html),
@@ -175,8 +194,7 @@ export class CjsComponent<TData = any> {
 
         if(isAsync) return `<div ${this.attribute} ${onLoadAttribute.trim()}></div>`;
 
-        this._renderData = data;
-        const html = renderFn.call(this, () => document.querySelector(`[${this.attribute}]`), {});
+        const html = renderFn.call(this);
 
         const processed = !CjsObject.isEmpty(style)
             ? this.injectStyle(html, styleString!)
@@ -315,14 +333,14 @@ export class CjsComponent<TData = any> {
         return document.body.querySelector(`[${this.attribute}=""]`) !== null;
     }
 
-    public setDefaultData(data: Partial<TData>): this {
-        if (!(data instanceof Object)) {
+    public setDefaultData(defaultData: Partial<TData>): this {
+        if (!(defaultData instanceof Object)) {
             console.log(`${CJS_PRETTY_PREFIX_X}Data passed into setDefaultData() must be object`);
 
             return this;
         }
 
-        this.data = data;
+        this._defaultData = defaultData;
         return this;
     }
 
