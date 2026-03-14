@@ -1,4 +1,4 @@
-import { CjsComponent } from "cjs";
+import { CjsComponent, onClick } from "cjs";
 
 type Data = {
     text: string;
@@ -11,12 +11,12 @@ export class Container extends CjsComponent<Data> {
 
     _template() {
         const { text } = this.data;
-        const { click } = this.actions;
+        const { test } = this.actions;
 
         return `
             <div>
                 <p>${text}</p>
-                <button ${click}>Click me</button>
+                <button ${onClick(test)}>Click me</button>
             </div>
         `;
     }
@@ -25,7 +25,7 @@ export class Container extends CjsComponent<Data> {
         const { text } = this.data;
 
         return this.wrapActions({
-            click: (e) => console.log("Container clicked", text, e)
+            test: (e) => console.log("Container clicked", text, e)
         });
     }
 }

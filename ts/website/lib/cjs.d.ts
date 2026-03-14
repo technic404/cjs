@@ -69,13 +69,14 @@ declare class CjsLayout {
     rerenderLayouts(): this;
 }
 
+type ActionsMap = Record<string, (e: CjsEvent) => any>;
 declare class CjsComponent<TData = any> {
     data: TData;
     _defaultData: Partial<TData>;
     attribute: string;
     _cssStyle: string | null;
     _setStyle: Partial<CSSStyleDeclaration>;
-    __actions: Record<string, unknown>;
+    __actions: ActionsMap;
     private renderedCssStyle;
     private onLoadCallback;
     private fillHeightData?;
@@ -83,9 +84,9 @@ declare class CjsComponent<TData = any> {
     /** Function that provides template for base html structure */
     _template(): string;
     /** Function that provides actions for the component */
-    _actions(): Record<string, (event: CjsEvent) => void>;
+    _actions(): ActionsMap;
     constructor();
-    get actions(): Record<string, unknown>;
+    get actions(): ReturnType<this["_actions"]>;
     wrapActions(actions: Record<string, (event: CjsEvent) => void>): Record<string, (event: CjsEvent) => void>;
     private mergeObjects;
     private getData;

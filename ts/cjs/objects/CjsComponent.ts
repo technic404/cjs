@@ -8,13 +8,15 @@ import { addRootStyle } from "../utils/StyleUtil";
 import { CjsEvent } from "./CjsEvent";
 import { CjsLayout } from "./CjsLayout";
 
+type ActionsMap = Record<string, (e: CjsEvent) => any>;
+
 export class CjsComponent<TData = any> {
     public data: TData = {} as TData;
     public _defaultData: Partial<TData> = {} as Partial<TData>;
     public attribute: string;
     public _cssStyle: string | null = null;
     public _setStyle: Partial<CSSStyleDeclaration> = {};
-    public __actions: Record<string, unknown> = {};
+    public __actions: ActionsMap = {};
 
     private renderedCssStyle = false;
     private onLoadCallback: () => void = () => {};
@@ -28,8 +30,8 @@ export class CjsComponent<TData = any> {
     }
 
     /** Function that provides actions for the component */
-    public _actions(): Record<string, (event: CjsEvent) => void> {
-        return {};
+    public _actions(): ActionsMap {
+        return {} as ActionsMap;
     }
 
     constructor() {
@@ -39,7 +41,7 @@ export class CjsComponent<TData = any> {
         );
     }
 
-    get actions() : Record<string, unknown> {
+    get actions() : ReturnType<this["_actions"]> {
         return new Proxy(this.__actions, {
             get(target, prop: string) {
                 if (prop in target) {
@@ -47,7 +49,7 @@ export class CjsComponent<TData = any> {
                 }
                 return `${CJS_ELEMENT_ACTION_FILL_PREFIX}${prop}`;
             }
-        }) as Record<string, unknown>;
+        }) as ReturnType<this["_actions"]>;
     }
 
     public wrapActions(actions: Record<string, (event: CjsEvent) => void>) {
@@ -256,12 +258,22 @@ export class CjsComponent<TData = any> {
     }
 
     public toVirtualElement(): HTMLElement {
-        return htmlToElement(
+        const element = htmlToElement(
             this.getHtml(
                 this.getData(this.preSetData),
                 this._setStyle
             )
         );
+
+        for(const [name, attribute] of Object.entries(this.__actions)) {
+            const targetElements = Array.from(element.querySelectorAll(`[${CJS_ELEMENT_ACTION_FILL_PREFIX}${name}]`));
+
+            targetElements.forEach(el => {
+                el.setAttribute(attribute as string, "");
+            })
+        }
+
+        return element;
     }
 
     public toElement(ignoreReadyState = false): HTMLElement | null {

@@ -219,7 +219,10 @@ export class CjsLayout {
                 return document.createElement("cjslayouterror");
             }
 
-            const layoutElement = elements[0];
+            const rawLayoutElement = elements[0];
+            const layoutElement = isConstructable(rawLayoutElement) 
+                ? new (rawLayoutElement as unknown as Constructor<CjsComponent>)()
+                : rawLayoutElement
 
             if (layoutElement instanceof CjsLayout) {
                 return layoutElement.toElement();
@@ -231,9 +234,7 @@ export class CjsLayout {
                 return document.createElement("cjslayouterror");
             }
 
-            const component = layoutElement instanceof CjsComponent
-                 ? layoutElement.toVirtualElement() 
-                 : new (layoutElement as unknown as Constructor<CjsComponent>)().toVirtualElement();
+            const component = layoutElement.toVirtualElement();
             const hasParentAndChild = elements.length === 2;
 
             if (hasParentAndChild) {

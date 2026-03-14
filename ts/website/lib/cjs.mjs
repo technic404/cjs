@@ -4,7 +4,7 @@ const m = {
   Red: "\x1B[31m",
   Green: "\x1B[32m",
   Yellow: "\x1B[33m"
-}, _ = 16, gt = `${m.Yellow}${m.Underscore}[CJS]${m.None} `, f = `${gt}${m.Red}✘ ${m.None}`, At = `${gt}${m.Green}✔ ${m.None}`, $ = "c_js-", yt = `${$}style-`, rt = `${$}filters-`, ot = `${$}keyframes-`, Ot = `${$}plugins-`, st = `${$}root-`, Y = `${$}component-`, G = "cjsrender", Rt = `${$}layout-`, q = `${$}element-`, Z = `${$}elementdisabled-`, D = `${$}observer-`, _t = `${$}fill-`, K = `${$}lazy-`, X = "lazy:", nt = {
+}, _ = 16, yt = `${m.Yellow}${m.Underscore}[CJS]${m.None} `, f = `${yt}${m.Red}✘ ${m.None}`, Ot = `${yt}${m.Green}✔ ${m.None}`, $ = "c_js-", bt = `${$}style-`, it = `${$}filters-`, rt = `${$}keyframes-`, Rt = `${$}plugins-`, et = `${$}root-`, Y = `${$}component-`, G = "cjsrender", _t = `${$}layout-`, q = `${$}element-`, Z = `${$}elementdisabled-`, D = `${$}observer-`, ot = `${$}fill-`, K = `${$}lazy-`, X = "lazy:", st = {
   onLoadLayout: (i) => {
   }
 }, N = {
@@ -37,7 +37,7 @@ function at(i) {
   const t = document.createElement("virtualContainer");
   return t.appendChild(i), t;
 }
-function bt(i, t, e = !0) {
+function Ct(i, t, e = !0) {
   const s = (r) => L(r, t).length > 0;
   if (e && s(i))
     return i;
@@ -192,7 +192,7 @@ class jt {
     if (n.isApplied && !s) return;
     n.isApplied = !0;
     const r = n.options.windowApplied ? window : t, c = (o) => {
-      const a = bt(
+      const a = Ct(
         n.options.windowApplied ? o.target : t,
         Z,
         !0
@@ -238,9 +238,9 @@ class jt {
   }
 }
 const I = new jt();
-class it {
+class nt {
   constructor(t, e) {
-    this.event = t, this.target = t.target, this.component = bt(e, Y), this.source = e;
+    this.event = t, this.target = t.target, this.component = Ct(e, Y), this.source = e;
   }
 }
 const P = {
@@ -325,7 +325,7 @@ class Q {
     this.statusCode === t && e();
   }
 }
-class Ct {
+class wt {
   constructor(t, e) {
     this.url = t, this.method = e, this.onStartCallback = () => {
     }, this.onEndCallback = () => {
@@ -436,7 +436,7 @@ const ee = {
     }
   }
 };
-class wt {
+class $t {
   /**
    * String to analyze input
    */
@@ -551,7 +551,7 @@ class wt {
     return r;
   }
 }
-class lt extends wt {
+class lt extends $t {
   /**
    * Css text
    */
@@ -595,7 +595,7 @@ class lt extends wt {
     }), t;
   }
 }
-class ut extends wt {
+class ut extends $t {
   /**
    * Css selector style
    */
@@ -649,15 +649,15 @@ class ut extends wt {
 }
 const H = /* @__PURE__ */ new Map(), dt = {
   "backdrop-filter": ["-webkit-backdrop-filter"]
-}, $t = {
+}, St = {
   RootVariables: {
     _addProperties(i) {
       for (const [t, e] of Object.entries(i))
-        $t.RootVariables[t.trim()] = e;
+        St.RootVariables[t.trim()] = e;
     }
   }
 };
-function St(i, t = "", e = {
+function Et(i, t = "", e = {
   prefixStyleRules: !0,
   encodeKeyframes: !0,
   enableMultiSelector: !0
@@ -670,7 +670,7 @@ function St(i, t = "", e = {
     if (o.startsWith(":")) {
       if (o.startsWith(":root")) {
         const d = new ut(a).read();
-        $t.RootVariables._addProperties(d);
+        St.RootVariables._addProperties(d);
       }
       return [l];
     }
@@ -679,10 +679,10 @@ function St(i, t = "", e = {
         `${t}${h ? "" : " "}${u.trim()}`
       ];
       if (!h) {
-        const y = u.split(" "), b = y[0], x = y.slice(1).join(" "), C = b.includes(":") ? b.slice(b.indexOf(":")) : "", w = b.replace(C, ""), v = `${C} ${x}`, k = v.split(",").map((g) => g.trim()).slice(1), j = v.includes(",") ? k.map((g) => {
+        const b = u.split(" "), g = b[0], x = b.slice(1).join(" "), C = g.includes(":") ? g.slice(g.indexOf(":")) : "", w = g.replace(C, ""), v = `${C} ${x}`, k = v.split(",").map((y) => y.trim()).slice(1), j = v.includes(",") ? k.map((y) => {
           const T = [
             `${w}${t}`,
-            `${g.replace(w, "")}`
+            `${y.replace(w, "")}`
           ], W = !T[1].startsWith(":");
           return T.join(W ? " " : "");
         }) : "";
@@ -699,12 +699,12 @@ function St(i, t = "", e = {
     const l = new lt(a).read(), u = [];
     for (const [d, h] of Object.entries(l)) {
       const p = new ut(h).read();
-      for (const [b, x] of Object.entries(p))
-        if (b in dt)
-          for (const C of dt[b])
+      for (const [g, x] of Object.entries(p))
+        if (g in dt)
+          for (const C of dt[g])
             C in p || (p[C] = x);
-      const y = r(d, h);
-      u.push(...y);
+      const b = r(d, h);
+      u.push(...b);
     }
     return u;
   };
@@ -712,14 +712,14 @@ function St(i, t = "", e = {
     if (a.trim() === "") continue;
     const l = o.startsWith("@media"), u = o.startsWith("@keyframes");
     if (o.startsWith("@range")) {
-      const h = o.split(" "), p = h[1], y = h[2], b = {}, x = (() => {
+      const h = o.split(" "), p = h[1], b = h[2], g = {}, x = (() => {
         let k = "", j = "";
-        for (const g of y.split(""))
-          isNaN(Number(g)) ? j += g : k += g;
+        for (const y of b.split(""))
+          isNaN(Number(y)) ? j += y : k += y;
         return { number: parseInt(k), unit: j };
       })(), { number: C, unit: w } = x;
-      b["<"] = `max-width: ${C - 1}${w}`, b["<="] = `max-width: ${C}${w}`, b[">"] = `min-width: ${C + 1}${w}`, b[">="] = `min-width: ${C}${w}`;
-      const v = `@media only screen and (${b[p]}) { ${c(o, a).join(`
+      g["<"] = `max-width: ${C - 1}${w}`, g["<="] = `max-width: ${C}${w}`, g[">"] = `min-width: ${C + 1}${w}`, g[">="] = `min-width: ${C}${w}`;
+      const v = `@media only screen and (${g[p]}) { ${c(o, a).join(`
 `)} }`;
       n.push(v);
       continue;
@@ -757,7 +757,7 @@ async function Nt(i, t, e = {
     return;
   }
   t = t.startsWith("./") ? t.slice(2) : t;
-  const s = await new Ct(t, "get").doRequest();
+  const s = await new wt(t, "get").doRequest();
   if (s.isError()) {
     console.log(
       `${f}Error occurred while importing style (${m.Yellow}${t}${m.None})`
@@ -765,10 +765,10 @@ async function Nt(i, t, e = {
     return;
   }
   const n = s.text(), r = document.head.querySelector(
-    `[id="${yt}"]`
+    `[id="${bt}"]`
   );
   if (!r) return;
-  const c = St(n, `[${i}]`, e);
+  const c = Et(n, `[${i}]`, e);
   r.innerHTML += c;
 }
 class Pt {
@@ -903,19 +903,19 @@ class Ft {
     if (!this.map.has(e) || this.executedFunctions.get(e)?.elements.includes(s)) return;
     const r = this.map.get(e);
     if (!r || r.type !== t) return;
-    const c = new it(
+    const c = new nt(
       new Pt(s, /* @__PURE__ */ new Date()),
       s
     );
     r.action(c), this.executedFunctions.has(e) || this.executedFunctions.set(e, { elements: [] }), this.executedFunctions.get(e).elements.push(s);
   }
 }
-const F = new Ft(), Et = new Mt();
+const F = new Ft(), vt = new Mt();
 F.onAdd((i) => {
-  Et.observe(i);
+  vt.observe(i);
 });
 window.addEventListener("DOMContentLoaded", () => {
-  Et.observeAll(), F.observe(), F.executeAll("add");
+  vt.observeAll(), F.observe(), F.executeAll("add");
 });
 function M(i) {
   return F.listen("add", i);
@@ -942,7 +942,7 @@ function ne(i, t = 500) {
 }
 function ie(i) {
   return I.add("click", (t, e) => {
-    document.body.contains(e) && e !== t.target && !e.contains(t.target) && i(new it(t, e));
+    document.body.contains(e) && e !== t.target && !e.contains(t.target) && i(new nt(t, e));
   }, { windowApplied: !0, additionalName: "outerclick" });
 }
 function re(i) {
@@ -976,8 +976,8 @@ function ae(i, t = 50, e = 50) {
       const l = a, u = "touches" in l ? l.touches[0].clientX : l.clientX, d = "touches" in l ? l.touches[0].clientY : l.clientY;
       n.lastX = u, n.startX = u, n.lastY = d, n.startY = d;
     }, c = (a) => {
-      const l = a, u = "touches" in l ? l.touches[0].clientX : l.clientX, d = "touches" in l ? l.touches[0].clientY : l.clientY, h = u - 1 <= n.lastX, p = u - n.startX, y = d - n.startY;
-      if (e !== -1 && e < Math.abs(y)) {
+      const l = a, u = "touches" in l ? l.touches[0].clientX : l.clientX, d = "touches" in l ? l.touches[0].clientY : l.clientY, h = u - 1 <= n.lastX, p = u - n.startX, b = d - n.startY;
+      if (e !== -1 && e < Math.abs(b)) {
         n.startX = 0;
         return;
       }
@@ -997,8 +997,8 @@ function ce(i, t = 50, e = 50) {
       const l = a, u = "touches" in l ? l.touches[0].clientX : l.clientX, d = "touches" in l ? l.touches[0].clientY : l.clientY;
       n.lastX = u, n.startX = u, n.lastY = d, n.startY = d;
     }, c = (a) => {
-      const l = a, u = "touches" in l ? l.touches[0].clientX : l.clientX, d = "touches" in l ? l.touches[0].clientY : l.clientY, h = u + 1 >= n.lastX, p = u - n.startX, y = d - n.startY;
-      if (e !== -1 && e < Math.abs(y)) {
+      const l = a, u = "touches" in l ? l.touches[0].clientX : l.clientX, d = "touches" in l ? l.touches[0].clientY : l.clientY, h = u + 1 >= n.lastX, p = u - n.startX, b = d - n.startY;
+      if (e !== -1 && e < Math.abs(b)) {
         n.startX = 0;
         return;
       }
@@ -1031,7 +1031,7 @@ function le(i, t = 10) {
 function ue(...i) {
   return I.disable(i);
 }
-const S = (i, t) => I.add(i, (e, s) => t(new it(e, s))), de = (i) => S("change", i), he = (i) => S("click", i), fe = (i) => S("dblclick", i), pe = (i) => S("focus", i), me = (i) => S("focusout", i), ge = (i) => S("input", i), ye = (i) => S("mouseenter", i), be = (i) => S("mouseleave", i), Ce = (i) => S("mousemove", i), we = (i) => S("resize", i), $e = (i) => S("scroll", i), Se = (i) => S("touchmove", i), V = {
+const S = (i, t) => I.add(i, (e, s) => t(new nt(e, s))), de = (i) => S("change", i), he = (i) => S("click", i), fe = (i) => S("dblclick", i), pe = (i) => S("focus", i), me = (i) => S("focusout", i), ge = (i) => S("input", i), ye = (i) => S("mouseenter", i), be = (i) => S("mouseleave", i), Ce = (i) => S("mousemove", i), we = (i) => S("resize", i), $e = (i) => S("scroll", i), Se = (i) => S("touchmove", i), V = {
   /**
    * Generates attribute
    * @param prefix 
@@ -1118,7 +1118,7 @@ const S = (i, t) => I.add(i, (e, s) => t(new it(e, s))), de = (i) => S("change",
     return Object.keys(i).length > 0;
   }
 };
-class tt {
+class ft {
   constructor() {
     this.data = {}, this._defaultData = {}, this._cssStyle = null, this._setStyle = {}, this.__actions = {}, this.renderedCssStyle = !1, this.onLoadCallback = () => {
     }, this.preSetData = {}, this.attribute = V.generateAttribute(
@@ -1137,7 +1137,7 @@ class tt {
   get actions() {
     return new Proxy(this.__actions, {
       get(t, e) {
-        return e in t ? t[e] : `${_t}${e}`;
+        return e in t ? t[e] : `${ot}${e}`;
       }
     });
   }
@@ -1167,8 +1167,8 @@ class tt {
     const o = t.slice(r, c), a = o.indexOf("style=");
     let l;
     if (a !== -1) {
-      const u = o[a + 6], d = a + 7, h = o.indexOf(u, d), p = o.slice(d, h).trim(), y = !p.endsWith(";") && p.length > 0 ? p + ";" + e : p + e;
-      l = o.slice(0, d) + y + o.slice(h);
+      const u = o[a + 6], d = a + 7, h = o.indexOf(u, d), p = o.slice(d, h).trim(), b = !p.endsWith(";") && p.length > 0 ? p + ";" + e : p + e;
+      l = o.slice(0, d) + b + o.slice(h);
     } else
       l = o + ` style="${e}"`;
     return t.slice(0, r) + l + t.slice(c);
@@ -1244,12 +1244,17 @@ class tt {
     return Object.assign(e, this), e.attribute = V.generateAttribute(Y, N.components), e._setStyle = t, e;
   }
   toVirtualElement() {
-    return A(
+    const t = A(
       this.getHtml(
         this.getData(this.preSetData),
         this._setStyle
       )
     );
+    for (const [e, s] of Object.entries(this.__actions))
+      Array.from(t.querySelectorAll(`[${ot}${e}]`)).forEach((r) => {
+        r.setAttribute(s, "");
+      });
+    return t;
   }
   toElement(t = !1) {
     const e = document.body.querySelector(`[${this.attribute}=""]`);
@@ -1261,7 +1266,7 @@ class tt {
       e.innerHTML = "";
       for (const s of t)
         e.appendChild(s.toElement()), setTimeout(() => {
-          s._executeOnLoad({}), nt.onLoadLayout(s);
+          s._executeOnLoad({}), st.onLoadLayout(s);
         }, 2);
     }
   }
@@ -1314,7 +1319,7 @@ class B {
       default: void 0,
       active: null
     }, this.elements = t, this.attribute = V.generateAttribute(
-      Rt,
+      _t,
       N.layouts
     );
   }
@@ -1323,7 +1328,7 @@ class B {
    */
   onLoad(t) {
     this.onLoadCallback = (e) => {
-      nt.onLoadLayout(this), t(e);
+      st.onLoadLayout(this), t(e);
     };
   }
   /**
@@ -1388,12 +1393,12 @@ class B {
    */
   asComponentWithData(t) {
     this.setData(t);
-    const e = new tt();
+    const e = new ft();
     return e._template = () => "<div></div>", e.onLoad(() => e.loadLayout(this.setData(t))), e;
   }
   /** Replace page content with layout */
   replacePage() {
-    const t = document.getElementById(st);
+    const t = document.getElementById(et);
     t && (t.innerHTML = "", t.appendChild(this.toElement()), this._executeOnLoad(this.dataState.active));
   }
   /** Get layout element from DOM */
@@ -1408,44 +1413,46 @@ class B {
   toElement() {
     const t = document.createElement("div");
     t.setAttribute(this.attribute, "");
-    const e = (s) => {
-      if (!Array.isArray(s))
+    function e(n) {
+      return typeof n == "function" && n.prototype?.constructor === n;
+    }
+    const s = (n) => {
+      if (!Array.isArray(n))
         return console.log(`${f}Layout have wrong pattern, component should be in array`), document.createElement("cjslayouterror");
-      if (s.length === 0)
+      if (n.length === 0)
         return console.log(`${f}Layout have an empty component space`), document.createElement("cjslayouterror");
-      const n = s[0];
-      if (n instanceof B)
-        return n.toElement();
-      if (!(n instanceof tt))
+      const r = n[0], c = e(r) ? new r() : r;
+      if (c instanceof B)
+        return c.toElement();
+      if (!(c instanceof ft))
         return console.log(`${f}The passed element inside layout is not CjsComponent or CjsLayout`), document.createElement("cjslayouterror");
-      console.log(n);
-      const r = n instanceof tt ? n.toVirtualElement() : new n().toVirtualElement();
-      if (s.length === 2) {
-        let o = r.querySelector(G);
-        const a = s[1];
-        if (!Array.isArray(a))
-          return console.log(`${f}Layout sub components at second argument have to be Array`), r;
-        a.forEach((l, u) => {
-          if (l === null) return;
-          const d = u === a.length - 1, h = l[0], p = e(l);
-          if (h instanceof B) {
-            r.insertAdjacentElement("beforeend", p);
+      const o = c.toVirtualElement();
+      if (n.length === 2) {
+        let l = o.querySelector(G);
+        const u = n[1];
+        if (!Array.isArray(u))
+          return console.log(`${f}Layout sub components at second argument have to be Array`), o;
+        u.forEach((d, h) => {
+          if (d === null) return;
+          const p = h === u.length - 1, b = d[0], g = s(d);
+          if (b instanceof B) {
+            o.insertAdjacentElement("beforeend", g);
             return;
           }
-          o = r.querySelector(G), o ? (d || o.insertAdjacentElement(
+          l = o.querySelector(G), l ? (p || l.insertAdjacentElement(
             "afterend",
             document.createElement(
               G
             )
-          ), o.replaceWith(p)) : r.insertAdjacentElement("beforeend", p);
+          ), l.replaceWith(g)) : o.insertAdjacentElement("beforeend", g);
         });
       }
-      return r;
+      return o;
     };
-    return this.elements(this.dataState.active).forEach((s) => {
-      s && t.insertAdjacentElement(
+    return this.elements(this.dataState.active).forEach((n) => {
+      n && t.insertAdjacentElement(
         "beforeend",
-        e(s.filter((n) => n !== null))
+        s(n.filter((r) => r !== null))
       );
     }), t;
   }
@@ -1464,12 +1471,12 @@ class B {
     const t = Array.from(document.body.querySelectorAll(`[${this.attribute}]`)), e = this.toElement();
     for (const s of t)
       s.replaceWith(e), setTimeout(() => {
-        this._executeOnLoad(this.dataState.active), nt.onLoadLayout(this);
+        this._executeOnLoad(this.dataState.active), st.onLoadLayout(this);
       }, 2);
     return this;
   }
 }
-const ft = [], pt = [];
+const pt = [], mt = [];
 class z {
   constructor() {
     this.entries = [], this.duration = 1e3, this.timingFunction = "ease", this.keepEndingEntryStyle = !0, this.selector = "", this.isImportant = !1, this.fillMode = "";
@@ -1505,37 +1512,37 @@ class z {
     const e = t.reversed ?? !1;
     this.entries.length > 100 && console.log(`${f} CjsKeyFrame cannot have more than 100 entries`);
     const s = document.head.querySelector(
-      `[id="${ot}"]`
+      `[id="${rt}"]`
     );
     if (!s)
       throw new Error("Keyframes style element not found");
     const n = e ? [...this.entries].reverse() : this.entries, r = n.length === 1, c = 100 / Math.max(n.length - 1, 1), a = `{
-${n.map((g, T) => {
-      const W = r ? 100 : T * c, Lt = Object.entries(g).map(([kt, xt]) => `${kt}: ${xt};`).join(" ");
-      return `    ${W}% { ${Lt} }`;
+${n.map((y, T) => {
+      const W = r ? 100 : T * c, kt = Object.entries(y).map(([xt, At]) => `${xt}: ${At};`).join(" ");
+      return `    ${W}% { ${kt} }`;
     }).join(`
 `)}
-}`, l = ct(a), u = ft.find((g) => g.hash === l);
+}`, l = ct(a), u = pt.find((y) => y.hash === l);
     let d;
     if (u)
       d = u.animation;
     else {
-      d = `${ot}${E(_)}`;
-      const g = `@keyframes ${d} ${a}`;
+      d = `${rt}${E(_)}`;
+      const y = `@keyframes ${d} ${a}`;
       s.innerHTML += `
-${g}`, ft.push({
+${y}`, pt.push({
         hash: l,
         animation: d
       });
     }
-    const h = n[n.length - 1], p = this.isImportant ? " !important" : "", y = Object.entries(h).map(([g, T]) => `${g}: ${T};`).join(" "), x = [`animation: ${d} ${this.duration / 1e3}s ${this.timingFunction}${p}`];
-    this.keepEndingEntryStyle && x.push(y);
-    const C = `{ ${x.join("; ")} }`, w = ct(`${this.selector}-${C}`), v = pt.find((g) => g.hash === w);
+    const h = n[n.length - 1], p = this.isImportant ? " !important" : "", b = Object.entries(h).map(([y, T]) => `${y}: ${T};`).join(" "), x = [`animation: ${d} ${this.duration / 1e3}s ${this.timingFunction}${p}`];
+    this.keepEndingEntryStyle && x.push(b);
+    const C = `{ ${x.join("; ")} }`, w = ct(`${this.selector}-${C}`), v = mt.find((y) => y.hash === w);
     if (v)
       return v.class;
     const k = `${d}-${w}`, j = `.${k} ${this.selector} ${C}`;
     return s.innerHTML += `
-${j}`, pt.push({
+${j}`, mt.push({
       hash: w,
       class: k
     }), k;
@@ -1601,7 +1608,7 @@ const Oe = {
       if (!e.ok)
         return console.log(`${f} Couldn't download file: ${e.statusText}`);
       const s = await e.blob();
-      mt(s, t ?? i.split("/").pop());
+      gt(s, t ?? i.split("/").pop());
     } catch (e) {
       console.log(
         `${f} Error downloading file`,
@@ -1612,7 +1619,7 @@ const Oe = {
   async downloadFile(i, t, e = null) {
     try {
       const s = new Blob([i], { type: t }), n = t.split("/").pop() ?? "file", r = e ?? `${n}.${n}`;
-      mt(s, r);
+      gt(s, r);
     } catch (s) {
       console.log(
         `${f} Error creating download file`,
@@ -1621,12 +1628,12 @@ const Oe = {
     }
   }
 };
-function mt(i, t) {
+function gt(i, t) {
   if (typeof document > "u") return;
   const e = document.createElement("a");
   e.href = URL.createObjectURL(i), e.download = t ?? "download", document.body.appendChild(e), e.click(), document.body.removeChild(e), URL.revokeObjectURL(e.href);
 }
-const vt = {
+const Lt = {
   /**
    * Creates a delay (sleep)
    */
@@ -1646,7 +1653,7 @@ class Yt {
 }
 function qt(i, t, e, s) {
   const n = document.head.querySelector(
-    `[id="${rt}"]`
+    `[id="${it}"]`
   );
   if (!n)
     throw new Error("Filter style element not found");
@@ -1681,7 +1688,7 @@ function qt(i, t, e, s) {
       break;
   }
   e === "reverse" && ([r, c] = [c, r]);
-  const o = `${rt}${i}-${E(8)}`, a = E(32), l = `
+  const o = `${it}${i}-${E(8)}`, a = E(32), l = `
 .${o} {
     filter: ${c};
     animation: ${a} ${s / 1e3}s;
@@ -1700,7 +1707,7 @@ function qt(i, t, e, s) {
     o
   );
 }
-const et = {
+const tt = {
   blur: [],
   opacity: [],
   grayscale: [],
@@ -1712,12 +1719,12 @@ const et = {
   sepia: []
 };
 async function Xt(i, t, e = 10, s = "standard", n = 500) {
-  const r = et[t].find(
+  const r = tt[t].find(
     (o) => o.amount === e && o.direction === s && o.time === n
   ), c = r ?? qt(t, e, s, n);
-  r || et[t].push(c), et[t].forEach((o) => {
+  r || tt[t].push(c), tt[t].forEach((o) => {
     i.classList.remove(o.getClassName());
-  }), i.classList.add(c.getClassName()), await vt.sleep(n), i.classList.remove(c.getClassName());
+  }), i.classList.add(c.getClassName()), await Lt.sleep(n), i.classList.remove(c.getClassName());
 }
 async function Re(i, t) {
   const e = {
@@ -2011,7 +2018,7 @@ class U {
    */
   _addStyleRules(t) {
     const e = document.getElementById(
-      Ot
+      Rt
     );
     if (!e) {
       console.warn(`${f} Plugin style element not found`);
@@ -2221,7 +2228,7 @@ class zt extends U {
                 <p>${t}</p>
             </div>
         `);
-    s.appendChild(r), vt.sleep(this.keyframe.duration).then(() => r.remove());
+    s.appendChild(r), Lt.sleep(this.keyframe.duration).then(() => r.remove());
   }
   info(t) {
     this.createNotification(t, "info");
@@ -2277,12 +2284,12 @@ async function Ve(i) {
     setTimeout(c, r);
   }), e = Date.now(), s = () => {
     Array.from(
-      document.querySelectorAll(`#${st}`)
+      document.querySelectorAll(`#${et}`)
     ).forEach((c) => c.remove()), document.head.appendChild(document.createComment("Styles"));
   }, n = async () => {
     s(), await t(10);
-    const r = Zt(st), c = i.toElement();
-    r.innerHTML = "", r.insertAdjacentElement("beforeend", c), i._executeOnLoad({}), I.applyBodyMappings(), console.log(`${At}Website loaded in ${m.Green}${Date.now() - e} ms${m.None}.`);
+    const r = Zt(et), c = i.toElement();
+    r.innerHTML = "", r.insertAdjacentElement("beforeend", c), i._executeOnLoad({}), I.applyBodyMappings(), console.log(`${Ot}Website loaded in ${m.Green}${Date.now() - e} ms${m.None}.`);
   };
   if (O.window.DOMContentLoaded) {
     await n();
@@ -2319,24 +2326,24 @@ class Qt {
     document.title = t.title ?? this.website.title, document.head.appendChild(document.createComment("Meta definitions")), e("icon", t.icon ?? this.website.icon);
   }
   async importStyle(t) {
-    const e = document.head.querySelector(`[id="${yt}"]`);
+    const e = document.head.querySelector(`[id="${bt}"]`);
     if (!e) return;
-    const s = await new Ct(t, "get").doRequest();
+    const s = await new wt(t, "get").doRequest();
     if (s.isError()) {
       console.log(`${f}Error importing root style at path "${t}"`);
       return;
     }
-    const n = St(s.text());
+    const n = Et(s.text());
     e.innerHTML += n;
   }
 }
 const Be = new Qt();
 export {
   Ee as CjsAnimation,
-  tt as CjsComponent,
+  ft as CjsComponent,
   te as CjsDebug,
   Oe as CjsDownload,
-  nt as CjsFrameworkEvents,
+  st as CjsFrameworkEvents,
   O as CjsGlobals,
   z as CjsKeyFrame,
   B as CjsLayout,
@@ -2344,13 +2351,13 @@ export {
   zt as CjsNotificationPlugin,
   ht as CjsObject,
   He as CjsPluginManager,
-  Ct as CjsRequest,
+  wt as CjsRequest,
   ee as CjsRequestsUtil,
   Vt as CjsRipplePlugin,
   Bt as CjsScaleClickPlugin,
   Kt as CjsScaleHoverPlugin,
   Fe as CjsString,
-  vt as CjsTimings,
+  Lt as CjsTimings,
   Ie as CjsValidator,
   De as CjsWebSocket,
   Ye as CjsWindow,
