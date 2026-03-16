@@ -101,6 +101,10 @@ declare class CjsComponent<TData = any> {
     /**
      * Clones an component and sets data with argument (used for Layouts)
      */
+    static withData<T extends CjsComponent<any>>(this: new () => T, data?: Partial<T extends CjsComponent<infer D> ? D : never>): T;
+    /**
+     * Clones an component and sets data with argument (used for Layouts)
+     */
     withData(data?: Partial<TData>): this;
     /**
      * Adds style to element using attribute `style="..."`

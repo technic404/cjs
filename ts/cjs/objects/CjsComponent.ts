@@ -228,12 +228,36 @@ export class CjsComponent<TData = any> {
         return this;
     }
 
+    static render<T extends CjsComponent<any>>(
+        this: new () => T,
+        data: Partial<T extends CjsComponent<infer D> ? D : never> = {}
+    ) {
+        return new this().render(data);
+    }
+
     public render(data: Partial<TData> = {}): string {
         return this.getHtml(this.getData(data), this._setStyle);
     }
 
+    static visualise<T extends CjsComponent<any>>(
+        this: new () => T,
+        data: Partial<T extends CjsComponent<infer D> ? D : never> = {}
+    ) {
+        return new this().visualise(data);
+    }
+
     public visualise(data: Partial<TData> = {}): HTMLElement {
         return htmlToElement(this.render(data));
+    }
+
+    /**
+     * Clones an component and sets data with argument (used for Layouts)
+     */
+    static withData<T extends CjsComponent<any>>(
+        this: new () => T, 
+        data: Partial<T extends CjsComponent<infer D> ? D : never> = {}
+    ) {
+        return new this().withData(data);
     }
 
     /**
@@ -244,6 +268,13 @@ export class CjsComponent<TData = any> {
         Object.assign(clone, this);
         clone.attribute = AttributeHelper.generateAttribute(CJS_COMPONENT_PREFIX, CjsTakenAttributes.components);
         return clone.setData(data);
+    }
+
+    static withStyle<T extends CjsComponent<any>>(
+        this: new () => T,
+        style: Partial<Record<keyof CSSStyleDeclaration, string>>
+    ) {
+        return new this().withStyle(style);
     }
 
     /**
@@ -265,13 +296,13 @@ export class CjsComponent<TData = any> {
             )
         );
 
-        for(const [name, attribute] of Object.entries(this.__actions)) {
-            const targetElements = Array.from(element.querySelectorAll(`[${CJS_ELEMENT_ACTION_FILL_PREFIX}${name}]`));
+        // for(const [name, attribute] of Object.entries(this.__actions)) {
+        //     const targetElements = Array.from(element.querySelectorAll(`[${CJS_ELEMENT_ACTION_FILL_PREFIX}${name}]`));
 
-            targetElements.forEach(el => {
-                el.setAttribute(attribute as string, "");
-            })
-        }
+        //     targetElements.forEach(el => {
+        //         el.setAttribute(attribute as string, "");
+        //     })
+        // }
 
         return element;
     }
