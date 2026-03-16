@@ -96,7 +96,9 @@ declare class CjsComponent<TData = any> {
     private addLazyIdentifiers;
     private getHtml;
     setData(data: Partial<TData>): this;
+    static render<T extends CjsComponent<any>>(this: new () => T, data?: Partial<T extends CjsComponent<infer D> ? D : never>): string;
     render(data?: Partial<TData>): string;
+    static visualise<T extends CjsComponent<any>>(this: new () => T, data?: Partial<T extends CjsComponent<infer D> ? D : never>): HTMLElement;
     visualise(data?: Partial<TData>): HTMLElement;
     /**
      * Clones an component and sets data with argument (used for Layouts)
@@ -106,6 +108,7 @@ declare class CjsComponent<TData = any> {
      * Clones an component and sets data with argument (used for Layouts)
      */
     withData(data?: Partial<TData>): this;
+    static withStyle<T extends CjsComponent<any>>(this: new () => T, style: Partial<Record<keyof CSSStyleDeclaration, string>>): any;
     /**
      * Adds style to element using attribute `style="..."`
      */
@@ -249,8 +252,6 @@ declare function jpg(path: string): string;
  * Shortcut of asset method, by default adds `gif/` prefix and `.gif` suffix.
  */
 declare function gif(path: string): string;
-
-declare function wrap<T extends CjsComponent>(prototype: new () => T): T;
 
 /**
  * Global runtime state for the website
@@ -668,6 +669,6 @@ declare class CjsRoot {
 }
 declare const Root: CjsRoot;
 
-export { CjsAnimation, CjsComponent, CjsDebug, CjsDownload, CjsFrameworkEvents, CjsGlobals, CjsKeyFrame, CjsLayout, CjsMobile, CjsNotificationPlugin, CjsObject, CjsPluginManager, CjsRequest, CjsRequestsUtil, CjsRipplePlugin, CjsScaleClickPlugin, CjsScaleHoverPlugin, CjsString, CjsTimings, CjsValidator, CjsWebSocket, CjsWindow, Root, Search, asset, createFilter, createHandle, getRandom, gif, init, jpg, off, onChange, onClick, onDoubleClick, onEscape, onFocus, onFocusOut, onHoldDown, onInput, onLoad, onMouseEnter, onMouseLeave, onMouseMove, onOuterclick, onResize, onScroll, onScrollBottom, onSlideDown, onSlideLeft, onSlideRight, onSlideUp, onTouchMove, png, strif, strmap, strmax, stror, svg, wrap };
+export { CjsAnimation, CjsComponent, CjsDebug, CjsDownload, CjsFrameworkEvents, CjsGlobals, CjsKeyFrame, CjsLayout, CjsMobile, CjsNotificationPlugin, CjsObject, CjsPluginManager, CjsRequest, CjsRequestsUtil, CjsRipplePlugin, CjsScaleClickPlugin, CjsScaleHoverPlugin, CjsString, CjsTimings, CjsValidator, CjsWebSocket, CjsWindow, Root, Search, asset, createFilter, createHandle, getRandom, gif, init, jpg, off, onChange, onClick, onDoubleClick, onEscape, onFocus, onFocusOut, onHoldDown, onInput, onLoad, onMouseEnter, onMouseLeave, onMouseMove, onOuterclick, onResize, onScroll, onScrollBottom, onSlideDown, onSlideLeft, onSlideRight, onSlideUp, onTouchMove, png, strif, strmap, strmax, stror, svg };
 
 }
