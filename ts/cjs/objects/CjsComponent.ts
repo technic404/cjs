@@ -1,16 +1,17 @@
-import { _DOMElementsUtil } from "cjs/utils/_DOMElementsUtil";
-import { _StringHTMLElementsUtil } from "cjs/utils/_StringHTMLElementsUtil";
-import { CjsObjectUtil } from "cjs/utils/CjsObjectUtil";
+import { CjsEvent } from "../types";
+import { _DOMElementsUtil } from "../utils/protected/_DOMElementsUtil";
+import { _StringHTMLElementsUtil } from "../utils/protected/_StringHTMLElementsUtil";
+import { CjsObjectUtil } from "../utils/public/CjsObjectUtil";
 
-type ActionsMap = Record<string, (e: object) => any>;
+type EventsMap = Record<string, (e: object) => any>;
 
 export class CjsComponent<TData = any> {
-    public __actions: ActionsMap = {};
+    public __events: EventsMap = {};
 
     private fillHeightData?: { offset: number; maxHeight?: number };
 
     public _cssStyle: string | null = null;
-    public _additionalStyle: Partial<CSSStyleDeclaration> = {};
+    public _additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>> = {};
 
     public _defaultData: Partial<TData> = {} as Partial<TData>;
     public _preSetData: Partial<TData> = {};
@@ -21,7 +22,7 @@ export class CjsComponent<TData = any> {
 
     constructor(
         preSetData: Partial<TData> | null = null, 
-        additionalStyle: Partial<CSSStyleDeclaration> | null = null
+        additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>> | null = null
     ) {
         if(preSetData) this._preSetData = CjsObjectUtil.copy(preSetData);
 
@@ -39,7 +40,9 @@ export class CjsComponent<TData = any> {
             html = _StringHTMLElementsUtil.injectAttribute(
                 html,
                 "style", 
-                Object.values(this._additionalStyle).join("; ")
+                Object.entries(this._additionalStyle)
+                    .map(e => `${e[0]}: ${e[1]}`)
+                    .join("; ")
             );
         }
 
@@ -58,8 +61,8 @@ export class CjsComponent<TData = any> {
     }
 
     /** Function that provides actions for the component */
-    public _actions(): ActionsMap {
-        return {} as ActionsMap;
+    public _events(): EventsMap {
+        return {} as EventsMap;
     }
 
     public visualise(preSetData: Partial<TData> | null = null) {
@@ -77,19 +80,25 @@ export class CjsComponent<TData = any> {
 
     get data(): TData {
         return CjsObjectUtil.copy(
-            CjsObjectUtil.join(this._preSetData, this._defaultData)
-        ) as TData
+            CjsObjectUtil.join(this._defaultData, this._preSetData)
+        ) as TData;
     }
     
-    get actions() : ReturnType<this["_actions"]> {
-        return new Proxy(this.__actions, {
+    get events() : ReturnType<this["_events"]> {
+        const _this = this;
+
+        return new Proxy(this.__events, {
             get(target, prop: string) {
                 if (prop in target) {
                     return target[prop];
                 }
+                return (event: CjsEvent) => {
+                    _this._events()[prop](event);
+                };
+                
                 return `${prop}`;
             }
-        }) as ReturnType<this["_actions"]>;
+        }) as ReturnType<this["_events"]>;
     }
 
     /**

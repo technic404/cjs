@@ -1,4 +1,4 @@
-import { _ConsoleColorsUtil } from "./utils/_ConsoleColorsUtil";
+import { _ConsoleColorsUtil } from "./utils/protected/_ConsoleColorsUtil";
 
 
 export const CjsLazyClassPrefix = "lazy:"
@@ -14,3 +14,8 @@ export const CjsPrefix = _ConsoleColorsUtil.format(`&e&n${_CjsPrefixBaseText}&r 
 export const CjsErrorPrefix = _ConsoleColorsUtil.format(`&c&n${_CjsPrefixBaseText}&r `);
 export const CjsSuccessPrefix = _ConsoleColorsUtil.format(`&c&a${_CjsPrefixBaseText}&r `);
 export const CjsInfoPrefix = _ConsoleColorsUtil.format(`&c&b${_CjsPrefixBaseText}&r `);
+
+export const CjsComponentReRenderTag = "fx:render";
+export const CjsRootTag = "cjsroot";
+
+export const CjsEventAttributePrefix = "cjsevent-";

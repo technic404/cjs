@@ -131,7 +131,7 @@ export const CjsObjectUtil = {
         return object;
     },
 
-    isEmpty(object: object) {
-        return Object.keys(object).length > 0;
+    isEmpty(object: object | null) {
+        return !object || Object.keys(object).length === 0;
     }
 };

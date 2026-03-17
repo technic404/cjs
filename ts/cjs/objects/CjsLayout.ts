@@ -1,67 +1,85 @@
-import { Constructor } from "cjs/types";
+import { Constructor } from "../types";
 import { CjsComponent } from "./CjsComponent";
-import { _CjsLoggerUtil } from "cjs/utils/_CjsLoggerUtil";
-import { CjsComponentReRenderTag } from "cjs/constants";
+import { _CjsLoggerUtil } from "../utils/protected/_CjsLoggerUtil";
+import { CjsComponentReRenderTag } from "../constants";
+import { _DOMElementsUtil } from "../utils/protected/_DOMElementsUtil";
 
-export type CjsLayoutNode = Constructor<CjsComponent> | CjsLayout | CjsLayoutNode[];
+export type CjsLayoutNode = Constructor<CjsComponent> | CjsComponent | CjsLayout | CjsLayoutNode[];
 
 export class CjsLayout<TData = any> {
+
+    public _preSetData: TData | null = null;
 
     public elements: (data: TData) => CjsLayoutNode[][];
 
     /**
      * @param elements Function returning layout structure
      */
-    constructor(elements: (data: TData) => CjsLayoutNode[][]) {
+    constructor(elements: (data: TData | null) => CjsLayoutNode[][]) {
         this.elements = elements;
+    }
+
+    public withData(preSetData: TData): CjsLayout {
+        const clone = Object.create(Object.getPrototypeOf(this));
+        Object.assign(clone, this);
+
+        clone._preSetData = preSetData;
+        return clone;
+    }
+
+    private createErrorElement() {
+        return document.createElement("cjslayouterror");
     }
 
 
     /** Build DOM structure */
-    public toElement(): HTMLElement {
+    public visualise(): HTMLElement[] {
         const tempWrapper = document.createElement("div");
 
         function isConstructable(v: any): boolean {
             return typeof v === "function" && v.prototype?.constructor === v;
         }
 
-        const walk = (elements: CjsLayoutNode): HTMLElement => {
+        const walk = (elements: CjsLayoutNode): HTMLElement[] => {
             if (!Array.isArray(elements)) {
                 _CjsLoggerUtil.error("Layout have wrong pattern, component should be in array");
 
-                return document.createElement("cjslayouterror");
+                return [this.createErrorElement()];
             }
 
             if (elements.length === 0) {
                 _CjsLoggerUtil.error("Layout have an empty component space");
 
-                return document.createElement("cjslayouterror");
+                return [this.createErrorElement()];
             }
 
             const element = elements[0];
 
-            if (element instanceof CjsLayout) return element.toElement();
+            if (element instanceof CjsLayout) return element.visualise();
 
-            if(!isConstructable(element)) {
-                _CjsLoggerUtil.error("Passed element should be a constructable prototype");
+            const instance = 
+                (isConstructable(element)
+                ? new (element as Constructor<CjsComponent>)()
+                : element) as CjsComponent
 
-                return document.createElement("cjslayouterror");
+            if(!(instance instanceof CjsComponent)) {
+                _CjsLoggerUtil.error("The element should be CjsComponent, but passed", instance);
+
+                return [this.createErrorElement()];
             }
-
-            const instance = new (element as Constructor<CjsComponent>)();
 
             const component = instance.visualise();
             const hasParentAndChild = elements.length === 2;
 
             if (hasParentAndChild) {
-                let renderPlaceholder = component.querySelector(CjsComponentReRenderTag);
+                let renderPlaceholder = component.getElementsByTagName(CjsComponentReRenderTag)[0];
 
                 const children = elements[1];
 
                 if (!Array.isArray(children)) {
                     _CjsLoggerUtil.error("Layout sub components at second argument have to be Array");
                     
-                    return component;
+                    return [component];
                 }
 
                 children.forEach((child, index) => {
@@ -72,11 +90,13 @@ export class CjsLayout<TData = any> {
                     const builtChild = walk(child);
 
                     if (childRoot instanceof CjsLayout) {
-                        component.insertAdjacentElement("beforeend", builtChild);
+                        for(const _buildChild of builtChild) {
+                            component.insertAdjacentElement("beforeend", _buildChild);
+                        }
                         return;
                     }
 
-                    renderPlaceholder = component.querySelector(CjsComponentReRenderTag);
+                    renderPlaceholder = component.getElementsByTagName(CjsComponentReRenderTag)[0];
 
                     if (renderPlaceholder) {
                         if (!isLast) {
@@ -85,26 +105,40 @@ export class CjsLayout<TData = any> {
                             );
                         }
 
-                        renderPlaceholder.replaceWith(builtChild);
+                        // renderPlaceholder.replaceWith(builtChild);
+                        for(const _buildChild of builtChild) {
+                            renderPlaceholder.insertAdjacentElement("afterend", _buildChild);
+                        }
+
+                        renderPlaceholder.remove();
                     } else {
-                        component.insertAdjacentElement("beforeend", builtChild);
+                        for(const _buildChild of builtChild) {
+                            component.insertAdjacentElement("beforeend", _buildChild);
+                        }
+
+                        // console.log(component, tempWrapper);
+                        
+                        // component.insertAdjacentElement("beforeend", builtChild);
                     }
                 });
             }
 
-            return component;
+            return [component];
         };
 
-        this.elements(this.dataState.active).forEach(elements => {
+        this.elements(this._preSetData as TData).forEach(elements => {
             if (!elements) return;
 
-            tempWrapper.insertAdjacentElement(
-                "beforeend",
-                walk(elements.filter(e => e !== null))
-            );
+            const processedElements = walk(elements.filter(e => e !== null));
+
+            for(const processedElement of processedElements) {
+                tempWrapper.insertAdjacentElement(
+                    "beforeend",
+                    processedElement
+                );
+            }
         });
 
-        return tempWrapper.innerHTML;
+        return Array.from(tempWrapper.children) as HTMLElement[];
     }
-
 }
