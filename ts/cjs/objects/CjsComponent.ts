@@ -2,6 +2,7 @@ import { CjsEvent } from "../types";
 import { _DOMElementsUtil } from "../utils/protected/_DOMElementsUtil";
 import { _StringHTMLElementsUtil } from "../utils/protected/_StringHTMLElementsUtil";
 import { CjsObjectUtil } from "../utils/public/CjsObjectUtil";
+import { CjsForm } from "./CjsForm";
 
 type EventsMap = Record<string, (e: object) => any>;
 
@@ -33,6 +34,7 @@ export class CjsComponent<TData = any> {
      * / 🔴 ------------ PRIVATE SCOPE ------------ 🔴 /
      */
 
+    /** Provides the HTML string for the component */
     private getHtml() {
         let html = this._template();
 
@@ -65,6 +67,7 @@ export class CjsComponent<TData = any> {
         return {} as EventsMap;
     }
 
+    /** Provides component as an HTML element */
     public visualise(preSetData: Partial<TData> | null = null) {
         if(preSetData) this._preSetData = CjsObjectUtil.copy(preSetData);
         
@@ -77,13 +80,22 @@ export class CjsComponent<TData = any> {
      * 
      */
     
-
+    /** Provides merged component data including default data and pre-set data */
     get data(): TData {
         return CjsObjectUtil.copy(
             CjsObjectUtil.join(this._defaultData, this._preSetData)
         ) as TData;
     }
+
+    /** Provides all form elements within the component as CjsForm instances */
+    get forms(): CjsForm[] {
+        return Array.from(
+            _DOMElementsUtil.HTMLToElement(this.getHtml()).querySelectorAll("form"), 
+            (el) => new CjsForm(el)
+        );
+    }
     
+    /** Provides all event handlers for the component */
     get events() : ReturnType<this["_events"]> {
         const _this = this;
 
@@ -107,6 +119,7 @@ export class CjsComponent<TData = any> {
      * 
      */
 
+    /** Provides a rendered HTML string for the component */
     static render<T extends CjsComponent<any>>(
         this: new (preSetData: Partial<T extends CjsComponent<infer D> ? D : never>) => T,
         data: Partial<T extends CjsComponent<infer D> ? D : never> = {}
@@ -114,6 +127,7 @@ export class CjsComponent<TData = any> {
         return new this(data).getHtml();
     }
 
+    /** Provides a visualised HTML element for the component */
     static visualise<T extends CjsComponent<any>>(
         this: new (preSetData: Partial<T extends CjsComponent<infer D> ? D : never>) => T,
         data: Partial<T extends CjsComponent<infer D> ? D : never> = {}
@@ -121,6 +135,7 @@ export class CjsComponent<TData = any> {
         return _DOMElementsUtil.HTMLToElement(new this(data).getHtml());
     }
 
+    /** Sets the data for the component */
     static withData<T extends CjsComponent<any>>(
         this: new (preSetData: Partial<T extends CjsComponent<infer D> ? D : never>) => T, 
         data: Partial<T extends CjsComponent<infer D> ? D : never> = {}
@@ -128,6 +143,7 @@ export class CjsComponent<TData = any> {
         return new this(data);
     }
 
+    /** Sets additional style for the component */
     static withStyle<T extends CjsComponent<any>>(
         this: new (preSetData: any, additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>) => T,
         style: Partial<Record<keyof CSSStyleDeclaration, string>>
