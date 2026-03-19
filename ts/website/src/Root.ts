@@ -1,4 +1,4 @@
 import { init } from "cjs";
-import { RootLayout } from "./layouts/RootLayout";
+import { RootLayout } from "./layouts/root/RootLayout";
 
 init(RootLayout);

@@ -42,6 +42,5 @@ window.addEventListener("mouseup", () => {
 });
 
 window.addEventListener("DOMContentLoaded", () => {
-
     CjsGlobals.window.DOMContentLoaded = true;
 });

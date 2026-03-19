@@ -2,9 +2,12 @@ import { CjsEvent } from "../types";
 import { _DOMElementsUtil } from "../utils/protected/_DOMElementsUtil";
 import { _StringHTMLElementsUtil } from "../utils/protected/_StringHTMLElementsUtil";
 import { CjsObjectUtil } from "../utils/public/CjsObjectUtil";
+import { CjsStringUtil } from "../utils/public/CjsStringUtil";
 import { CjsForm } from "./CjsForm";
 
 type EventsMap = Record<string, (e: object) => any>;
+
+const CjsComponentTakenCssClasses = new Map<string, string>();
 
 export class CjsComponent<TData = any> {
     public __events: EventsMap = {};
@@ -12,6 +15,7 @@ export class CjsComponent<TData = any> {
     private fillHeightData?: { offset: number; maxHeight?: number };
 
     public _cssStyle: string | null = null;
+    public _cssClassName: string | null = null;
     public _additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>> = {};
 
     public _defaultData: Partial<TData> = {} as Partial<TData>;
@@ -45,6 +49,31 @@ export class CjsComponent<TData = any> {
                 Object.entries(this._additionalStyle)
                     .map(e => `${e[0]}: ${e[1]}`)
                     .join("; ")
+            );
+        }
+
+        if(this._cssStyle) {
+            const className = CjsComponentTakenCssClasses.has(this._cssStyle)
+                ? CjsComponentTakenCssClasses.get(this._cssStyle)!
+                : (() => {
+                    let className = null;
+
+                    const takenClassNames = Array.from(CjsComponentTakenCssClasses.values());
+
+                    while(className == null || takenClassNames.includes(className)) {
+                        className = CjsStringUtil.getRandom(6);
+                    }
+
+                    CjsComponentTakenCssClasses.set(this._cssStyle!, className);
+
+                    return className;
+                })();
+            
+            
+            html = _StringHTMLElementsUtil.injectAttribute(
+                html,
+                "class", 
+                className
             );
         }
 

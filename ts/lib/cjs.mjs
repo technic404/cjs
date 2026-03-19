@@ -1,4 +1,4 @@
-const M = {
+const A = {
   HTMLToElement(n) {
     const e = document.createElement("template");
     e.innerHTML = n.trim();
@@ -16,7 +16,7 @@ const M = {
     }
     return t;
   }
-}, S = {
+}, T = {
   injectAttribute(n, e, t) {
     const s = n.length;
     let r = 0;
@@ -24,16 +24,16 @@ const M = {
     if (n[r] !== "<") return n;
     const o = r, c = n.indexOf(">", o);
     if (c === -1) return n;
-    const i = n.slice(o, c), l = i.indexOf(`${e}=`), d = l !== -1, y = e.length;
-    let m;
-    if (d) {
-      const A = i[l + y], g = l + y + 1, E = i.indexOf(A, g), f = i.slice(g, E).trim(), h = !f.endsWith(";") && f.length > 0 ? f + ";" + t : f + t;
-      m = i.slice(0, g) + h + i.slice(E);
+    const i = n.slice(o, c), a = i.indexOf(`${e}=`), u = a !== -1, d = e.length;
+    let f;
+    if (u) {
+      const b = i[a + d], y = a + d + 1, v = i.indexOf(b, y), h = i.slice(y, v).trim(), p = !h.endsWith(";") && h.length > 0 ? h + ";" + t : h + t;
+      f = i.slice(0, y) + p + i.slice(v);
     } else
-      m = i + ` ${e}="${t}"`;
-    return n.slice(0, o) + m + n.slice(c);
+      f = i + ` ${e}="${t}"`;
+    return n.slice(0, o) + f + n.slice(c);
   }
-}, p = {
+}, g = {
   /**
    * Returns values from keys if the value is not an object
    */
@@ -61,12 +61,12 @@ const M = {
         ...Object.keys(r ?? {}),
         ...Object.keys(o ?? {})
       ]);
-      for (const l of i) {
-        if (!(l in o)) {
-          c[l] = r?.[l];
+      for (const a of i) {
+        if (!(a in o)) {
+          c[a] = r?.[a];
           continue;
         }
-        !t && l in r ? c[l] = r[l] : c[l] = s(r?.[l], o?.[l]);
+        !t && a in r ? c[a] = r[a] : c[a] = s(r?.[a], o?.[a]);
       }
       return c;
     };
@@ -102,80 +102,21 @@ const M = {
   isEmpty(n) {
     return !n || Object.keys(n).length === 0;
   }
-};
-class j {
-  /**
-   * / ⚪ ------------ CONSTRUCTOR SCOPE ------------ ⚪ /
-   */
-  constructor(e = null, t = null) {
-    this.__events = {}, this._cssStyle = null, this._additionalStyle = {}, this._defaultData = {}, this._preSetData = {}, e && (this._preSetData = p.copy(e)), t && (this._additionalStyle = p.copy(t));
+}, B = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", O = "abcdefghijklmnopqrstuvwxyz0123456789", N = {
+  getRandom(n, e = !0) {
+    let t = "";
+    const s = e ? O : B, r = s.length;
+    let o = 0;
+    for (; o < n; )
+      t += s.charAt(Math.floor(Math.random() * r)), o += 1;
+    if (e) {
+      const c = (i) => !isNaN(Number(i.substring(0, 1)));
+      for (; c(t); )
+        t = this.getRandom(n, e);
+    }
+    return t;
   }
-  /**
-   * / 🔴 ------------ PRIVATE SCOPE ------------ 🔴 /
-   */
-  getHtml() {
-    let e = this._template();
-    return p.isEmpty(this._additionalStyle) || (e = S.injectAttribute(
-      e,
-      "style",
-      Object.entries(this._additionalStyle).map((t) => `${t[0]}: ${t[1]}`).join("; ")
-    )), e;
-  }
-  /**
-   * 
-   * / 🟢 ------------ PUBLIC SCOPE ------------ 🟢 /
-   * 
-   */
-  /** Function that provides template for base html structure */
-  _template() {
-    return "";
-  }
-  /** Function that provides actions for the component */
-  _events() {
-    return {};
-  }
-  visualise(e = null) {
-    return e && (this._preSetData = p.copy(e)), M.HTMLToElement(this.getHtml());
-  }
-  /**
-   * 
-   * / 🔵 ------------ GETTERS SCOPE ------------ 🔵 /
-   * 
-   */
-  get data() {
-    return p.copy(
-      p.join(this._defaultData, this._preSetData)
-    );
-  }
-  get events() {
-    const e = this;
-    return new Proxy(this.__events, {
-      get(t, s) {
-        return s in t ? t[s] : (r) => {
-          e._events()[s](r);
-        };
-      }
-    });
-  }
-  /**
-   * 
-   * / 🟡 ------------ STATIC SCOPE ------------ 🟡 /
-   * 
-   */
-  static render(e = {}) {
-    return new this(e).getHtml();
-  }
-  static visualise(e = {}) {
-    return M.HTMLToElement(new this(e).getHtml());
-  }
-  static withData(e = {}) {
-    return new this(e);
-  }
-  static withStyle(e) {
-    return new this(null, e);
-  }
-}
-const a = {
+}, l = {
   None: "\x1B[0m",
   Bright: "\x1B[1m",
   Dim: "\x1B[2m",
@@ -188,27 +129,27 @@ const a = {
   Magenta: "\x1B[35m",
   Cyan: "\x1B[36m",
   White: "\x1B[37m"
-}, B = {
-  0: a.Black,
-  1: a.Blue,
-  2: a.Green,
-  3: a.Cyan,
-  4: a.Red,
-  5: a.Magenta,
-  6: a.Yellow,
-  7: a.White,
-  8: a.Dim,
-  9: a.Blue,
-  a: a.Green,
-  b: a.Cyan,
-  c: a.Red,
-  d: a.Magenta,
-  e: a.Yellow,
-  f: a.White,
-  l: a.Bright,
-  n: a.Underscore,
-  r: a.None
-}, b = {
+}, D = {
+  0: l.Black,
+  1: l.Blue,
+  2: l.Green,
+  3: l.Cyan,
+  4: l.Red,
+  5: l.Magenta,
+  6: l.Yellow,
+  7: l.White,
+  8: l.Dim,
+  9: l.Blue,
+  a: l.Green,
+  b: l.Cyan,
+  c: l.Red,
+  d: l.Magenta,
+  e: l.Yellow,
+  f: l.White,
+  l: l.Bright,
+  n: l.Underscore,
+  r: l.None
+}, k = {
   /**
    * `&0` black
    * `&1` dark blue
@@ -233,21 +174,157 @@ const a = {
    * @returns 
    */
   format(n) {
-    return n.replace(/&([0-9a-flnr])/gi, (e, t) => B[t.toLowerCase()] ?? "") + a.None;
+    return n.replace(/&([0-9a-flnr])/gi, (e, t) => D[t.toLowerCase()] ?? "") + l.None;
   }
-}, v = "[CJS]";
-b.format(`&e&n${v}&r `);
-const O = b.format(`&c&n${v}&r `), N = b.format(`&c&a${v}&r `), D = b.format(`&c&b${v}&r `), w = "fx:render", L = "cjsroot", k = "cjsevent-", C = {
+}, w = "[CJS]";
+k.format(`&e&n${w}&r `);
+const H = k.format(`&c&n${w}&r `), R = k.format(`&c&a${w}&r `), $ = k.format(`&c&b${w}&r `), x = "fx:render", L = "cjsroot", M = "cjsevent-", C = {
   info(n, ...e) {
-    console.log(`${D}${n}`, e);
+    console.log(`${$}${n}`, e);
   },
   success(n, ...e) {
-    console.log(`${N}${n}`, e);
+    console.log(`${R}${n}`, e);
   },
   error(n, ...e) {
-    console.log(`${O}${n}`, e);
+    console.log(`${H}${n}`, e);
   }
 };
+class P {
+  #e;
+  constructor(e) {
+    this.#e = e;
+  }
+  #t = {
+    radio: (e) => e.checked ? e.value : null,
+    checkbox: (e) => e.checked,
+    file: (e) => e.files,
+    number: (e) => e.value !== "" ? Number(e.value) : null,
+    "*": (e) => e.value
+  };
+  serialize(e = {}) {
+    const t = Array.from(this.#e.querySelectorAll("select")), s = Array.from(this.#e.querySelectorAll("input")), r = Array.from(this.#e.querySelectorAll("textarea")), o = [...t, ...s, ...r], c = {};
+    for (let i = 0; i < o.length; i++) {
+      const a = o[i], u = a.getAttribute("name");
+      if (!u && !e.includeNoNames) continue;
+      const d = a.getAttribute("type") ?? "*", b = (this.#t[d] ?? this.#t["*"])(a), y = u ?? i;
+      c[y] = b;
+    }
+    if (e.checkboxesReadType === "array") {
+      const i = s.filter((a) => a.type === "checkbox");
+      for (const a of i) {
+        if (!a.name) {
+          C.error("Checkbox doesn't have a name attribute, but it's required when options.checkboxesReadType === array", a);
+          continue;
+        }
+        const u = a.name;
+        (!(u in c) || !Array.isArray(c[u])) && (c[u] = []), a.checked && c[u].push(a.value);
+      }
+    }
+    return c;
+  }
+}
+const E = /* @__PURE__ */ new Map();
+class q {
+  /**
+   * / ⚪ ------------ CONSTRUCTOR SCOPE ------------ ⚪ /
+   */
+  constructor(e = null, t = null) {
+    this.__events = {}, this._cssStyle = null, this._cssClassName = null, this._additionalStyle = {}, this._defaultData = {}, this._preSetData = {}, e && (this._preSetData = g.copy(e)), t && (this._additionalStyle = g.copy(t));
+  }
+  /**
+   * / 🔴 ------------ PRIVATE SCOPE ------------ 🔴 /
+   */
+  /** Provides the HTML string for the component */
+  getHtml() {
+    let e = this._template();
+    if (g.isEmpty(this._additionalStyle) || (e = T.injectAttribute(
+      e,
+      "style",
+      Object.entries(this._additionalStyle).map((t) => `${t[0]}: ${t[1]}`).join("; ")
+    )), this._cssStyle) {
+      const t = E.has(this._cssStyle) ? E.get(this._cssStyle) : (() => {
+        let s = null;
+        const r = Array.from(E.values());
+        for (; s == null || r.includes(s); )
+          s = N.getRandom(6);
+        return E.set(this._cssStyle, s), s;
+      })();
+      e = T.injectAttribute(
+        e,
+        "class",
+        t
+      );
+    }
+    return e;
+  }
+  /**
+   * 
+   * / 🟢 ------------ PUBLIC SCOPE ------------ 🟢 /
+   * 
+   */
+  /** Function that provides template for base html structure */
+  _template() {
+    return "";
+  }
+  /** Function that provides actions for the component */
+  _events() {
+    return {};
+  }
+  /** Provides component as an HTML element */
+  visualise(e = null) {
+    return e && (this._preSetData = g.copy(e)), A.HTMLToElement(this.getHtml());
+  }
+  /**
+   * 
+   * / 🔵 ------------ GETTERS SCOPE ------------ 🔵 /
+   * 
+   */
+  /** Provides merged component data including default data and pre-set data */
+  get data() {
+    return g.copy(
+      g.join(this._defaultData, this._preSetData)
+    );
+  }
+  /** Provides all form elements within the component as CjsForm instances */
+  get forms() {
+    return Array.from(
+      A.HTMLToElement(this.getHtml()).querySelectorAll("form"),
+      (e) => new P(e)
+    );
+  }
+  /** Provides all event handlers for the component */
+  get events() {
+    const e = this;
+    return new Proxy(this.__events, {
+      get(t, s) {
+        return s in t ? t[s] : (r) => {
+          e._events()[s](r);
+        };
+      }
+    });
+  }
+  /**
+   * 
+   * / 🟡 ------------ STATIC SCOPE ------------ 🟡 /
+   * 
+   */
+  /** Provides a rendered HTML string for the component */
+  static render(e = {}) {
+    return new this(e).getHtml();
+  }
+  /** Provides a visualised HTML element for the component */
+  static visualise(e = {}) {
+    return A.HTMLToElement(new this(e).getHtml());
+  }
+  /** Sets the data for the component */
+  static withData(e = {}) {
+    return new this(e);
+  }
+  /** Sets additional style for the component */
+  static withStyle(e) {
+    return new this(null, e);
+  }
+}
 class _ {
   /**
    * @param elements Function returning layout structure
@@ -276,33 +353,33 @@ class _ {
       const o = r[0];
       if (o instanceof _) return o.visualise();
       const c = t(o) ? new o() : o;
-      if (!(c instanceof j))
+      if (!(c instanceof q))
         return C.error("The element should be CjsComponent, but passed", c), [this.createErrorElement()];
       const i = c.visualise();
       if (r.length === 2) {
-        let d = i.getElementsByTagName(w)[0];
-        const y = r[1];
-        if (!Array.isArray(y))
+        let u = i.getElementsByTagName(x)[0];
+        const d = r[1];
+        if (!Array.isArray(d))
           return C.error("Layout sub components at second argument have to be Array"), [i];
-        y.forEach((m, A) => {
-          if (m === null) return;
-          const g = A === y.length - 1, E = m[0], f = s(m);
-          if (E instanceof _) {
-            for (const h of f)
-              i.insertAdjacentElement("beforeend", h);
+        d.forEach((f, b) => {
+          if (f === null) return;
+          const y = b === d.length - 1, v = f[0], h = s(f);
+          if (v instanceof _) {
+            for (const p of h)
+              i.insertAdjacentElement("beforeend", p);
             return;
           }
-          if (d = i.getElementsByTagName(w)[0], d) {
-            g || d.insertAdjacentElement(
+          if (u = i.getElementsByTagName(x)[0], u) {
+            y || u.insertAdjacentElement(
               "afterend",
-              document.createElement(w)
+              document.createElement(x)
             );
-            for (const h of f)
-              d.insertAdjacentElement("afterend", h);
-            d.remove();
+            for (const p of h)
+              u.insertAdjacentElement("afterend", p);
+            u.remove();
           } else
-            for (const h of f)
-              i.insertAdjacentElement("beforeend", h);
+            for (const p of h)
+              i.insertAdjacentElement("beforeend", p);
         });
       }
       return [i];
@@ -318,21 +395,7 @@ class _ {
     }), Array.from(e.children);
   }
 }
-const $ = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", H = "abcdefghijklmnopqrstuvwxyz0123456789", R = {
-  getRandom(n, e = !0) {
-    let t = "";
-    const s = e ? H : $, r = s.length;
-    let o = 0;
-    for (; o < n; )
-      t += s.charAt(Math.floor(Math.random() * r)), o += 1;
-    if (e) {
-      const c = (i) => !isNaN(Number(i.substring(0, 1)));
-      for (; c(t); )
-        t = this.getRandom(n, e);
-    }
-    return t;
-  }
-}, x = new class {
+const S = new class {
   #e = /* @__PURE__ */ new Map();
   constructor() {
   }
@@ -341,8 +404,8 @@ const $ = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", H = 
    * @returns attribute that have to applied to element, to properly detect element to add the click event
    */
   addCallback(e) {
-    const t = R.getRandom(16);
-    return this.#e.set(t, e), ` ${k}${t}`;
+    const t = N.getRandom(16);
+    return this.#e.set(t, e), ` ${M}${t}`;
   }
   hasCallback(e) {
     return this.#e.has(e);
@@ -350,7 +413,7 @@ const $ = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", H = 
   getCallback(e) {
     return this.#e.get(e);
   }
-}(), T = new class {
+}(), j = new class {
   #e;
   constructor() {
     this.#e = new MutationObserver(this.callback);
@@ -361,19 +424,19 @@ const $ = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", H = 
     });
   }
   processElementEvents(e) {
-    const t = M.getAttributesStartingWith(
+    const t = A.getAttributesStartingWith(
       e,
-      k
+      M
     );
     if (t.length !== 0)
       for (const s of t) {
-        const r = Array.from(document.body.querySelectorAll(`[${s}]`)), o = s.replace(k, "");
+        const r = Array.from(document.body.querySelectorAll(`[${s}]`)), o = s.replace(M, "");
         for (const c of r) {
-          if (c.removeAttribute(s), !x.hasCallback(o)) continue;
-          const i = x.getCallback(o);
+          if (c.removeAttribute(s), !S.hasCallback(o)) continue;
+          const i = S.getCallback(o);
           (i.applyToWindow ? window : c).addEventListener(
             i.eventName,
-            (d) => i.callback({ event: d, source: c })
+            (u) => i.callback({ event: u, source: c })
           );
         }
       }
@@ -394,39 +457,39 @@ const $ = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", H = 
     });
   }
 }();
-function P(n) {
+function W(n) {
   const e = document.body.querySelector(L);
   if (!e)
-    return document.body.appendChild(document.createElement(L)), P(n);
+    return document.body.appendChild(document.createElement(L)), W(n);
   e.innerHTML = "";
   for (const t of n.visualise())
     e.appendChild(t);
   window.addEventListener("DOMContentLoaded", (t) => {
     Array.from(document.body.querySelectorAll("*")).forEach((s) => {
-      T.processElementEvents(s);
-    }), T.observe();
+      j.processElementEvents(s);
+    }), j.observe();
   });
 }
-const u = (n, e) => x.addCallback({
+const m = (n, e) => S.addCallback({
   eventName: n,
   callback: e,
   applyToWindow: !1
-}), q = (n) => u("change", n), F = (n) => u("click", n), I = (n) => u("dblclick", n), z = (n) => u("focus", n), G = (n) => u("focusout", n), Y = (n) => u("input", n), V = (n) => u("mouseenter", n), J = (n) => u("mouseleave", n), Q = (n) => u("mousemove", n), K = (n) => u("resize", n), X = (n) => u("scroll", n), Z = (n) => u("touchmove", n);
+}), I = (n) => m("change", n), z = (n) => m("click", n), G = (n) => m("dblclick", n), Y = (n) => m("focus", n), V = (n) => m("focusout", n), J = (n) => m("input", n), Q = (n) => m("mouseenter", n), K = (n) => m("mouseleave", n), X = (n) => m("mousemove", n), Z = (n) => m("resize", n), ee = (n) => m("scroll", n), te = (n) => m("touchmove", n);
 export {
-  j as CjsComponent,
+  q as CjsComponent,
   _ as CjsLayout,
-  P as init,
-  q as onChange,
-  F as onClick,
-  I as onDoubleClick,
-  z as onFocus,
-  G as onFocusOut,
-  Y as onInput,
-  V as onMouseEnter,
-  J as onMouseLeave,
-  Q as onMouseMove,
-  K as onResize,
-  X as onScroll,
-  Z as onTouchMove
+  W as init,
+  I as onChange,
+  z as onClick,
+  G as onDoubleClick,
+  Y as onFocus,
+  V as onFocusOut,
+  J as onInput,
+  Q as onMouseEnter,
+  K as onMouseLeave,
+  X as onMouseMove,
+  Z as onResize,
+  ee as onScroll,
+  te as onTouchMove
 };
 //# sourceMappingURL=cjs.mjs.map

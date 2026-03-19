@@ -1,8 +1,14 @@
 // vite.config.ts
 import { defineConfig } from "vite";
+import cssProcessorPlugin from "./vite-plugins/cssProcessorPlugin";
 import path from "path";
 
+
+
 export default defineConfig({
+  plugins: [
+    cssProcessorPlugin()
+  ],
   resolve: {
     alias: {
       "cjs": path.resolve(__dirname, "./lib/cjs.mjs")
