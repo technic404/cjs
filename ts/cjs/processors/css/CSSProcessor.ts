@@ -17,13 +17,6 @@ export const _CSSProcessor = {
             const fullCssText = `${selector} { ${cssText} }`;
 
             if (selector.startsWith(":")) {
-                const isRoot = selector.startsWith(":root");
-
-                if (isRoot) {
-                    const properties = new CssStylePropertiesReader(cssText).read();
-                    CjsStyle.RootVariables._addProperties(properties);
-                }
-
                 return [fullCssText];
             }
 
@@ -138,7 +131,7 @@ export const _CSSProcessor = {
             }
 
             const modifiedRules = getModifiedRules(selector, cssText);
-            
+
             newRules.push(...modifiedRules);
             newRules.push(cssText);
         }
