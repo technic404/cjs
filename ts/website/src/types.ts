@@ -1,5 +1,17 @@
 export type LanguageTag = "pl" | "en" | "ru";
 
+export enum PublicationType {
+    Article = "article",
+    Monograph = "monograph",
+    Chapter = "chapter",
+    Report = "report",
+}
+
+export enum PublicationStatus {
+    Published = "published",
+    Preprint = "preprint",
+}
+
 export interface ArchaeologicalSite {
     id: number;
     name: string;

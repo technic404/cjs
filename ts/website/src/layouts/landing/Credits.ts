@@ -1,9 +1,16 @@
+import { CjsComponent, png } from "cjs";
 import {Logo} from "../../components/Logo.mjs";
 
-export const Credits = new class Credits extends CjsComponent {
-    data = {};
-    _() {
-        const {  } = this._renderData;
+type Data = {
+    
+}
+
+export class Credits extends CjsComponent<Data> {
+    _defaultData = {};
+
+    _template() {
+        const { } = this.data;
+        const { } = this.events;
 
         return `
             <aside class="credits">
@@ -16,7 +23,10 @@ export const Credits = new class Credits extends CjsComponent {
         `;
     }
 
+    _events() {
+        return {};
+    }
+
     /** Settings */
-    _renderData = this.data;
     _cssStyle = './src/layouts/landing/_styles/Credits.css';
 };
