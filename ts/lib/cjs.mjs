@@ -918,6 +918,7 @@ class Ce {
   _events() {
     return {};
   }
+  // public _wrapEvents(): 
   /** Provides component as an HTML element */
   visualise(e = null) {
     return e && (this._preSetData = R.copy(e)), S.HTMLToElement(this.getHtml());

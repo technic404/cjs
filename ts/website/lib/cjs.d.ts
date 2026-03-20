@@ -84,7 +84,7 @@ declare class CjsForm {
     serialize(options?: CjsFormSerializeOptions): Record<string | number, any>;
 }
 
-type EventsMap = Record<string, (e: object) => any>;
+type EventsMap = Record<string, (e: CjsEvent<Event | null>) => any>;
 declare class CjsComponent<TData = any> {
     __events: EventsMap;
     private fillHeightData?;

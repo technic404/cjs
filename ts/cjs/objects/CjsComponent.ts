@@ -9,7 +9,7 @@ import { CjsStringUtil } from "../utils/public/CjsStringUtil";
 import { CjsRequest } from "../utils/user-helpers/CjsRequestsUtil";
 import { CjsForm } from "./CjsForm";
 
-type EventsMap = Record<string, (e: object) => any>;
+type EventsMap = Record<string, (e: CjsEvent<Event | null>) => any>;
 
 const CjsComponentTakenCssClasses = new Map<string, string>();
 
@@ -125,6 +125,8 @@ export class CjsComponent<TData = any> {
     public _events(): EventsMap {
         return {} as EventsMap;
     }
+
+    // public _wrapEvents(): 
 
     /** Provides component as an HTML element */
     public visualise(preSetData: Partial<TData> | null = null) {
