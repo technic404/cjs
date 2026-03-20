@@ -1,8 +1,12 @@
+import { CjsGlobalStyleTagId } from "../constants";
+import { _CSSProcessor } from "../processors/css/CSSProcessor";
 import { CjsEvent } from "../types";
+import { _CjsLoggerUtil } from "../utils/protected/_CjsLoggerUtil";
 import { _DOMElementsUtil } from "../utils/protected/_DOMElementsUtil";
 import { _StringHTMLElementsUtil } from "../utils/protected/_StringHTMLElementsUtil";
 import { CjsObjectUtil } from "../utils/public/CjsObjectUtil";
 import { CjsStringUtil } from "../utils/public/CjsStringUtil";
+import { CjsRequest } from "../utils/user-helpers/CjsRequestsUtil";
 import { CjsForm } from "./CjsForm";
 
 type EventsMap = Record<string, (e: object) => any>;
@@ -38,22 +42,33 @@ export class CjsComponent<TData = any> {
      * / 🔴 ------------ PRIVATE SCOPE ------------ 🔴 /
      */
 
+    /** Passes processed component style to global root style */
+    private async injectRootStyle() {
+        if(!this._cssStyle || !this._cssClassName) return;
+
+        const stylePath = this._cssStyle.startsWith("./") ? this._cssStyle.slice(2) : this._cssStyle;
+        const request = await new CjsRequest(stylePath, "get").doRequest();
+
+        if (request.isError()) {
+            _CjsLoggerUtil.error(`Error occurred while importing style (&e${stylePath}&r)`);
+            return;
+        }
+
+        const cssText = request.text();
+        const style = document.head.querySelector<HTMLStyleElement>(`[id="${CjsGlobalStyleTagId}"]`);
+
+        if (!style) return;
+
+        style.innerHTML += _CSSProcessor.processComponentStyle(`.${this._cssClassName}`, cssText);
+    }
+
     /** Provides the HTML string for the component */
     private getHtml() {
         let html = this._template();
 
-        if(!CjsObjectUtil.isEmpty(this._additionalStyle)) {
-            html = _StringHTMLElementsUtil.injectAttribute(
-                html,
-                "style", 
-                Object.entries(this._additionalStyle)
-                    .map(e => `${e[0]}: ${e[1]}`)
-                    .join("; ")
-            );
-        }
-
         if(this._cssStyle) {
-            const className = CjsComponentTakenCssClasses.has(this._cssStyle)
+            const alreadyCreatedCssClass = CjsComponentTakenCssClasses.has(this._cssStyle)
+            const className = alreadyCreatedCssClass
                 ? CjsComponentTakenCssClasses.get(this._cssStyle)!
                 : (() => {
                     let className = null;
@@ -69,11 +84,26 @@ export class CjsComponent<TData = any> {
                     return className;
                 })();
             
+            this._cssClassName = className;
             
             html = _StringHTMLElementsUtil.injectAttribute(
                 html,
                 "class", 
                 className
+            );
+            
+            if(!alreadyCreatedCssClass) {
+                this.injectRootStyle();
+            }
+        }
+
+        if(!CjsObjectUtil.isEmpty(this._additionalStyle)) {
+            html = _StringHTMLElementsUtil.injectAttribute(
+                html,
+                "style", 
+                Object.entries(this._additionalStyle)
+                    .map(e => `${e[0]}: ${e[1]}`)
+                    .join("; ")
             );
         }
 

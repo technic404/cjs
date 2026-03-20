@@ -1,5 +1,6 @@
-import { CJS_ID_LENGTH, CJS_PRETTY_PREFIX_X, CJS_STYLE_KEYFRAMES_PREFIX } from "../../Constants";
-import { getRandomCharacters, getUniqueNumberId } from "../StringUtil";
+import { CjsGlobalStyleKeyframesTagId, CjsGlobalStyleTagId } from "../../constants";
+import { _CjsLoggerUtil } from "../protected/_CjsLoggerUtil";
+import { CjsStringUtil } from "../public/CjsStringUtil";
 
 /**
  * Global animation caches
@@ -66,7 +67,7 @@ export class CjsKeyFrame<T extends CjsStyleProperties = CjsStyleProperties> {
 
     setDuration(duration: number): this {
         if (isNaN(duration)) {
-            console.log(`${CJS_PRETTY_PREFIX_X} Provided argument is not a number`);
+            _CjsLoggerUtil.error("Provided argument is not a number");
             return this;
         }
 
@@ -92,11 +93,11 @@ export class CjsKeyFrame<T extends CjsStyleProperties = CjsStyleProperties> {
         const reversed = options.reversed ?? false;
 
         if (this.entries.length > 100) {
-            console.log(`${CJS_PRETTY_PREFIX_X} CjsKeyFrame cannot have more than 100 entries`);
+            _CjsLoggerUtil.error("CjsKeyFrame cannot have more than 100 entries");
         }
 
         const styleElement = document.head.querySelector<HTMLStyleElement>(
-            `[id="${CJS_STYLE_KEYFRAMES_PREFIX}"]`
+            `[id="${CjsGlobalStyleTagId}"]`
         );
 
         if (!styleElement) {
@@ -120,13 +121,13 @@ export class CjsKeyFrame<T extends CjsStyleProperties = CjsStyleProperties> {
         }).join("\n");
 
         const keyframeBlock = `{\n${cssKeyframes}\n}`;
-        const animationHash = getUniqueNumberId(keyframeBlock);
+        const animationHash = CjsStringUtil.getHash(keyframeBlock);
         const existing = CJS_KEYFRAMES_ANIMATIONS.find(e => e.hash === animationHash);
 
         let animationName: string;
 
         if (!existing) {
-            animationName = `${CJS_STYLE_KEYFRAMES_PREFIX}${getRandomCharacters(CJS_ID_LENGTH)}`;
+            animationName = `${CjsGlobalStyleKeyframesTagId}${CjsStringUtil.getRandom(16)}`;
 
             const css = `@keyframes ${animationName} ${keyframeBlock}`;
 
@@ -160,7 +161,7 @@ export class CjsKeyFrame<T extends CjsStyleProperties = CjsStyleProperties> {
         }
 
         const classBlock = `{ ${classCssParts.join("; ")} }`;
-        const classHash = getUniqueNumberId(`${this.selector}-${classBlock}`);
+        const classHash = CjsStringUtil.getHash(`${this.selector}-${classBlock}`);
         const existingClass = CJS_KEYFRAMES_CLASSES.find(e => e.hash === classHash);
 
         if (existingClass) {

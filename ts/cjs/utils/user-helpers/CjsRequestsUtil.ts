@@ -69,7 +69,7 @@ export class CjsRequest<TResponse = any> {
 
     private onStartCallback: () => void = () => {};
     private onEndCallback: Callback<TResponse> = () => {};
-    private onErrorCallback: Callback<TResponse> = () => {};
+    private onErrorCallback: Callback<object> = () => {};
     private onSuccessCallback: Callback<TResponse> = () => {};
     private onProgressCallback:
         (percentage: number, loaded: number, total: number, e: ProgressEvent) => void
@@ -114,13 +114,10 @@ export class CjsRequest<TResponse = any> {
         return parsed;
     }
 
-    private setCached(data: any, seconds: number): void {
-        const expiryTimestamp = Date.now() + seconds * 1000;
+    private setCached(data: any, seconds: number) {
+        const expiryTimestamp = new Date().getTime() + (1000 * seconds);
 
-        localStorage.setItem(
-            this.getCacheKey(),
-            JSON.stringify({ data, expiryTimestamp })
-        );
+        localStorage.setItem(this.getCacheKey(), JSON.stringify({ data, expiryTimestamp }));
     }
 
     private buildUrl(): string {
@@ -209,7 +206,47 @@ export class CjsRequest<TResponse = any> {
         return this;
     }
 
-    async doRequest(): Promise<CjsRequestResult<TResponse>> {
+    setCacheMinutes(minutes: number): this {
+        this.cacheSeconds = minutes * 60;
+        return this;
+    }
+
+    setCacheHours(hours: number): this {
+        this.cacheSeconds = hours * 60 * 60;
+        return this;
+    }
+
+    setResponseType(responseType: ResponseType) {
+        this.responseType = responseType;
+        return this;
+    }
+
+    onStart(callback: () => any) {
+        this.onStartCallback = callback;
+        return this;
+    }
+
+    onEnd(callback: Callback<TResponse>) {
+        this.onEndCallback = callback;
+        return this;
+    }
+
+    onError(callback: Callback<any>) {
+        this.onErrorCallback = callback;
+        return this;
+    }
+
+    onSuccess(callback: () => any) {
+        this.onStartCallback = callback;
+        return this;
+    }
+
+    onProgress(callback: (precentage: number, loaded: number, total: number, event: ProgressEvent) => void) {
+        this.onProgressCallback = callback;
+        return this;
+    }
+
+    async doRequest(): Promise<CjsRequestResult<TResponse | null>> {
         if (this.cacheSeconds > 0) {
             const cached = this.getCached();
 
@@ -240,9 +277,7 @@ export class CjsRequest<TResponse = any> {
         this.onStartCallback();
 
         const result = await new Promise<CjsRequestResult<TResponse>>((resolve) => {
-
             xhr.onreadystatechange = () => {
-
                 if (xhr.readyState !== 4) return;
 
                 const result = new CjsRequestResult<TResponse>(
@@ -254,7 +289,7 @@ export class CjsRequest<TResponse = any> {
                 this.onEndCallback(result);
 
                 if (result.isError()) {
-                    this.onErrorCallback(result);
+                    this.onErrorCallback(result as CjsRequestResult<object>);
                 } else {
                     this.onSuccessCallback(result);
                 }
@@ -269,10 +304,18 @@ export class CjsRequest<TResponse = any> {
                 resolve(result);
             };
 
+            xhr.upload.onprogress = (e) => {
+                if (e.lengthComputable) {
+                    let percentage = (e.loaded / e.total) * 100;
+
+                    this.onProgressCallback(percentage, e.loaded, e.total, e);
+                }
+            }
+
             xhr.onerror = () => {
-                const result = new CjsRequestResult<TResponse>(0, null as any, true);
+                const result = new CjsRequestResult<object>(0, null as any, true);
                 this.onErrorCallback(result);
-                resolve(result);
+                resolve(null);
             };
 
             this.sendBodyOrFiles(xhr);
@@ -282,11 +325,9 @@ export class CjsRequest<TResponse = any> {
     }
 }
 
-export const CjsRequestsUtil = {
+export const CjsRequests = {
     clearCache(): void {
-
         for (let i = 0; i < localStorage.length; i++) {
-
             const key = localStorage.key(i);
 
             if (key?.startsWith("cjsrequest-")) {

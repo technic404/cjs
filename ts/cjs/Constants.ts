@@ -17,5 +17,7 @@ export const CjsInfoPrefix = _ConsoleColorsUtil.format(`&c&b${_CjsPrefixBaseText
 
 export const CjsComponentReRenderTag = "fx:render";
 export const CjsRootTag = "cjsroot";
+export const CjsGlobalStyleTagId = "cjs-style";
+export const CjsGlobalStyleKeyframesTagId = "cjs-style-keyframes";
 
 export const CjsEventAttributePrefix = "cjsevent-";

@@ -1,4 +1,4 @@
-import { CjsComponent, onClick,  } from "cjs";
+import { CjsComponent, CjsNotification, onClick, onLoad,  } from "cjs";
 
 type Data = {
     text: string;
@@ -11,10 +11,10 @@ export class Button extends CjsComponent<Data> {
 
     _template() {
         const { text } = this.data;
-        const { test } = this.events;
+        const { test, load } = this.events;
 
         return `
-            <button ${onClick(test)}>${text}</button>
+            <button ${onClick(test)} ${onLoad(load)}>${text}</button>
     `;
     }
 
@@ -22,7 +22,11 @@ export class Button extends CjsComponent<Data> {
         const { text } = this.data;
 
         return {
-            test: () => console.log(text)
+            test: () => {
+                CjsNotification.info(text)
+            },
+            load: () => console.log("Button with text loaded", text)
+            
         };
     }
 

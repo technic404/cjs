@@ -1,12 +1,11 @@
-import { CjsMutationEvent } from "./listeners/CjsMutationListener";
-
 export type Constructor<T> = new (...args: any[]) => T;
 
 export type AnyHTMLElement = HTMLElementTagNameMap[keyof HTMLElementTagNameMap];
 
-export type CjsEvent = {
-    event: Event | CjsMutationEvent;
-    source: AnyHTMLElement;
+export type CjsEvent<T extends Event | null = Event | null> = {
+  event: T;
+  source: AnyHTMLElement;
 };
 
-export type CjsEventCallback = (cjsEvent: CjsEvent) => any;
+export type CjsEventCallback = (cjsEvent: CjsEvent<Event>) => any;
+export type CjsNullEventCallback = (cjsEvent: CjsEvent<null>) => any;

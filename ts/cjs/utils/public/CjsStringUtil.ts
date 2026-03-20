@@ -29,5 +29,20 @@ export const CjsStringUtil = {
         }
 
         return result;
+    },
+    /**
+     * Creates a unique numeric ID from a string
+     * (DJB2 hash)
+     */
+    getHash(string: string): number {
+
+        let hash = 5381;
+
+        for (let i = 0; i < string.length; i++) {
+            const char = string.charCodeAt(i);
+            hash = (hash * 33) ^ char;
+        }
+
+        return hash >>> 0; // force positive integer
     }
 };

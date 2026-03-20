@@ -2,12 +2,14 @@
 import { defineConfig } from "vite";
 import cssProcessorPlugin from "./vite-plugins/cssProcessorPlugin";
 import path from "path";
-
-
+import fs from 'fs'
 
 export default defineConfig({
+  server: {
+    middlewareMode: false
+  },
   plugins: [
-    cssProcessorPlugin()
+    
   ],
   resolve: {
     alias: {
@@ -27,5 +29,5 @@ export default defineConfig({
     rollupOptions: {
       external: [],        // specify external deps if needed
     },
-  }
+  },
 });

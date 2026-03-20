@@ -1,6 +1,8 @@
-import { CjsLayout } from "cjs";
-import { CjsRootTag } from "./constants";
+import { CjsGlobalStyleTagId, CjsRootTag } from "./constants";
 import { CjsMutationListener } from "./listeners/CjsMutationListener";
+import { CjsLayout } from "./objects/CjsLayout";
+import { _CjsGlobalStyleUtil } from "./utils/protected/_CjsGlobalStyleUtil";
+import { _DOMElementsUtil } from "./utils/protected/_DOMElementsUtil";
 
 
 export function init(layout: CjsLayout) {
@@ -10,6 +12,8 @@ export function init(layout: CjsLayout) {
         document.body.appendChild(document.createElement(CjsRootTag));
         return init(layout);
     }
+
+    _CjsGlobalStyleUtil.create();
 
     root.innerHTML = "";
 

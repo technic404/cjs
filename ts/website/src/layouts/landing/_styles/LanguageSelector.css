@@ -1,0 +1,71 @@
+.language-selector {
+    position: fixed;
+    --t: 20px;
+    top: var(--t);
+    right: var(--t);
+    border-radius: 12px;
+    border: 2px solid var(--light-400);
+    z-index: 999999;
+    background: var(--light-50);
+}
+
+.language-selector > header {
+    padding: 8px 12px;
+    border-bottom: 2px solid transparent;
+    transition: border-bottom 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.language-selector.extended > header {
+    border-bottom: 2px solid var(--light-400);
+}
+
+.language-selector > footer > button,
+.language-selector > header > button {
+    cursor: pointer;
+    background: var(--light-50);
+    width: 100%;
+    font-size: 16px;
+}
+
+.language-selector > header > img {
+    height: 16px;
+    transition: transform 0.3s;
+}
+
+.language-selector.extended > header > img {
+    transform: rotate(180deg);
+}
+
+.language-selector > footer {
+    padding: 5px;
+    display: none;
+}
+
+.language-selector.extended > footer {
+    max-height: 200px;
+}
+
+.language-selector > footer {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 0;
+    transition: max-height 0.3s;
+}
+
+.language-selector > footer > button {
+    transition: background-color .3s;
+    padding: 8px 12px;
+}
+
+.language-selector > footer > button:hover {
+    background: var(--light-200);
+}
+
+.language-selector > footer > button:last-of-type {
+    border-bottom-right-radius: 11px;
+    border-bottom-left-radius: 11px;
+}

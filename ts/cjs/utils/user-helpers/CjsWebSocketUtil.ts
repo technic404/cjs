@@ -1,4 +1,4 @@
-import { getRandomCharacters } from "../StringUtil";
+import { CjsStringUtil } from "../public/CjsStringUtil";
 
 type CaptureCallback = (event: MessageEvent) => void;
 
@@ -72,7 +72,7 @@ export class CjsWebSocket {
      * @returns capture id
      */
     createCapture(callback: CaptureCallback): string {
-        const id = getRandomCharacters(16);
+        const id = CjsStringUtil.getRandom(16);
 
         this.captures.set(id, callback);
 

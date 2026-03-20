@@ -1,4 +1,4 @@
-import { CJS_PRETTY_PREFIX_X } from "../../Constants";
+import { _CjsLoggerUtil } from "../protected/_CjsLoggerUtil";
 
 /**
  * Array.map but returns string (useful for templates)
@@ -8,10 +8,7 @@ export function strmap<T>(
     callback: (element: T, index: number) => string
 ): string {
     if (!Array.isArray(array)) {
-        console.log(
-            `${CJS_PRETTY_PREFIX_X}The provided argument in strmap is not an array`,
-            array
-        );
+        _CjsLoggerUtil.error("The provided argument in strmap is not an array", array);
         return "";
     }
 

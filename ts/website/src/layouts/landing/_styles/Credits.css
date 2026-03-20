@@ -1,0 +1,18 @@
+.credits {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    position: fixed;
+    top: 20px;
+    right: 140px;
+    z-index: 9999;
+    padding: 0 10px;
+    border: 2px solid var(--light-400);
+    --r: 9px;
+    border-radius: 12px;
+    background: var(--light-100);
+}
+
+.credits > img {
+    height: 20px;
+}

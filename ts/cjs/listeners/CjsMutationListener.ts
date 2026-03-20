@@ -1,21 +1,33 @@
 import { CjsEventAttributePrefix } from "../constants";
 import { CjsEventsManager } from "../events/CjsEventsManager";
-import { AnyHTMLElement } from "../types";
+import { AnyHTMLElement, CjsEvent } from "../types";
 import { _DOMElementsUtil } from "../utils/protected/_DOMElementsUtil";
-
-export class CjsMutationEvent {
-    public target: HTMLElement;
-
-    constructor(target: HTMLElement) {
-        this.target = target;
-    }
-}
 
 export const CjsMutationListener = new class CjsMutationListener {
     #observer: MutationObserver;
 
     constructor() {
         this.#observer = new MutationObserver(this.callback);
+    }
+
+    #processCallback(eventId: string, element: Element) {
+        if(!CjsEventsManager.hasCallback(eventId)) return;
+
+        const eventCallback = CjsEventsManager.getCallback(eventId)!;
+        const targetElement = eventCallback.applyToWindow ? window : element;
+
+        targetElement.addEventListener(
+            eventCallback.eventName, 
+            (event) => eventCallback.callback({ event, source: element as AnyHTMLElement })
+        )
+    }
+
+    #processOnAddElementCallback(eventId: string, element: Element) {
+        if(!CjsEventsManager.hasOnAddElementCallback(eventId)) return;
+
+        const eventCallback = CjsEventsManager.getOnAddElementCallback(eventId)!;
+
+        eventCallback.callback({ event: null, source: element as AnyHTMLElement });
     }
 
     public processForms(): void {
@@ -39,21 +51,13 @@ export const CjsMutationListener = new class CjsMutationListener {
             for(const element of elements) {
                 element.removeAttribute(attribute);
 
-                if(!CjsEventsManager.hasCallback(eventId)) continue;
-
-                const eventCallback = CjsEventsManager.getCallback(eventId)!;
-                const targetElement = eventCallback.applyToWindow ? window : element;
-
-                targetElement.addEventListener(
-                    eventCallback.eventName, 
-                    (event) => eventCallback.callback({ event, source: element as AnyHTMLElement })
-                )
-
+                this.#processCallback(eventId, element);
+                this.#processOnAddElementCallback(eventId, element);
             }
         }
     }
 
-    public callback(mutationsList: MutationRecord[]) {
+    callback = (mutationsList: MutationRecord[]) => {
         this.processForms();
 
         const childListMutations = mutationsList.filter(m => m.type === "childList");
