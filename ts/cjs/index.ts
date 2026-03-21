@@ -60,3 +60,6 @@ export { CjsWindow } from "./utils/user-helpers/CjsWindowUtil";
 
 // --- /initializer ---
 export { init } from "./initializer";
+
+// --- /types
+export type { CjsEventsMap } from "./types";

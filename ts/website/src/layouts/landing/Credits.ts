@@ -1,4 +1,4 @@
-import { CjsComponent, png } from "cjs";
+import { CjsComponent, CjsEventsMap, png } from "cjs";
 import {Logo} from "../../components/Logo.mjs";
 
 type Data = {
@@ -24,7 +24,7 @@ export class Credits extends CjsComponent<Data> {
     }
 
     _events() {
-        return {};
+        return {} satisfies CjsEventsMap;
     }
 
     /** Settings */

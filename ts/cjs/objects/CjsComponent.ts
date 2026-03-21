@@ -1,6 +1,7 @@
 import { CjsGlobalStyleTagId } from "../constants";
+import { onLoad } from "../events/custom/LoadEvent";
 import { _CSSProcessor } from "../processors/css/CSSProcessor";
-import { CjsEvent } from "../types";
+import { CjsEvent, CjsEventsMap } from "../types";
 import { _CjsLoggerUtil } from "../utils/protected/_CjsLoggerUtil";
 import { _DOMElementsUtil } from "../utils/protected/_DOMElementsUtil";
 import { _StringHTMLElementsUtil } from "../utils/protected/_StringHTMLElementsUtil";
@@ -9,12 +10,12 @@ import { CjsStringUtil } from "../utils/public/CjsStringUtil";
 import { CjsRequest } from "../utils/user-helpers/CjsRequestsUtil";
 import { CjsForm } from "./CjsForm";
 
-type EventsMap = Record<string, (e: CjsEvent<Event | null>) => any>;
+
 
 const CjsComponentTakenCssClasses = new Map<string, string>();
 
 export class CjsComponent<TData = any> {
-    public __events: EventsMap = {};
+    public __events: CjsEventsMap = {};
 
     private fillHeightData?: { offset: number; maxHeight?: number };
 
@@ -24,6 +25,8 @@ export class CjsComponent<TData = any> {
 
     public _defaultData: Partial<TData> = {} as Partial<TData>;
     public _preSetData: Partial<TData> = {};
+
+    public element: HTMLElement | null = null;
 
     /**
      * / ⚪ ------------ CONSTRUCTOR SCOPE ------------ ⚪ /
@@ -66,6 +69,8 @@ export class CjsComponent<TData = any> {
     private getHtml() {
         let html = this._template();
 
+        const onLoadCallbacks: ((cjsEvent: CjsEvent<null>) => any)[] = [];
+
         if(this._cssStyle) {
             const alreadyCreatedCssClass = CjsComponentTakenCssClasses.has(this._cssStyle)
             const className = alreadyCreatedCssClass
@@ -107,6 +112,29 @@ export class CjsComponent<TData = any> {
             );
         }
 
+        if(this.fillHeightData !== undefined) {
+            const { maxHeight, offset } = this.fillHeightData;
+            const resize = (cjsEvent: CjsEvent<null>) => {
+                const { source } = cjsEvent;
+
+                source.style.height = `${
+                    maxHeight !== undefined && window.innerHeight > maxHeight 
+                    ? maxHeight 
+                    : window.innerHeight + offset
+                }px`
+            };
+
+            onLoadCallbacks.push((cjsEvent) => {
+                window.addEventListener('resize', _ => resize(cjsEvent));
+            });
+        }
+
+        _StringHTMLElementsUtil.injectAttribute(html, onLoad((cjsEvent) => {
+            onLoadCallbacks.forEach(onLoadCallback => onLoadCallback(cjsEvent));
+
+            this.element = cjsEvent.source;
+        }), "");
+
         return html;
     }
 
@@ -122,17 +150,28 @@ export class CjsComponent<TData = any> {
     }
 
     /** Function that provides actions for the component */
-    public _events(): EventsMap {
-        return {} as EventsMap;
+    public _events(): CjsEventsMap {
+        return {} as CjsEventsMap;
     }
 
-    // public _wrapEvents(): 
+    /** Functions that creates an type for component events */
+    public _wrapEvents(CjsEventsMap: CjsEventsMap): CjsEventsMap {
+        return CjsEventsMap;
+    }
 
     /** Provides component as an HTML element */
     public visualise(preSetData: Partial<TData> | null = null) {
         if(preSetData) this._preSetData = CjsObjectUtil.copy(preSetData);
         
         return _DOMElementsUtil.HTMLToElement(this.getHtml());
+    }
+
+    /** Provides auto fill height of the component to the actual screen height (with optional offsets) */
+    public fillHeight(offset: number = 0, maxHeight: number | undefined = undefined) {
+        this.fillHeightData = {
+            offset,
+            maxHeight
+        };
     }
     
     /**
@@ -202,6 +241,15 @@ export class CjsComponent<TData = any> {
         data: Partial<T extends CjsComponent<infer D> ? D : never> = {}
     ) {
         return new this(data);
+    }
+
+    /** Provides auto fill height of the component to the actual screen height (with optional offsets) */
+    static fillHeight<T extends CjsComponent<any>>(
+        this: new () => T,
+        offset: number = 0, 
+        maxHeight: number | undefined = undefined
+    ) {
+        return new this().fillHeight(offset, maxHeight);
     }
 
     /** Sets additional style for the component */

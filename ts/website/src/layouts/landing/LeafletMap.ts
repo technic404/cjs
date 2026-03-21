@@ -1,5 +1,7 @@
-import { CjsComponent } from "cjs";
+import { CjsComponent, onLoad, png } from "cjs";
 import {Results} from "./Results.js";
+import { ThemeUtil } from "../utils/ThemeUtil";
+import { App } from "src/requests/App.js";
 
 type Data = {
 
@@ -10,11 +12,7 @@ export class LeafletMap extends CjsComponent<Data> {
 
     _template() {
         const {  } = this.data;
-        const { } = this.events;
-
-        const load = createHandle(async e => {
-            
-        });
+        const { load } = this.events;
 
         return `
             <div class="leaflet-map" ${onLoad(load)} id="map"></div>
@@ -22,8 +20,8 @@ export class LeafletMap extends CjsComponent<Data> {
     }
 
     _events() {
-        return {
-            load: (e: CjsEvent) => {
+        return this._wrapEvents({
+            load: (e) => {
                 e.source.style.height = `${window.innerHeight}px`;
                 const map = L
                     .map('map', { attributionControl: false, zoomControl: false })
@@ -63,7 +61,9 @@ export class LeafletMap extends CjsComponent<Data> {
                 const loadFromCenter = async () => {
                     const { lat, lng } = map.getCenter();
 
-                    const sites = await App.archeologicalSites.getAll();
+                    const sites = await App.archaeologicalSites.getAll();
+
+                    if(!sites) return;
 
                     for(const site of sites) {
                         const customIcon = L.icon({
@@ -82,12 +82,11 @@ export class LeafletMap extends CjsComponent<Data> {
                         });
                     }
                 }
-
                 // map.on('moveend', loadFromCenter);
 
                 loadFromCenter();
             } 
-        }
+        });
     }
 
     /** Settings */

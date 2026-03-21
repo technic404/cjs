@@ -1,4 +1,4 @@
-import { CjsEvent, CjsEventCallback, CjsNullEventCallback } from "../types";
+import { CjsEventCallback, CjsNullEventCallback } from "../types";
 import { CjsEventAttributePrefix } from "../constants";
 import { CjsStringUtil } from "../utils/public/CjsStringUtil";
 

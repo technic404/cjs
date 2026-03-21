@@ -7,6 +7,7 @@ type CjsEvent<T extends Event | null = Event | null> = {
 };
 type CjsEventCallback = (cjsEvent: CjsEvent<Event>) => any;
 type CjsNullEventCallback = (cjsEvent: CjsEvent<null>) => any;
+type CjsEventsMap = Record<string, (cjsEvent: CjsEvent<Event | null>) => any>;
 
 /**
  * Executes when clicked ESC (Escape) keyboard key
@@ -84,15 +85,15 @@ declare class CjsForm {
     serialize(options?: CjsFormSerializeOptions): Record<string | number, any>;
 }
 
-type EventsMap = Record<string, (e: CjsEvent<Event | null>) => any>;
 declare class CjsComponent<TData = any> {
-    __events: EventsMap;
+    __events: CjsEventsMap;
     private fillHeightData?;
     _cssStyle: string | null;
     _cssClassName: string | null;
     _additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>;
     _defaultData: Partial<TData>;
     _preSetData: Partial<TData>;
+    element: HTMLElement | null;
     /**
      * / ⚪ ------------ CONSTRUCTOR SCOPE ------------ ⚪ /
      */
@@ -112,9 +113,13 @@ declare class CjsComponent<TData = any> {
     /** Function that provides template for base html structure */
     _template(): string;
     /** Function that provides actions for the component */
-    _events(): EventsMap;
+    _events(): CjsEventsMap;
+    /** Functions that creates an type for component events */
+    _wrapEvents(CjsEventsMap: CjsEventsMap): CjsEventsMap;
     /** Provides component as an HTML element */
     visualise(preSetData?: Partial<TData> | null): HTMLElement;
+    /** Provides auto fill height of the component to the actual screen height (with optional offsets) */
+    fillHeight(offset?: number, maxHeight?: number | undefined): void;
     /**
      *
      * / 🔵 ------------ GETTERS SCOPE ------------ 🔵 /
@@ -137,6 +142,8 @@ declare class CjsComponent<TData = any> {
     static visualise<T extends CjsComponent<any>>(this: new (preSetData: Partial<T extends CjsComponent<infer D> ? D : never>) => T, data?: Partial<T extends CjsComponent<infer D> ? D : never>): HTMLElement;
     /** Sets the data for the component */
     static withData<T extends CjsComponent<any>>(this: new (preSetData: Partial<T extends CjsComponent<infer D> ? D : never>) => T, data?: Partial<T extends CjsComponent<infer D> ? D : never>): T;
+    /** Provides auto fill height of the component to the actual screen height (with optional offsets) */
+    static fillHeight<T extends CjsComponent<any>>(this: new () => T, offset?: number, maxHeight?: number | undefined): void;
     /** Sets additional style for the component */
     static withStyle<T extends CjsComponent<any>>(this: new (preSetData: any, additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>) => T, style: Partial<Record<keyof CSSStyleDeclaration, string>>): T;
 }
@@ -538,5 +545,6 @@ declare const CjsWindow: {
 declare function init(layout: CjsLayout): void;
 
 export { CjsAnimation, CjsComponent, CjsDownload, CjsGlobals, CjsKeyFrame, CjsLayout, CjsMobile, CjsNotification, CjsObjectUtil, CjsPluginManager, CjsRequest, CjsRequests, CjsSearch, CjsStringUtil, CjsTimings, CjsValidator, CjsWebSocket, CjsWindow, asset, createHandle, gif, init, jpg, onChange, onClick, onDoubleClick, onEscape, onFocus, onFocusOut, onHoldDown, onInput, onLoad, onMouseEnter, onMouseLeave, onMouseMove, onOuterclick, onResize, onScroll, onScrollBottom, onSlideDown, onSlideLeft, onSlideRight, onSlideUp, onTouchMove, png, strif, strmap, strmax, stror, svg };
+export type { CjsEventsMap };
 
 }
