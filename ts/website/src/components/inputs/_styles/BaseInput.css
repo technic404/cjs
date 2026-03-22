@@ -1,0 +1,36 @@
+.text-input {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 2px solid var(--light-400);
+    transition: border-color 0.3s;
+    cursor: text;
+    width: 160px;
+    background: var(--light);
+}
+
+.text-input.focused,
+.text-input:hover {
+    border-color: var(--dark-100);
+}
+
+.text-input > p {
+    font-size: 14px;
+    color: var(--dark-200);
+}
+
+.text-input > textarea,
+.text-input > input {
+    border: none;
+    background: transparent;
+    padding: 3px;
+    font-size: 18px;
+    outline: 0;
+}
+
+
+.text-input > input::placeholder {
+    font-size: 17px;
+}

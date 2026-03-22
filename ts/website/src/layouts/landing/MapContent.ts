@@ -6,18 +6,10 @@ type Data = {
 }
 
 export class MapContent extends CjsComponent<Data> {
-    _defaultData = {};
-
    _template() {
-       const {  } = this.data;
-
        return `
           <section class="map-content"></section>
        `;
-   }
-
-   _events() {
-        return {};
    }
 
     /** Settings */

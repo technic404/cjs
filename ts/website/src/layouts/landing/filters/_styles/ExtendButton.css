@@ -1,0 +1,30 @@
+.extend-button {
+    display: grid;
+    place-items: center;
+    z-index: 999;
+    background: var(--light-50);
+    padding: 10px;
+    width: 80px;
+    filter: drop-shadow(2px 4px 6px var(--light-300));
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.extend-button:hover {
+    background: var(--light-200);
+}
+
+.extend-button > img {
+    height: 18px;
+    transform: rotate(180deg);
+    transition: transform 0.3s;
+}
+
+.extend-button.extend {
+
+}
+
+.extend-button.extend > img {
+    transform: rotate(0);
+}

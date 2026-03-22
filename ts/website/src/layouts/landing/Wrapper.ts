@@ -5,12 +5,7 @@ type Data = {
 }
 
 export class Wrapper extends CjsComponent<Data> {
-    _defaultData = {};
-
-   _() {
-       const {  } = this.data;
-       const {  } = this.events;
-
+   _template() {
        return `
           <div class="wrapper"></div>
        `;
@@ -20,4 +15,4 @@ export class Wrapper extends CjsComponent<Data> {
     _cssStyle = './src/layouts/landing/_styles/Wrapper.css';
 };
 
-// Wrapper.fillHeight();
+Wrapper.fillHeight();

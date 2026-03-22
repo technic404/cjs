@@ -2,9 +2,10 @@ import { Credits } from "./Credits";
 import { LanguageSelector } from "./LanguageSelector";
 import { LeafletMap } from "./LeafletMap";
 import { MapContent } from "./MapContent";
-import { Results } from "./Results";
 import { Wrapper } from "./Wrapper";
 import { CjsLayout } from "cjs";
+import {ResultsLayout} from "./results/_ResultsLayout";
+import {LandingFiltersLayout} from "./filters/_LandingFiltersLayout";
 
 export const LandingLayout = new CjsLayout(() =>
     [
@@ -14,7 +15,7 @@ export const LandingLayout = new CjsLayout(() =>
             [LandingFiltersLayout],
             [MapContent, [
                 [LeafletMap],
-                [Results]
+                [ResultsLayout]
             ]]
         ]]
     ]

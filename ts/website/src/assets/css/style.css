@@ -1,0 +1,125 @@
+:root {
+    --filters-width: 404px;
+}
+
+body {
+    margin: 0;
+    background: var(--light-100);
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: DMSans-SemiBold;
+    color: var(--dark-100);
+}
+
+p {
+    line-height: 1.4;
+}
+
+button {
+    border: none;
+}
+
+ul {
+    list-style: none;
+}
+
+/*h1, h2, h3, h4, h5, h6 { font-family: Bold; }*/
+
+img,
+button,
+input {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline: none !important; /* Might be in focus, but if button has no custom outline, can be here */
+}
+
+button[scale] {
+    transition: transform 0.3s;
+}
+
+button[scale]:hover {
+    transform: scale(0.94);
+}
+
+.skeleton-text:empty {
+    display: inline-block;
+    width: 120px;          /* Adjust width as needed */
+    height: 1em;           /* Matches text height */
+    border-radius: 4px;
+    --skeleton-base: color-mix(in srgb, var(--light-300) 40%, transparent);
+    background-color: inherit;
+    background-image: linear-gradient(
+            90deg,
+            /*rgba(255,255,255,10.0) 25%,*/
+            var(--skeleton-base) 25%,
+            color-mix(in srgb, var(--dark-400) 40%, transparent) 37%,
+            var(--skeleton-base) 63%
+    );
+    background-size: 400% 100%;
+    animation: skeleton-loading 1.4s ease infinite;
+    vertical-align: middle;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: 0 0;
+    }
+    /*100% {*/
+    /*    background-position: 100% 0;*/
+    /*}*/
+}
+
+.noselect {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline: none !important;
+}
+
+.oneliner {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+a {
+    color: var(--base-100-dark-20);
+    transition: color .3s;
+}
+
+a:hover {
+    color: var(--base-100-dark-100);
+}
+
+@font-face { font-family: DMSans-Bold; src: url("../fonts/DMSans-Bold.ttf"); }
+@font-face { font-family: DMSans-Medium; src: url("../fonts/DMSans-Medium.ttf"); }
+@font-face { font-family: DMSans-Regular; src: url("../fonts/DMSans-Regular.ttf"); }
+@font-face { font-family: DMSans-SemiBold; src: url("../fonts/DMSans-SemiBold.ttf"); }
+
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: var(--light-300); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--light-500); }
+
+/*::-webkit-scrollbar { width: 0; height: 0; }*/
+/*::-webkit-scrollbar-track { background: transparent; }*/
+/*::-webkit-scrollbar-thumb { background: transparent; }*/
+/*::-webkit-scrollbar-thumb:hover { background: transparent; }*/

@@ -1,0 +1,42 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+
+    display: block;
+    overflow: auto;
+    padding-bottom: 6px;
+}
+
+table tbody {
+    --b: 1px solid var(--light-300);
+    border-top: var(--b);
+    border-bottom: var(--b);
+}
+
+table tr {
+
+}
+
+table tr:not(:first-child):nth-child(even) {
+    background: var(--light-200);
+}
+
+table td {
+    padding: 10px;
+    text-align: end;
+}
+
+table td:first-child {
+    text-align: start;
+}
+
+table th {
+    padding: 10px;
+    color: var(--dark-300);
+    text-align: end;
+    text-wrap: nowrap;
+}
+
+table th:first-child {
+    text-align: start;
+}

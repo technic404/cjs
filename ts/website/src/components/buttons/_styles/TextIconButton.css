@@ -1,0 +1,30 @@
+.text-icon-button {
+    border: 2px solid var(--light-400);
+    border-radius: 12px;
+    background: var(--light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    width: fit-content;
+}
+
+.text-icon-button.fill {
+    border: none;
+    background: var(--base-100-dark-10);
+    color: white;
+}
+
+.text-icon-button > img {
+    height: 16px;
+}
+
+.text-icon-button.fill > img {
+    filter: var(--const-filter-white);
+}
+
+.text-icon-button > p {
+    color: inherit;
+    font-size: 15px;
+}

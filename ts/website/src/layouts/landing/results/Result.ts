@@ -3,6 +3,7 @@ import { Publication } from "../../../types";
 import { App } from "../../../requests/App";
 import { T } from "../../utils/TranslationsUtil";
 import { CulturalGroups } from "../../../constants";
+import {ArchaeologicalDataTable} from "../../../components/common/ArchaeologicalDataTable";
 
 export class Result extends CjsComponent<Publication> {
     _template() {
@@ -77,5 +78,5 @@ export class Result extends CjsComponent<Publication> {
     }
 
     /** Settings */
-    _cssStyle = './src/layouts/landing/_styles/Results.css';
+    _cssStyle = './src/layouts/landing/results/_styles/Results.css';
 };

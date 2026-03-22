@@ -25,5 +25,5 @@ export class ArcheologicalSiteElement extends CjsComponent<Data> {
     }
 
     /** Settings */
-    _cssStyle = './src/layouts/landing/_styles/Results.css';
+    _cssStyle = './src/layouts/landing/results/_styles/Results.css';
 };

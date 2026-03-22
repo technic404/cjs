@@ -11,11 +11,11 @@ export default defineConfig({
           if (req.url?.endsWith('.css')) {
             const cleanUrl = req.url.split('?')[0];
             const relativePath = cleanUrl.replace(/^\/+/, ''); // remove leading /
-            const filePath = path.join(__dirname, "src", relativePath);
+            const filePath = path.join(__dirname, relativePath);
 
             if (fs.existsSync(filePath)) {
-              res.setHeader('Content-Type', 'text/css')
-              res.end(fs.readFileSync(filePath))
+              res.setHeader('Content-Type', 'text/css');
+              res.end(fs.readFileSync(filePath, { encoding: "utf-8" }))
               return;
             }
           }

@@ -1,0 +1,11 @@
+.filters {
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: auto;
+    max-height: 50vh;
+    padding-right: 8px;
+    overflow-x: hidden;
+    transition: max-height 0.3s;
+}

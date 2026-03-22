@@ -1,7 +1,7 @@
 import { CjsComponent, onLoad, png } from "cjs";
-import {Results} from "./Results.js";
 import { ThemeUtil } from "../utils/ThemeUtil";
-import { App } from "src/requests/App.js";
+import {App} from "../../requests/App";
+import {T} from "../utils/TranslationsUtil";
 
 type Data = {
 
@@ -43,7 +43,7 @@ export class LeafletMap extends CjsComponent<Data> {
                         { archaeologicalSiteIds: selectedSites.map(s => s.id) }
                     );
 
-                    Results.loadPublications(publications);
+                    // Results.loadPublications(publications);
                 });
 
                 const button = L.control({ position: 'topright' });

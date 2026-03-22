@@ -1,0 +1,24 @@
+.icon-button {
+    border: 2px solid var(--light-400);
+    --s: 30px;
+    width: var(--s);
+    height: var(--s);
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    background: var(--light);
+    cursor: pointer;
+}
+
+.icon-button > img {
+    height: 18px;
+}
+
+.icon-button.danger {
+    border-color: #e83c3c;
+    background: rgba(255, 0, 0, 0.06);
+}
+
+.icon-button.danger > img {
+    filter: var(--const-filter-red);
+}

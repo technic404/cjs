@@ -1,0 +1,10 @@
+nav {
+    background: var(--light-50);
+    padding: 10px;
+    width: var(--filters-width);
+    filter: drop-shadow(2px 4px 6px var(--light-300));
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

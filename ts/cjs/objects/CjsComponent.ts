@@ -1,4 +1,4 @@
-import { CjsGlobalStyleTagId } from "../constants";
+import { CjsObjectAttributePrefix, CjsGlobalStyleTagId } from "../constants";
 import { onLoad } from "../events/custom/LoadEvent";
 import { _CSSProcessor } from "../processors/css/CSSProcessor";
 import { CjsEvent, CjsEventsMap } from "../types";
@@ -10,9 +10,10 @@ import { CjsStringUtil } from "../utils/public/CjsStringUtil";
 import { CjsRequest } from "../utils/user-helpers/CjsRequestsUtil";
 import { CjsForm } from "./CjsForm";
 
+type Constructor<T> = new (...args: any[]) => T;
+type StaticCast<T> = (Constructor<T> & typeof CjsComponent);
 
-
-const CjsComponentTakenCssClasses = new Map<string, string>();
+const CjsComponentInjectedStylePaths: string[] = [];
 
 export class CjsComponent<TData = any> {
     public __events: CjsEventsMap = {};
@@ -20,13 +21,16 @@ export class CjsComponent<TData = any> {
     private fillHeightData?: { offset: number; maxHeight?: number };
 
     public _cssStyle: string | null = null;
-    public _cssClassName: string | null = null;
     public _additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>> = {};
 
     public _defaultData: Partial<TData> = {} as Partial<TData>;
     public _preSetData: Partial<TData> = {};
 
+    public _id: string | null = null;
+
     public element: HTMLElement | null = null;
+
+    static _ids = new Map<Function, string>();
 
     /**
      * / ⚪ ------------ CONSTRUCTOR SCOPE ------------ ⚪ /
@@ -39,15 +43,36 @@ export class CjsComponent<TData = any> {
         if(preSetData) this._preSetData = CjsObjectUtil.copy(preSetData);
 
         if(additionalStyle) this._additionalStyle = CjsObjectUtil.copy(additionalStyle);
+
+        this.createId();
     }
+
 
     /**
      * / 🔴 ------------ PRIVATE SCOPE ------------ 🔴 /
      */
 
+    /** Creates id or pulls it from the map */
+    private createId() {
+        const idsMap = (this.constructor as typeof CjsComponent)._ids;
+        const values = Array.from(idsMap.values());
+
+        if(idsMap.has(this.constructor)) {
+            this._id = idsMap.get(this.constructor)!;
+        } else {
+            this._id = null;
+
+            while(this._id === null || values.includes(this._id)) {
+                this._id = `c${CjsStringUtil.getRandom(6)}`;
+            }
+
+            idsMap.set(this.constructor, this._id!);
+        }
+    }
+
     /** Passes processed component style to global root style */
     private async injectRootStyle() {
-        if(!this._cssStyle || !this._cssClassName) return;
+        if(!this._cssStyle) return;
 
         const stylePath = this._cssStyle.startsWith("./") ? this._cssStyle.slice(2) : this._cssStyle;
         const request = await new CjsRequest(stylePath, "get").doRequest();
@@ -62,7 +87,7 @@ export class CjsComponent<TData = any> {
 
         if (!style) return;
 
-        style.innerHTML += _CSSProcessor.processComponentStyle(`.${this._cssClassName}`, cssText);
+        style.innerHTML += _CSSProcessor.processComponentStyle(`[${CjsObjectAttributePrefix}="${this._id}"]`, cssText);
     }
 
     /** Provides the HTML string for the component */
@@ -72,33 +97,12 @@ export class CjsComponent<TData = any> {
         const onLoadCallbacks: ((cjsEvent: CjsEvent<null>) => any)[] = [];
 
         if(this._cssStyle) {
-            const alreadyCreatedCssClass = CjsComponentTakenCssClasses.has(this._cssStyle)
-            const className = alreadyCreatedCssClass
-                ? CjsComponentTakenCssClasses.get(this._cssStyle)!
-                : (() => {
-                    let className = null;
-
-                    const takenClassNames = Array.from(CjsComponentTakenCssClasses.values());
-
-                    while(className == null || takenClassNames.includes(className)) {
-                        className = CjsStringUtil.getRandom(6);
-                    }
-
-                    CjsComponentTakenCssClasses.set(this._cssStyle!, className);
-
-                    return className;
-                })();
-            
-            this._cssClassName = className;
-            
-            html = _StringHTMLElementsUtil.injectAttribute(
-                html,
-                "class", 
-                className
-            );
+            const alreadyCreatedCssClass = CjsComponentInjectedStylePaths.includes(this._cssStyle);
             
             if(!alreadyCreatedCssClass) {
                 this.injectRootStyle();
+
+                CjsComponentInjectedStylePaths.push(this._cssStyle);
             }
         }
 
@@ -110,6 +114,7 @@ export class CjsComponent<TData = any> {
                     .map(e => `${e[0]}: ${e[1]}`)
                     .join("; ")
             );
+            
         }
 
         if(this.fillHeightData !== undefined) {
@@ -129,11 +134,13 @@ export class CjsComponent<TData = any> {
             });
         }
 
-        _StringHTMLElementsUtil.injectAttribute(html, onLoad((cjsEvent) => {
+        html = _StringHTMLElementsUtil.injectAttribute(html, onLoad((cjsEvent) => {
             onLoadCallbacks.forEach(onLoadCallback => onLoadCallback(cjsEvent));
 
             this.element = cjsEvent.source;
         }), "");
+
+        html = _StringHTMLElementsUtil.injectAttribute(html, CjsObjectAttributePrefix, this._id!);
 
         return html;
     }
@@ -172,6 +179,27 @@ export class CjsComponent<TData = any> {
             offset,
             maxHeight
         };
+    }
+
+    public getForms(): CjsForm[] | null {
+        const element = this.element;
+
+        if(!element) return null;
+
+        return Array.from(
+            element.querySelectorAll("form"), 
+            (el) => new CjsForm(el)
+        );
+    }
+
+    /** Get first occurrence of the CjsComponent as HTMLElement */
+    public getFirst() {
+        return document.body.querySelector<HTMLElement>(`[${CjsObjectAttributePrefix}="${this._id}"]`);
+    }
+
+    /** Get all occurrences of the CjsComponent as HTMLElement */
+    public getAll() {
+        return document.body.querySelectorAll<HTMLElement>(`[${CjsObjectAttributePrefix}="${this._id}"]`);
     }
     
     /**
@@ -219,44 +247,89 @@ export class CjsComponent<TData = any> {
      * 
      */
 
-    /** Provides a rendered HTML string for the component */
-    static render<T extends CjsComponent<any>>(
-        this: new (preSetData: Partial<T extends CjsComponent<infer D> ? D : never>) => T,
-        data: Partial<T extends CjsComponent<infer D> ? D : never> = {}
-    ) {
-        return new this(data).getHtml();
+    
+
+    /** Central helper to get or create _id for a class */
+    static getClassId<T extends CjsComponent<any>>(this: Constructor<T> & typeof CjsComponent) {
+        let id = this._ids.get(this);
+
+        if (!id) {
+            id = new this()._id!;
+            this._ids.set(this, id);
+        }
+        
+        return id;
     }
 
-    /** Provides a visualised HTML element for the component */
-    static visualise<T extends CjsComponent<any>>(
-        this: new (preSetData: Partial<T extends CjsComponent<infer D> ? D : never>) => T,
-        data: Partial<T extends CjsComponent<infer D> ? D : never> = {}
+    static getInstance<T extends CjsComponent<any>>(
+        this: new (...args: any[]) => CjsComponent<any>,
+        ...args: any[]
     ) {
-        return _DOMElementsUtil.HTMLToElement(new this(data).getHtml());
+        const cls = this as unknown as (Constructor<T> & typeof CjsComponent);
+        const instance = new cls(...args);
+        instance._id = cls.getClassId();
+        return instance;
     }
 
-    /** Sets the data for the component */
-    static withData<T extends CjsComponent<any>>(
-        this: new (preSetData: Partial<T extends CjsComponent<infer D> ? D : never>) => T, 
-        data: Partial<T extends CjsComponent<infer D> ? D : never> = {}
-    ) {
-        return new this(data);
+    static getForms<T extends CjsComponent<any>>(
+        this: Constructor<T>
+    ): CjsForm[] | null {
+        const element = (this as StaticCast<T>).getInstance().getFirst();
+
+        if(!element) return null;
+
+        return Array.from(
+            element.querySelectorAll("form"), 
+            (el) => new CjsForm(el)
+        );
     }
 
-    /** Provides auto fill height of the component to the actual screen height (with optional offsets) */
-    static fillHeight<T extends CjsComponent<any>>(
-        this: new () => T,
-        offset: number = 0, 
-        maxHeight: number | undefined = undefined
+    /** Sets the data for the component */ 
+    static withData<T extends CjsComponent<any>>( 
+        this: (new (preSetData: Partial<T extends CjsComponent<infer D> ? D : never>) => T), 
+        data: Partial<T extends CjsComponent<infer D> ? D : never> = {} 
     ) {
-        return new this().fillHeight(offset, maxHeight);
-    }
-
-    /** Sets additional style for the component */
+        return (this as StaticCast<T>).getInstance(data); 
+    } 
+    
+    /** Sets additional style for the component */ 
     static withStyle<T extends CjsComponent<any>>(
-        this: new (preSetData: any, additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>) => T,
-        style: Partial<Record<keyof CSSStyleDeclaration, string>>
+         this: (new (preSetData: any, additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>) => T), 
+         style: Partial<Record<keyof CSSStyleDeclaration, string>> 
+    ) { 
+        return (this as StaticCast<T>).getInstance(null, style);
+    }
+
+    /** Example: render HTML string */
+    static render<T extends CjsComponent<any>>(
+        this: Constructor<T>,
+        data: Partial<T extends CjsComponent<infer D> ? D : never> = {}
     ) {
-        return new this(null, style);
+        return (this as StaticCast<T>).getInstance(data).getHtml();
+    }
+
+    /** Example: visualise component as element */
+    static visualise<T extends CjsComponent<any>>(
+        this: Constructor<T>,
+        data: Partial<T extends CjsComponent<infer D> ? D : never> = {}
+    ) {
+        return _DOMElementsUtil.HTMLToElement((this as StaticCast<T>).getInstance(data).getHtml());
+    }
+
+    /** Example: querySelector logic */
+    static querySelector<T extends CjsComponent<any>>(
+        this: Constructor<T>,
+        selectors: string
+    ) {
+        return (this as StaticCast<T>).getInstance().getFirst()!.querySelector(selectors);
+    }
+
+    /** Other static methods can do the same */
+    static fillHeight<T extends CjsComponent<any>>(
+        this: Constructor<T>,
+        offset: number = 0,
+        maxHeight?: number
+    ) {
+        return (this as StaticCast<T>).getInstance().fillHeight(offset, maxHeight);
     }
 }

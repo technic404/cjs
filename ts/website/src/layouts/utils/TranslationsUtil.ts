@@ -108,3 +108,5 @@ class TranslationsClass {
 
 export const Translations = new TranslationsClass();
 export const T = Translations;
+
+Translations.set(Translations.lang === null ? "en" : Translations.lang);

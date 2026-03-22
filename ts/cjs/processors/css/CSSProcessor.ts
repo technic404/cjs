@@ -31,27 +31,24 @@ export const _CSSProcessor = {
                     ];
 
                     if (!isSelectorClassOrId) {
+                        // Selector like button[cjsAttribute] { ... }
                         const selectorTextSplit = sel.split(" ");
                         const firstTag = selectorTextSplit[0];
                         const rawRestSelector = selectorTextSplit.slice(1).join(" ");
-                        const colonSelector = firstTag.includes(":")
-                            ? firstTag.slice(firstTag.indexOf(":"))
-                            : "";
 
+                        // like button:before or button::before
+                        const colonSelector = firstTag.includes(":") ? firstTag.slice(firstTag.indexOf(":")) : "";
                         const parsedFirstTag = firstTag.replace(colonSelector, "");
                         const restSelector = `${colonSelector} ${rawRestSelector}`;
-                        const commaSeparatedRemainingSelectors = restSelector
-                            .split(",")
-                            .map((e) => e.trim())
-                            .slice(1);
 
+                        // like button:before, button:after
+                        const commaSeparatedRemainingSelectors = restSelector.split(",").map((e) => e.trim()).slice(1);
                         const commaSeparatedSelectors = restSelector.includes(",")
                             ? commaSeparatedRemainingSelectors.map((e) => {
                                 const parts = [
                                     `${parsedFirstTag}${prefix}`,
                                     `${e.replace(parsedFirstTag, "")}`,
                                 ];
-
                                 const createSpacing = !parts[1].startsWith(":");
 
                                 return parts.join(createSpacing ? " " : "");
@@ -133,7 +130,6 @@ export const _CSSProcessor = {
             const modifiedRules = getModifiedRules(selector, cssText);
 
             newRules.push(...modifiedRules);
-            newRules.push(cssText);
         }
 
         return newRules.join(" ").replaceAll("\n", "");

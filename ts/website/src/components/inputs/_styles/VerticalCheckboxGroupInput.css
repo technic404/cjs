@@ -1,0 +1,55 @@
+.vertical-checkbox-group-input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.vertical-checkbox-group-input > label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+
+.vertical-checkbox-group-input > label > input {
+    --t: 20px;
+    appearance: none;
+    background-color: vaR(--light-100);
+    margin: 0;
+    font: inherit;
+    color: currentColor;
+    width: var(--t);
+    height: var(--t);
+    border: 2px solid var(--dark-300);
+    border-radius: 5px;
+    transform: translateY(-0.075em);
+    display: grid;
+    place-items: center;
+}
+
+
+.vertical-checkbox-group-input > label > input::before {
+    --t: 12px;
+    content: "";
+    display: block;
+    width: var(--t);
+    height: var(--t);
+    transform: scale(0);
+    transition: 120ms transform ease-in-out, 120ms box-shadow ease-in-out ;
+    border-radius: 3px;
+    box-shadow: inset 1em 1em var(--base-100-dark-20);
+}
+
+.vertical-checkbox-group-input > label > input:not(:checked):hover::before {
+    transform: scale(1);
+    box-shadow: inset 1em 1em var(--base-100-opacity);
+}
+
+.vertical-checkbox-group-input > label > input:checked::before {
+    transform: scale(1);
+}
+
+.vertical-checkbox-group-input > label > p {
+    color: var(--dark-100);
+}

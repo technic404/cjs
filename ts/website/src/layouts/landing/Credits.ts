@@ -1,5 +1,5 @@
 import { CjsComponent, CjsEventsMap, png } from "cjs";
-import {Logo} from "../../components/Logo.mjs";
+import {Logo} from "../../components/Logo";
 
 type Data = {
     

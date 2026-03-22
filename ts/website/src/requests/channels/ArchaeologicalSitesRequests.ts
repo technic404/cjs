@@ -1,6 +1,6 @@
 import { CjsNotification, CjsRequest } from "cjs";
 import { ApiUrl } from "../../constants";
-import { ArchaeologicalSite } from "src/types";
+import {ArchaeologicalSite} from "../../types";
 
 export class ArchaeologicalSitesRequests {
     #path = `${ApiUrl}/archaeological-sites`;

@@ -1,0 +1,28 @@
+.card {
+    --border: 2px solid var(--light-400);
+    border: var(--border);
+    border-radius: 12px;
+    padding: 15px;
+    background: var(--light);
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card > header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+
+}
+
+.card > header > p {
+    font-size: 20px;
+    white-space: nowrap;
+}
+
+.card > main {
+
+}

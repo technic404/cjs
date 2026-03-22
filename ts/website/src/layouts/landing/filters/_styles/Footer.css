@@ -1,0 +1,36 @@
+footer {
+    --t: 10px;
+    padding-top: var(--t);
+    margin-top: var(--t);
+    border-top: 1px solid var(--light-400);
+    display: flex;
+    justify-content: space-between;
+}
+
+footer > button {
+    min-width: 100px;
+    height: 36px;
+    background: transparent;
+    border: 1px solid var(--light-400);
+    border-radius: 18px;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0 20px;
+    font-family: DMSans-Regular;
+    transition: background-color 0.3s;
+}
+
+footer > button:hover {
+    background: var(--light-200);
+}
+
+footer > button.fill {
+    background: var(--base-100-dark-10);
+    color: var(--light-100);
+    font-family: DMSans-Medium;
+    border: none;
+}
+
+footer > button.fill:hover {
+    background: var(--base-100-dark-30);
+}

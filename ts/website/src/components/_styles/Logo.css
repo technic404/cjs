@@ -1,0 +1,22 @@
+.logo {
+    width: min-content;
+    height: 39px;
+    display: grid;
+    place-items: center;
+    position: relative;
+    transform-origin: 0 0;
+}
+
+.logo > p {
+    font-size: 16px;
+    border-left: 5px solid #0c70de;
+    padding-left: 4px;
+    border-radius: 4px;
+    border-bottom: 3px solid #55a2fa;
+    border-bottom-right-radius: 0;
+
+}
+
+.logo > p > span.sub {
+    font-size: 12px;
+}

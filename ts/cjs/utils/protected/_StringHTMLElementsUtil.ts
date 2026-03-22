@@ -4,38 +4,54 @@ export const _StringHTMLElementsUtil = {
         const len = html.length;
         let i = 0;
 
+        // Skip whitespace
         while (i < len && html.charCodeAt(i) <= 32) i++;
 
         if (html[i] !== "<") return html;
 
         const tagStart = i;
         const tagEnd = html.indexOf(">", tagStart);
-
         if (tagEnd === -1) return html;
 
-        const openingTag = html.slice(tagStart, tagEnd);
-        const attributeIndex = openingTag.indexOf(`${attribute}=`);
-        const attributeExistsInHTML = attributeIndex !== -1;
-        const attributeLength = attribute.length;
+        let openingTag = html.slice(tagStart, tagEnd);
+
+        // Regex to safely find attribute (handles spaces + quotes)
+        const attrRegex = new RegExp(
+            `\\b${attribute}\\s*=\\s*(['"])(.*?)\\1`,
+            "i"
+        );
+
+        const match = openingTag.match(attrRegex);
 
         let newOpeningTag: string;
 
-        if (attributeExistsInHTML) {
-            const quote = openingTag[attributeIndex + attributeLength];
-            const start = attributeIndex + attributeLength + 1;
-            const end = openingTag.indexOf(quote, start);
-            const existing = openingTag.slice(start, end).trim();
+        if (match) {
+            const fullMatch = match[0];
+            const quote = match[1];
+            const existing = match[2].trim();
+
             const merged =
-                !existing.endsWith(";") && existing.length > 0
-                    ? existing + ";" + value
-                    : existing + value;
+                existing.length === 0
+                    ? value
+                    : existing.endsWith(";")
+                    ? existing + value
+                    : attribute === "style"
+                    ? existing + "; " + value
+                    : existing + " " + value;
+
+            const updatedAttr = `${attribute}=${quote}${merged}${quote}`;
+
+            newOpeningTag = openingTag.replace(fullMatch, updatedAttr);
+        } else {
+            // Insert before closing (handle self-closing tags)
+            const insertPos = openingTag.endsWith("/")
+                ? openingTag.length - 1
+                : openingTag.length;
 
             newOpeningTag =
-                openingTag.slice(0, start) +
-                merged +
-                openingTag.slice(end);
-        } else {
-            newOpeningTag = openingTag + ` ${attribute}="${value}"`;
+                openingTag.slice(0, insertPos) +
+                ` ${attribute}="${value}"` +
+                openingTag.slice(insertPos);
         }
 
         return html.slice(0, tagStart) + newOpeningTag + html.slice(tagEnd);

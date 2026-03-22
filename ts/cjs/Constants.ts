@@ -15,9 +15,10 @@ export const CjsErrorPrefix = _ConsoleColorsUtil.format(`&c&n${_CjsPrefixBaseTex
 export const CjsSuccessPrefix = _ConsoleColorsUtil.format(`&c&a${_CjsPrefixBaseText}&r `);
 export const CjsInfoPrefix = _ConsoleColorsUtil.format(`&c&b${_CjsPrefixBaseText}&r `);
 
-export const CjsComponentReRenderTag = "fx:render";
+export const CjsComponentReRenderTag = "cjs:render";
 export const CjsRootTag = "cjsroot";
 export const CjsGlobalStyleTagId = "cjs-style";
 export const CjsGlobalStyleKeyframesTagId = "cjs-style-keyframes";
 
 export const CjsEventAttributePrefix = "cjsevent-";
+export const CjsObjectAttributePrefix = "cjs_";

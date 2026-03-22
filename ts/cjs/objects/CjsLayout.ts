@@ -1,14 +1,19 @@
 import { Constructor } from "../types";
 import { CjsComponent } from "./CjsComponent";
 import { _CjsLoggerUtil } from "../utils/protected/_CjsLoggerUtil";
-import { CjsComponentReRenderTag } from "../constants";
+import { CjsComponentReRenderTag, CjsObjectAttributePrefix } from "../constants";
 import { _DOMElementsUtil } from "../utils/protected/_DOMElementsUtil";
+import { CjsStringUtil } from "../utils/public/CjsStringUtil";
 
 export type CjsLayoutNode = Constructor<CjsComponent> | CjsComponent | CjsLayout | CjsLayoutNode[];
+
+const CjsLayoutTakenIds: string[] = [];
 
 export class CjsLayout<TData = any> {
 
     public _preSetData: TData | null = null;
+
+    public _layoutObjects: Element[] = [];
 
     public elements: (data: TData) => CjsLayoutNode[][];
 
@@ -55,7 +60,9 @@ export class CjsLayout<TData = any> {
 
             const element = elements[0];
 
-            if (element instanceof CjsLayout) return element.visualise();
+            if (element instanceof CjsLayout) {
+                return element.visualise();
+            }
 
             const instance = 
                 (isConstructable(element)
@@ -128,7 +135,7 @@ export class CjsLayout<TData = any> {
 
         this.elements(this._preSetData as TData).forEach(elements => {
             if (!elements) return;
-
+            
             const processedElements = walk(elements.filter(e => e !== null));
 
             for(const processedElement of processedElements) {
@@ -139,6 +146,22 @@ export class CjsLayout<TData = any> {
             }
         });
 
-        return Array.from(tempWrapper.children) as HTMLElement[];
+        this._layoutObjects = Array.from(tempWrapper.children);
+
+        return this._layoutObjects as HTMLElement[];
+    }
+
+    reRender() {
+        const layoutElements = this._layoutObjects;
+        const firstLayoutElementOccurrence = layoutElements[0];
+        const otherLayoutElements = layoutElements.slice(1);
+
+        otherLayoutElements.forEach(el => el.remove());
+
+        for(const child of this.visualise()) {
+            firstLayoutElementOccurrence.insertAdjacentElement(`beforebegin`, child);
+        }
+
+        firstLayoutElementOccurrence.remove();
     }
 }

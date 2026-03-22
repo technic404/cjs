@@ -1,0 +1,41 @@
+:root {
+    --indent: 25px;
+}
+
+
+.search-input {
+    display: flex;
+    width: 100%;
+    z-index: 999;
+    --border: 2px solid var(--light-400);
+    border: var(--border);
+    position: relative;
+    border-radius: 12px;
+    background: var(--light);
+    flex: 1;
+}
+
+.search-input > img {
+    height: 15px;
+    position: absolute;
+    left: calc(var(--indent) - 15px);
+    top: 17px;
+    transform: translateY(-50%);
+    z-index: 9999;
+}
+
+.search-input > input {
+    z-index: 999;
+    border: none;
+    outline: 0;
+    width: 100%;
+    border-radius: 12px;
+    padding: 6px;
+    font-family: DMSans-Bold;
+    font-size: 16px;
+    text-indent: var(--indent);
+}
+
+.search-input > input::placeholder {
+    font-family: DMSans-Medium;
+}

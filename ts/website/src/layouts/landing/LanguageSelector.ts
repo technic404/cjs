@@ -24,7 +24,7 @@ class LanguageButton extends CjsComponent<Data> {
         return this._wrapEvents({
             click: () => {
                 Translations.set(lang);
-                element.querySelector("header > button")!.innerHTML = fullLangName;
+                LanguageSelector.querySelector("header > button")!.innerHTML = fullLangName;
             }
         });
     }

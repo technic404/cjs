@@ -1,0 +1,38 @@
+.checkbox-group-input {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.checkbox-group-input > label {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    border: 2px solid var(--light-400);
+    width: 180px;
+    background: var(--light);
+    transition: border-color 0.3s;
+}
+
+.checkbox-group-input > label:hover {
+    border-color: var(--dark-100);
+}
+
+.checkbox-group-input > label.checked {
+    border-color: var(--dark-100);
+}
+
+.checkbox-group-input > label > p {
+    font-size: 17px;
+    color: var(--dark-100);
+}
+
+.checkbox-group-input > label > p.description {
+    font-size: 14px;
+    color: var(--dark-500);
+    font-family: DMSans-Regular;
+}
+
+.checkbox-group-input > label > input {
+    display: none;
+}

@@ -1,0 +1,38 @@
+.card-table {
+    max-height: 500px;      /* scrolling container */
+    overflow-y: auto;
+    padding-bottom: 6px;
+}
+
+.card-table > table {
+    border-collapse: separate;   /* 🔥 change this */
+    border-spacing: 0;
+    width: 100%;
+}
+
+.card-table > table tr:first-child {
+    position: sticky;
+    top: 0;
+    background: white;      /* required */
+    z-index: 2;
+}
+
+.card-table > table th {
+    font-size: 14px;
+    color: var(--dark-300);
+    border-bottom: 1px solid var(--light-400);
+    padding: 10px;
+    text-align: start;
+}
+
+.card-table > table td {
+    padding: 10px;
+}
+
+.card-table > table tr:nth-child(even) > td {
+    /*background: var(--light-100);*/
+}
+
+.card-table > table tr:hover > td {
+    background: var(--light-200);
+}

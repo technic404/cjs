@@ -9,4 +9,5 @@ export type CjsEvent<T extends Event | null = Event | null> = {
 
 export type CjsEventCallback = (cjsEvent: CjsEvent<Event>) => any;
 export type CjsNullEventCallback = (cjsEvent: CjsEvent<null>) => any;
+export type CjsAnyEventCallback = (cjsEvent: CjsEvent<Event | null>) => any;
 export type CjsEventsMap = Record<string, (cjsEvent: CjsEvent<Event | null>) => any>;

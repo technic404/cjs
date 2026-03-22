@@ -1,8 +1,8 @@
 import { CjsComponent, CjsEventsMap, onClick, onLoad } from "cjs";
-import { T } from "src/layouts/utils/TranslationsUtil";
-import { App } from "src/requests/App";
-import { Publication } from "src/types";
 import { Result } from "./Result";
+import {T} from "../../utils/TranslationsUtil";
+import {App} from "../../../requests/App";
+import {Publication} from "../../../types";
 
 export class Results extends CjsComponent {
     #EXTENDED_CLASS_NAME = "extended";
@@ -51,5 +51,5 @@ export class Results extends CjsComponent {
     }
 
     /** Settings */
-    _cssStyle = './src/layouts/landing/_styles/Results.css';
+    _cssStyle = './src/layouts/landing/results/_styles/Results.css';
 };

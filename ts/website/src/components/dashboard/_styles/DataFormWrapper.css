@@ -1,0 +1,14 @@
+.data-form-wrapper {
+
+}
+
+.data-form-wrapper > form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.data-form-wrapper > button {
+    margin-top: 8px;
+    float: right;
+}
