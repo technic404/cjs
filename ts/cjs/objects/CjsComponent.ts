@@ -8,12 +8,24 @@ import { _StringHTMLElementsUtil } from "../utils/protected/_StringHTMLElementsU
 import { CjsObjectUtil } from "../utils/public/CjsObjectUtil";
 import { CjsStringUtil } from "../utils/public/CjsStringUtil";
 import { CjsRequest } from "../utils/user-helpers/CjsRequestsUtil";
+import { CjsComponentsCollection } from "./CjsComponentsCollection";
 import { CjsForm } from "./CjsForm";
+import { CjsLayout } from "./CjsLayout";
 
 type Constructor<T> = new (...args: any[]) => T;
 type StaticCast<T> = (Constructor<T> & typeof CjsComponent);
 
 const CjsComponentInjectedStylePaths: string[] = [];
+
+type FilleHeightData = {
+    offset: number
+    maxHeight?: number
+}
+
+type PrototypeData = {
+    id: string
+    fillHeightData?: FilleHeightData
+}
 
 export class CjsComponent<TData = any> {
     public __events: CjsEventsMap = {};
@@ -30,7 +42,7 @@ export class CjsComponent<TData = any> {
 
     public element: HTMLElement | null = null;
 
-    static _ids = new Map<Function, string>();
+    static _prototypesData = new Map<Function, PrototypeData>();
 
     /**
      * / ⚪ ------------ CONSTRUCTOR SCOPE ------------ ⚪ /
@@ -54,19 +66,19 @@ export class CjsComponent<TData = any> {
 
     /** Creates id or pulls it from the map */
     private createId() {
-        const idsMap = (this.constructor as typeof CjsComponent)._ids;
-        const values = Array.from(idsMap.values());
+        const prototypes = (this.constructor as typeof CjsComponent)._prototypesData;
+        const ids = Array.from(prototypes.values()).map(e => e.id);
 
-        if(idsMap.has(this.constructor)) {
-            this._id = idsMap.get(this.constructor)!;
+        if(prototypes.has(this.constructor)) {
+            this._id = prototypes.get(this.constructor)!.id;
         } else {
             this._id = null;
 
-            while(this._id === null || values.includes(this._id)) {
-                this._id = `c${CjsStringUtil.getRandom(6)}`;
+            while(this._id === null || ids.includes(this._id)) {
+                this._id = CjsStringUtil.getRandom(6);
             }
 
-            idsMap.set(this.constructor, this._id!);
+            prototypes.set(this.constructor, { id: this._id });
         }
     }
 
@@ -87,13 +99,14 @@ export class CjsComponent<TData = any> {
 
         if (!style) return;
 
-        style.innerHTML += _CSSProcessor.processComponentStyle(`[${CjsObjectAttributePrefix}="${this._id}"]`, cssText);
+        style.innerHTML += _CSSProcessor.processComponentStyle(`[${CjsObjectAttributePrefix}*="${this._id}"]`, cssText);
     }
 
     /** Provides the HTML string for the component */
     private getHtml() {
         let html = this._template();
 
+        const prototypeData = (this.constructor as typeof CjsComponent)._prototypesData.get(this.constructor);
         const onLoadCallbacks: ((cjsEvent: CjsEvent<null>) => any)[] = [];
 
         if(this._cssStyle) {
@@ -117,8 +130,8 @@ export class CjsComponent<TData = any> {
             
         }
 
-        if(this.fillHeightData !== undefined) {
-            const { maxHeight, offset } = this.fillHeightData;
+        if(prototypeData && "fillHeightData" in prototypeData) {
+            const { maxHeight, offset } = prototypeData.fillHeightData!;
             const resize = (cjsEvent: CjsEvent<null>) => {
                 const { source } = cjsEvent;
 
@@ -126,18 +139,23 @@ export class CjsComponent<TData = any> {
                     maxHeight !== undefined && window.innerHeight > maxHeight 
                     ? maxHeight 
                     : window.innerHeight + offset
-                }px`
+                }px`;
+
             };
 
             onLoadCallbacks.push((cjsEvent) => {
                 window.addEventListener('resize', _ => resize(cjsEvent));
+
+                resize(cjsEvent);
             });
+
         }
 
         html = _StringHTMLElementsUtil.injectAttribute(html, onLoad((cjsEvent) => {
             onLoadCallbacks.forEach(onLoadCallback => onLoadCallback(cjsEvent));
 
             this.element = cjsEvent.source;
+            
         }), "");
 
         html = _StringHTMLElementsUtil.injectAttribute(html, CjsObjectAttributePrefix, this._id!);
@@ -145,11 +163,29 @@ export class CjsComponent<TData = any> {
         return html;
     }
 
+    private getConstructorClass<Args extends any[]>(): new (...args: Args) => this {
+        return this.constructor as unknown as new (...args: Args) => this;
+    }
+
     /**
      * 
      * / 🟢 ------------ PUBLIC SCOPE ------------ 🟢 /
      * 
      */
+
+    public _addToPrototypeData(prototypeData: Partial<PrototypeData>) {
+        const prototypes = (this.constructor as typeof CjsComponent)._prototypesData;
+
+        if(prototypes.has(this.constructor)) {
+            const obj = prototypes.get(this.constructor);
+
+            prototypes.set(this.constructor, { ...obj, ...prototypeData } as PrototypeData);
+            return;
+        }
+
+        prototypes.set(this.constructor, prototypeData as PrototypeData);
+        
+    }
 
     /** Function that provides template for base html structure */
     public _template(): string {
@@ -166,19 +202,9 @@ export class CjsComponent<TData = any> {
         return CjsEventsMap;
     }
 
-    /** Provides component as an HTML element */
-    public visualise(preSetData: Partial<TData> | null = null) {
-        if(preSetData) this._preSetData = CjsObjectUtil.copy(preSetData);
-        
-        return _DOMElementsUtil.HTMLToElement(this.getHtml());
-    }
-
     /** Provides auto fill height of the component to the actual screen height (with optional offsets) */
     public fillHeight(offset: number = 0, maxHeight: number | undefined = undefined) {
-        this.fillHeightData = {
-            offset,
-            maxHeight
-        };
+        this._addToPrototypeData({ fillHeightData: { offset, maxHeight } });
     }
 
     public getForms(): CjsForm[] | null {
@@ -192,6 +218,40 @@ export class CjsComponent<TData = any> {
         );
     }
 
+    public getComponents(): CjsComponentsCollection {
+        return new CjsComponentsCollection(document.body.querySelectorAll(`[${CjsObjectAttributePrefix}="${this._id}"]`));
+    }
+
+    /** Sets the data for the component */ 
+    public withData(data: Partial<TData> | null = null): CjsComponent<TData> {
+        if(data) this._preSetData = CjsObjectUtil.copy(data);
+        return this;
+    } 
+    
+    /** Sets additional style for the component */ 
+    public withStyle(style: Partial<Record<keyof CSSStyleDeclaration, string>>): CjsComponent<TData> { 
+        this._additionalStyle = CjsObjectUtil.copy(style);
+        return this;
+    }
+
+    /** Example: render HTML string */
+    public render(data: Partial<TData> | null = null) {
+        return new (this.getConstructorClass())(data).getHtml();
+    }
+
+    /** Example: visualise component as element */
+    public visualise(data: Partial<TData> | null = null) {
+        if(data) this._preSetData = CjsObjectUtil.copy(data);
+
+        return _DOMElementsUtil.HTMLToElement(this.getHtml());
+    }
+
+    /** Example: querySelector logic */
+    public querySelector(selectors: string) {
+        return this.getFirst()!.querySelector(selectors);
+    }
+    
+
     /** Get first occurrence of the CjsComponent as HTMLElement */
     public getFirst() {
         return document.body.querySelector<HTMLElement>(`[${CjsObjectAttributePrefix}="${this._id}"]`);
@@ -200,6 +260,16 @@ export class CjsComponent<TData = any> {
     /** Get all occurrences of the CjsComponent as HTMLElement */
     public getAll() {
         return document.body.querySelectorAll<HTMLElement>(`[${CjsObjectAttributePrefix}="${this._id}"]`);
+    }
+
+    /** Loads CjsLayout inside CjsComponent */
+    public loadLayout(layout: CjsLayout) {
+        for(const el of this.getAll()) {
+            el.innerHTML = '';
+            for(const layoutEl of layout.visualise()) {
+                el.appendChild(layoutEl);
+            }
+        }
     }
     
     /**
@@ -251,21 +321,20 @@ export class CjsComponent<TData = any> {
 
     /** Central helper to get or create _id for a class */
     static getClassId<T extends CjsComponent<any>>(this: Constructor<T> & typeof CjsComponent) {
-        let id = this._ids.get(this);
+        let id = this._prototypesData.get(this)!.id;
 
         if (!id) {
             id = new this()._id!;
-            this._ids.set(this, id);
         }
         
         return id;
     }
 
-    static getInstance<T extends CjsComponent<any>>(
-        this: new (...args: any[]) => CjsComponent<any>,
+    static getInstance(
+        this: { new (...args: any[]): any } & typeof CjsComponent,
         ...args: any[]
-    ) {
-        const cls = this as unknown as (Constructor<T> & typeof CjsComponent);
+    ): InstanceType<typeof this> {
+        const cls = this;
         const instance = new cls(...args);
         instance._id = cls.getClassId();
         return instance;
@@ -279,16 +348,22 @@ export class CjsComponent<TData = any> {
         if(!element) return null;
 
         return Array.from(
-            element.querySelectorAll("form"), 
+            element.querySelectorAll("form") as HTMLFormElement[], 
             (el) => new CjsForm(el)
         );
+    }
+
+    static getComponents<T extends CjsComponent<any>>(
+        this: Constructor<T>
+    ) {
+        return (this as StaticCast<T>).getInstance().getComponents();
     }
 
     /** Sets the data for the component */ 
     static withData<T extends CjsComponent<any>>( 
         this: (new (preSetData: Partial<T extends CjsComponent<infer D> ? D : never>) => T), 
         data: Partial<T extends CjsComponent<infer D> ? D : never> = {} 
-    ) {
+    ): T {
         return (this as StaticCast<T>).getInstance(data); 
     } 
     
@@ -296,7 +371,7 @@ export class CjsComponent<TData = any> {
     static withStyle<T extends CjsComponent<any>>(
          this: (new (preSetData: any, additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>) => T), 
          style: Partial<Record<keyof CSSStyleDeclaration, string>> 
-    ) { 
+    ): T { 
         return (this as StaticCast<T>).getInstance(null, style);
     }
 
@@ -331,5 +406,13 @@ export class CjsComponent<TData = any> {
         maxHeight?: number
     ) {
         return (this as StaticCast<T>).getInstance().fillHeight(offset, maxHeight);
+    }
+
+    /** Loads CjsLayout inside CjsComponent */
+    static loadLayout<T extends CjsComponent<any>>(
+        this: Constructor<T>,
+        layout: CjsLayout
+    ) {
+        return (this as StaticCast<T>).getInstance().loadLayout(layout);
     }
 }

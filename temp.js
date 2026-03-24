@@ -1,0 +1,5 @@
+
+
+function oblicz(a, b) {
+    
+}

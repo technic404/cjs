@@ -1,7 +1,7 @@
 import { CjsComponent, onLoad, png } from "cjs";
-import { ThemeUtil } from "../utils/ThemeUtil";
+import { ThemeUtil } from "../../utils/ThemeUtil";
 import {App} from "../../requests/App";
-import {T} from "../utils/TranslationsUtil";
+import {T} from "../../utils/TranslationsUtil";
 
 type Data = {
 

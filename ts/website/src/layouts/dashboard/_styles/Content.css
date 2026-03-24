@@ -1,0 +1,6 @@
+.content {
+    width: calc(100% - 250px);
+    background: var(--light-blue-100);
+    padding: 15px;
+    overflow: auto;
+}

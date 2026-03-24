@@ -73,6 +73,34 @@ declare const onResize: (f: CjsEventCallback) => string;
 declare const onScroll: (f: CjsEventCallback) => string;
 declare const onTouchMove: (f: CjsEventCallback) => string;
 
+declare class CjsComponentsCollection {
+    private components;
+    constructor(components: NodeListOf<HTMLElement>);
+    private call;
+    _add(element: HTMLElement): void;
+    /**
+     * Sets the class name for all components
+     */
+    set className(token: string);
+    /**
+     * Returns the value of first component className
+     */
+    get className(): string | null;
+    /**
+     * classList wrapper for all components
+     */
+    get classList(): {
+        add: (...tokens: string[]) => void;
+        remove: (...tokens: string[]) => void;
+        contains: (token: string) => boolean;
+        toggle: (token: string, force?: boolean) => void;
+        addExcept: (token: string, except: HTMLElement) => void;
+        removeExcept: (token: string, except: HTMLElement) => void;
+        addOnlyRemoveOthers: (token: string, only: HTMLElement) => void;
+        removeOnlyAddOthers: (token: string, only: HTMLElement) => void;
+    };
+}
+
 interface CjsFormSerializeOptions {
     checkboxesReadType?: "array" | "single";
     includeNoNames?: boolean;
@@ -86,7 +114,33 @@ declare class CjsForm {
     serialize(options?: CjsFormSerializeOptions): Record<string | number, any>;
 }
 
+type CjsLayoutNode = Constructor$1<CjsComponent> | CjsComponent | CjsLayout | null | CjsLayoutNode[];
+declare class CjsLayout<TData = any> {
+    _preSetData: TData | null;
+    _additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>> | null;
+    _layoutObjects: Element[];
+    elements: (data: TData) => CjsLayoutNode[][];
+    /**
+     * @param elements Function returning layout structure
+     */
+    constructor(elements: (data: TData | null) => CjsLayoutNode[][]);
+    withData(preSetData: TData): CjsLayout;
+    withStyle(additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>): any;
+    private createErrorElement;
+    /** Build DOM structure */
+    visualise(): HTMLElement[];
+    reRender(): void;
+}
+
 type Constructor<T> = new (...args: any[]) => T;
+type FilleHeightData = {
+    offset: number;
+    maxHeight?: number;
+};
+type PrototypeData = {
+    id: string;
+    fillHeightData?: FilleHeightData;
+};
 declare class CjsComponent<TData = any> {
     __events: CjsEventsMap;
     private fillHeightData?;
@@ -96,7 +150,7 @@ declare class CjsComponent<TData = any> {
     _preSetData: Partial<TData>;
     _id: string | null;
     element: HTMLElement | null;
-    static _ids: Map<Function, string>;
+    static _prototypesData: Map<Function, PrototypeData>;
     /**
      * / ⚪ ------------ CONSTRUCTOR SCOPE ------------ ⚪ /
      */
@@ -110,26 +164,39 @@ declare class CjsComponent<TData = any> {
     private injectRootStyle;
     /** Provides the HTML string for the component */
     private getHtml;
+    private getConstructorClass;
     /**
      *
      * / 🟢 ------------ PUBLIC SCOPE ------------ 🟢 /
      *
      */
+    _addToPrototypeData(prototypeData: Partial<PrototypeData>): void;
     /** Function that provides template for base html structure */
     _template(): string;
     /** Function that provides actions for the component */
     _events(): CjsEventsMap;
     /** Functions that creates an type for component events */
     _wrapEvents(CjsEventsMap: CjsEventsMap): CjsEventsMap;
-    /** Provides component as an HTML element */
-    visualise(preSetData?: Partial<TData> | null): HTMLElement;
     /** Provides auto fill height of the component to the actual screen height (with optional offsets) */
     fillHeight(offset?: number, maxHeight?: number | undefined): void;
     getForms(): CjsForm[] | null;
+    getComponents(): CjsComponentsCollection;
+    /** Sets the data for the component */
+    withData(data?: Partial<TData> | null): CjsComponent<TData>;
+    /** Sets additional style for the component */
+    withStyle(style: Partial<Record<keyof CSSStyleDeclaration, string>>): CjsComponent<TData>;
+    /** Example: render HTML string */
+    render(data?: Partial<TData> | null): string;
+    /** Example: visualise component as element */
+    visualise(data?: Partial<TData> | null): HTMLElement;
+    /** Example: querySelector logic */
+    querySelector(selectors: string): Element | null;
     /** Get first occurrence of the CjsComponent as HTMLElement */
     getFirst(): HTMLElement | null;
     /** Get all occurrences of the CjsComponent as HTMLElement */
     getAll(): NodeListOf<HTMLElement>;
+    /** Loads CjsLayout inside CjsComponent */
+    loadLayout(layout: CjsLayout): void;
     /**
      *
      * / 🔵 ------------ GETTERS SCOPE ------------ 🔵 /
@@ -148,36 +215,25 @@ declare class CjsComponent<TData = any> {
      */
     /** Central helper to get or create _id for a class */
     static getClassId<T extends CjsComponent<any>>(this: Constructor<T> & typeof CjsComponent): string;
-    static getInstance<T extends CjsComponent<any>>(this: new (...args: any[]) => CjsComponent<any>, ...args: any[]): T & CjsComponent<any>;
+    static getInstance(this: {
+        new (...args: any[]): any;
+    } & typeof CjsComponent, ...args: any[]): InstanceType<typeof this>;
     static getForms<T extends CjsComponent<any>>(this: Constructor<T>): CjsForm[] | null;
+    static getComponents<T extends CjsComponent<any>>(this: Constructor<T>): any;
     /** Sets the data for the component */
-    static withData<T extends CjsComponent<any>>(this: (new (preSetData: Partial<T extends CjsComponent<infer D> ? D : never>) => T), data?: Partial<T extends CjsComponent<infer D> ? D : never>): CjsComponent<any>;
+    static withData<T extends CjsComponent<any>>(this: (new (preSetData: Partial<T extends CjsComponent<infer D> ? D : never>) => T), data?: Partial<T extends CjsComponent<infer D> ? D : never>): T;
     /** Sets additional style for the component */
-    static withStyle<T extends CjsComponent<any>>(this: (new (preSetData: any, additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>) => T), style: Partial<Record<keyof CSSStyleDeclaration, string>>): CjsComponent<any>;
+    static withStyle<T extends CjsComponent<any>>(this: (new (preSetData: any, additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>) => T), style: Partial<Record<keyof CSSStyleDeclaration, string>>): T;
     /** Example: render HTML string */
-    static render<T extends CjsComponent<any>>(this: Constructor<T>, data?: Partial<T extends CjsComponent<infer D> ? D : never>): string;
+    static render<T extends CjsComponent<any>>(this: Constructor<T>, data?: Partial<T extends CjsComponent<infer D> ? D : never>): any;
     /** Example: visualise component as element */
     static visualise<T extends CjsComponent<any>>(this: Constructor<T>, data?: Partial<T extends CjsComponent<infer D> ? D : never>): HTMLElement;
     /** Example: querySelector logic */
-    static querySelector<T extends CjsComponent<any>>(this: Constructor<T>, selectors: string): Element | null;
+    static querySelector<T extends CjsComponent<any>>(this: Constructor<T>, selectors: string): any;
     /** Other static methods can do the same */
-    static fillHeight<T extends CjsComponent<any>>(this: Constructor<T>, offset?: number, maxHeight?: number): void;
-}
-
-type CjsLayoutNode = Constructor$1<CjsComponent> | CjsComponent | CjsLayout | CjsLayoutNode[];
-declare class CjsLayout<TData = any> {
-    _preSetData: TData | null;
-    _layoutObjects: Element[];
-    elements: (data: TData) => CjsLayoutNode[][];
-    /**
-     * @param elements Function returning layout structure
-     */
-    constructor(elements: (data: TData | null) => CjsLayoutNode[][]);
-    withData(preSetData: TData): CjsLayout;
-    private createErrorElement;
-    /** Build DOM structure */
-    visualise(): HTMLElement[];
-    reRender(): void;
+    static fillHeight<T extends CjsComponent<any>>(this: Constructor<T>, offset?: number, maxHeight?: number): any;
+    /** Loads CjsLayout inside CjsComponent */
+    static loadLayout<T extends CjsComponent<any>>(this: Constructor<T>, layout: CjsLayout): any;
 }
 
 /**
@@ -250,6 +306,14 @@ declare const CjsStringUtil: {
      * (DJB2 hash)
      */
     getHash(string: string): number;
+    /**
+     * Remove HTML tags from the input, keeping inner content
+     */
+    removeHtmlTags(input: string): string;
+    /**
+     * Capitalizes first letter of the string
+     */
+    capitalize(value: string): string;
 };
 
 /**

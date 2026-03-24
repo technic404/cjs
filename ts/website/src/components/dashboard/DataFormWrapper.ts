@@ -2,7 +2,7 @@ import {CjsComponent, CjsEventsMap, svg} from "cjs";
 import {TextIconButton} from "../buttons/TextIconButton";
 
 type Data = {
-    saveCallback: (data: object) => Promise<void>,
+    saveCallback: (data: any) => Promise<void>,
     serializeOptions?: { checkboxesReadType?: ("array" | "single"), includeNoNames?: boolean }
 }
 

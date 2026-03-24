@@ -57,7 +57,7 @@ export class TwoSideRangeInput extends CjsComponent<Data> {
         `;
     }
 
-    _events() {1q
+    _events() {
         const { min, max, onInputTo, onInputFrom } = this.data;
         const el = this.element!;
 

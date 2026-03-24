@@ -1,7 +1,7 @@
 import { CjsComponent, CjsEventsMap, onLoad, strmap, svg } from "cjs";
 import { Publication } from "../../../types";
 import { App } from "../../../requests/App";
-import { T } from "../../utils/TranslationsUtil";
+import { T } from "../../../utils/TranslationsUtil";
 import { CulturalGroups } from "../../../constants";
 import {ArchaeologicalDataTable} from "../../../components/common/ArchaeologicalDataTable";
 

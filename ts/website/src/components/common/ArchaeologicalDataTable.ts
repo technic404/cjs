@@ -1,6 +1,6 @@
 import {ArchaeologicalSiteData} from "../../types";
 import {CjsComponent, CjsEventsMap, onLoad, strmap} from "cjs";
-import {T} from "../../layouts/utils/TranslationsUtil";
+import {T} from "../../utils/TranslationsUtil";
 
 type Data = {
     prefixTh?: any[],

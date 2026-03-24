@@ -1,0 +1,8 @@
+.wrapper {
+    padding: 10px;
+    width: 250px;
+    --border: 2px solid var(--light-400);
+    border-right: var(--border);
+    height: 100%;
+    background: var(--light);
+}

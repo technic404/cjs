@@ -36,6 +36,7 @@ export class Checkbox extends CjsComponent<CheckboxData> {
 
         const setChecked = (isChecked: boolean, forceElement: HTMLElement | null = null) => {
             const label = forceElement || el;
+
             const checkbox = label.querySelector("input")!;
 
             checkbox.checked = isChecked;
@@ -57,7 +58,7 @@ export class Checkbox extends CjsComponent<CheckboxData> {
                 setChecked(!checked);
             },
             load: (e) => {
-                if(checked) setChecked(true);
+                if(checked) setChecked(true, e.source);
             }
         } satisfies CjsEventsMap;
     }

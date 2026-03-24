@@ -1,0 +1,55 @@
+button {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    background: transparent;
+    border-left: 4px solid transparent;
+}
+
+button > .line {
+    background-color: transparent;
+    width: 3px;
+    height: 26px;
+    transition: background-color 0.3s;
+}
+
+button > .content {
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    width: 100%;
+    transition: background-color 0.3s;
+
+}
+
+button > .content > img {
+    height: 21px;
+}
+
+button > .content > p {
+    font-size: 16px;
+}
+
+button:hover > .line {
+    background-color: var(--base-100-opacity);
+}
+
+button.active > .line {
+    background-color: var(--base-100-dark-20);
+}
+
+button.active > .content {
+    background: var(--base-100-opacity-01);
+}
+
+button.active > .content > img {
+    filter: var(--const-filter-blue);
+}
+
+button.active > .content > p {
+    color: var(--base);
+}

@@ -1,0 +1,8 @@
+.wrapper {
+    display: flex;
+    height: 50px;
+    --border: 2px solid var(--light-400);
+    border-bottom: var(--border);
+    width: 100vw;
+    background: var(--light);
+}

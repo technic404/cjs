@@ -1,0 +1,6 @@
+.left-corner {
+    width: 250px;
+    --border: 2px solid var(--light-400);
+    border-right: vaR(--border);
+    padding: 3px 10px;
+}

@@ -1,6 +1,6 @@
 import { CjsComponent, onClick, strmap, svg } from "cjs";
 import { Languages } from "../../constants";
-import { LanguageTag, Translations } from "../utils/TranslationsUtil";
+import { LanguageTag, Translations } from "../../utils/TranslationsUtil";
 
 type Data = {
     lang: LanguageTag,

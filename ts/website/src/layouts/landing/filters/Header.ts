@@ -1,5 +1,5 @@
 import {CjsComponent} from "cjs";
-import {T} from "../../utils/TranslationsUtil";
+import {T} from "../../../utils/TranslationsUtil";
 
 export class Header extends CjsComponent {
     _template() {

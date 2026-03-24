@@ -1,4 +1,4 @@
-import {App} from "../../requests/App";
+import {App} from "../requests/App";
 
 export type LanguageTag = "pl" | "en" | "ru";
 

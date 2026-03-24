@@ -1,5 +1,5 @@
 import {CjsComponent, CjsEventsMap, CjsObjectUtil, onClick} from "cjs";
-import {T} from "../../utils/TranslationsUtil";
+import {T} from "../../../utils/TranslationsUtil";
 import {App} from "../../../requests/App";
 import {Filters} from "./Filters";
 import {LandingFiltersInputs} from "./_LandingFiltersLayout";

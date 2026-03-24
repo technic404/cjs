@@ -1,7 +1,7 @@
 import { CjsComponent, strmap } from "cjs";
 import { ArchaeologicalSite } from "../../../types";
 import { CulturalGroups } from "../../../constants";
-import { T } from "../../utils/TranslationsUtil";
+import { T } from "../../../utils/TranslationsUtil";
 
 type Data = {
     transformedData: any[],

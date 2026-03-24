@@ -7,8 +7,8 @@ import {CardTable} from "./CardTable";
 type Data = {
     th: any[]
     title: string
-    searchCallback: (text: string, offset: number) => Promise<object[]>,
-    mapperCallback: (requestObject: object) => any[],
+    searchCallback: (text: string, offset: number) => Promise<any[]>,
+    mapperCallback: (requestObject: any) => any[],
 }
 
 export class SearchCard extends CjsComponent<Data> {
@@ -48,7 +48,7 @@ export class SearchCard extends CjsComponent<Data> {
                     }
                 })]
             ]]
-        ]).visualise()[0].innerHTML;
+        ]).visualise()[0].outerHTML;
     }
 
     /** Settings */

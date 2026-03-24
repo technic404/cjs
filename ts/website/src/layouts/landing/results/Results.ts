@@ -1,6 +1,6 @@
 import { CjsComponent, CjsEventsMap, onClick, onLoad } from "cjs";
 import { Result } from "./Result";
-import {T} from "../../utils/TranslationsUtil";
+import {T} from "../../../utils/TranslationsUtil";
 import {App} from "../../../requests/App";
 import {Publication} from "../../../types";
 

@@ -5,13 +5,14 @@ import { CjsComponentReRenderTag, CjsObjectAttributePrefix } from "../constants"
 import { _DOMElementsUtil } from "../utils/protected/_DOMElementsUtil";
 import { CjsStringUtil } from "../utils/public/CjsStringUtil";
 
-export type CjsLayoutNode = Constructor<CjsComponent> | CjsComponent | CjsLayout | CjsLayoutNode[];
+export type CjsLayoutNode = Constructor<CjsComponent> | CjsComponent | CjsLayout | null | CjsLayoutNode[];
 
 const CjsLayoutTakenIds: string[] = [];
 
 export class CjsLayout<TData = any> {
 
     public _preSetData: TData | null = null;
+    public _additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>> | null = null;
 
     public _layoutObjects: Element[] = [];
 
@@ -29,6 +30,14 @@ export class CjsLayout<TData = any> {
         Object.assign(clone, this);
 
         clone._preSetData = preSetData;
+        return clone;
+    }
+
+    public withStyle(additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>) {
+        const clone = Object.create(Object.getPrototypeOf(this));
+        Object.assign(clone, this);
+
+        clone._additionalStyle = additionalStyle;
         return clone;
     }
 
@@ -147,6 +156,25 @@ export class CjsLayout<TData = any> {
         });
 
         this._layoutObjects = Array.from(tempWrapper.children);
+
+        if(this._additionalStyle) {
+            for(const firstDeepObject of this._layoutObjects) {
+                const additionalStyleParsed = Object.entries(this._additionalStyle).map(e => `${e[0]}: ${e[1]}`).join("; ") + ";";
+                const existingStyle = firstDeepObject.hasAttribute("style") ? firstDeepObject.getAttribute("style") : null;
+
+                if(!existingStyle) {
+                    firstDeepObject.setAttribute("style", additionalStyleParsed);
+                    continue;
+                }
+
+                const existingStyleHasClosing = existingStyle.endsWith(";");
+
+                firstDeepObject.setAttribute("style", existingStyleHasClosing 
+                    ? `${existingStyle} ${additionalStyleParsed}`
+                    : `${existingStyle}; ${additionalStyleParsed}`
+                );
+            }
+        }
 
         return this._layoutObjects as HTMLElement[];
     }
