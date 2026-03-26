@@ -388,6 +388,7 @@ export class CjsComponent<TData = any> {
         this: Constructor<T>,
         data: Partial<T extends CjsComponent<infer D> ? D : never> = {}
     ) {
+        return (this as StaticCast<T>).getInstance().visualise(data);
         return _DOMElementsUtil.HTMLToElement((this as StaticCast<T>).getInstance(data).getHtml());
     }
 

@@ -11,6 +11,7 @@ export const CjsMutationListener = new class CjsMutationListener {
     }
 
     #processCallback(eventId: string, element: Element) {
+        // console.log('CjsEventsManager.hasCallback', eventId, CjsEventsManager.hasCallback(eventId), element);
         if(!CjsEventsManager.hasCallback(eventId)) return;
 
         const eventCallback = CjsEventsManager.getCallback(eventId)!;
@@ -19,7 +20,7 @@ export const CjsMutationListener = new class CjsMutationListener {
         targetElement.addEventListener(
             eventCallback.eventName, 
             (event) => eventCallback.callback({ event, source: element as AnyHTMLElement })
-        )
+        );
     }
 
     #processOnAddElementCallback(eventId: string, element: Element) {
@@ -42,14 +43,20 @@ export const CjsMutationListener = new class CjsMutationListener {
             CjsEventAttributePrefix
         );
 
+        // console.log("pe", attributes.join(", "));
+        
+
         if(attributes.length === 0) return;
 
         for(const attribute of attributes) {
+            console.log('found ', attribute);
+            
             const elements = Array.from(document.body.querySelectorAll(`[${attribute}]`));
             const eventId = attribute.replace(CjsEventAttributePrefix, "");
 
             for(const element of elements) {
                 element.removeAttribute(attribute);
+
 
                 this.#processCallback(eventId, element);
                 this.#processOnAddElementCallback(eventId, element);
@@ -62,16 +69,24 @@ export const CjsMutationListener = new class CjsMutationListener {
 
         const childListMutations = mutationsList.filter(m => m.type === "childList");
         const modifiedNodes = childListMutations
-            .map(m => Array.from(m.addedNodes))
-            .flat()
-            .filter(node => node.nodeType === 1)
-            .map(node => {
-                const wrapper = document.createElement("div");
-                wrapper.appendChild(node.cloneNode(true));
-                return wrapper;
-            })
-            .map(el => Array.from(el.querySelectorAll("*")))
-            .flat() as HTMLElement[];
+            .filter(m => m.type === "childList")
+            .flatMap(m => Array.from(m.addedNodes))
+            .filter((node): node is HTMLElement => node.nodeType === 1)
+            .flatMap(node => [
+                node,
+                ...Array.from(node.querySelectorAll("*"))
+            ]);
+            // .map(m => Array.from(m.addedNodes))
+            // .flat()
+            // .filter(node => node.nodeType === 1)
+            // .map(node => {
+            //     const wrapper = document.createElement("div");
+            //     wrapper.appendChild(node.cloneNode(true));
+            //     return wrapper;
+            // })
+            // .map((el) => Array.from(el.querySelectorAll("*")))
+            // .flat() as HTMLElement[];
+
 
         for (const virtualModifiedNode of modifiedNodes) {
             this.processElementEvents(virtualModifiedNode);
@@ -85,4 +100,3 @@ export const CjsMutationListener = new class CjsMutationListener {
         });
     }
 }
-

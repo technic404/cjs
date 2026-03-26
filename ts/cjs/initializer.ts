@@ -17,16 +17,13 @@ export function init(layout: CjsLayout) {
 
     root.innerHTML = "";
 
+    CjsMutationListener.observe();
+
     for(const element of layout.visualise()) {
         root.appendChild(element);
+
+        Array.from(element.querySelectorAll("*")).forEach(e => {
+            CjsMutationListener.processElementEvents(e);
+        });
     }
-
-    window.addEventListener('DOMContentLoaded', _ => {
-
-    Array.from(document.body.querySelectorAll("*")).forEach(e => {
-        CjsMutationListener.processElementEvents(e);
-    });
-
-        CjsMutationListener.observe();
-    });
 }

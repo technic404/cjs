@@ -37,6 +37,9 @@ export const CjsEventsManager = new class CjsEventsManager {
     addCallback(eventCallback: EventCallback): string {
         const id = this.#createEventId();
 
+        console.log('register', id);
+        
+
         this.#callbacksQueue.set(id, eventCallback);
 
         return ` ${CjsEventAttributePrefix}${id}`;
