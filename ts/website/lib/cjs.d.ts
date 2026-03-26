@@ -227,7 +227,7 @@ declare class CjsComponent<TData = any> {
     /** Example: render HTML string */
     static render<T extends CjsComponent<any>>(this: Constructor<T>, data?: Partial<T extends CjsComponent<infer D> ? D : never>): any;
     /** Example: visualise component as element */
-    static visualise<T extends CjsComponent<any>>(this: Constructor<T>, data?: Partial<T extends CjsComponent<infer D> ? D : never>): HTMLElement;
+    static visualise<T extends CjsComponent<any>>(this: Constructor<T>, data?: Partial<T extends CjsComponent<infer D> ? D : never>): any;
     /** Example: querySelector logic */
     static querySelector<T extends CjsComponent<any>>(this: Constructor<T>, selectors: string): any;
     /** Other static methods can do the same */
