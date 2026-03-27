@@ -5,7 +5,7 @@ import { CjsComponentReRenderTag, CjsObjectAttributePrefix } from "../constants"
 import { _DOMElementsUtil } from "../utils/protected/_DOMElementsUtil";
 import { CjsStringUtil } from "../utils/public/CjsStringUtil";
 
-export type CjsLayoutNode = Constructor<CjsComponent> | CjsComponent | CjsLayout | null | CjsLayoutNode[];
+export type CjsLayoutNode = Constructor<CjsComponent> | CjsComponent | CjsLayout | (() => Promise<CjsLayoutNode>) | null | CjsLayoutNode[];
 
 const CjsLayoutTakenIds: string[] = [];
 
@@ -54,30 +54,11 @@ export class CjsLayout<TData = any> {
             return typeof v === "function" && v.prototype?.constructor === v;
         }
 
-        const walk = (elements: CjsLayoutNode): HTMLElement[] => {
-            if (!Array.isArray(elements)) {
-                _CjsLoggerUtil.error("Layout have wrong pattern, component should be in array");
+        function isAsyncFunction(v: any): boolean {
+            return (v as any)[Symbol.toStringTag] === "AsyncFunction";
+        }
 
-                return [this.createErrorElement()];
-            }
-
-            if (elements.length === 0) {
-                _CjsLoggerUtil.error("Layout have an empty component space");
-
-                return [this.createErrorElement()];
-            }
-
-            const element = elements[0];
-
-            if (element instanceof CjsLayout) {
-                return element.visualise();
-            }
-
-            const instance = 
-                (isConstructable(element)
-                ? new (element as Constructor<CjsComponent>)()
-                : element) as CjsComponent
-
+        const getConstructedInstance = (instance: CjsComponent, elements: CjsLayoutNode[]) => {
             if(!(instance instanceof CjsComponent)) {
                 _CjsLoggerUtil.error("The element should be CjsComponent, but passed", instance);
 
@@ -120,8 +101,6 @@ export class CjsLayout<TData = any> {
                                 document.createElement(CjsComponentReRenderTag)
                             );
                         }
-
-                        // renderPlaceholder.replaceWith(builtChild);
                         for(const _buildChild of builtChild) {
                             renderPlaceholder.insertAdjacentElement("afterend", _buildChild);
                         }
@@ -131,15 +110,54 @@ export class CjsLayout<TData = any> {
                         for(const _buildChild of builtChild) {
                             component.insertAdjacentElement("beforeend", _buildChild);
                         }
-
-                        // console.log(component, tempWrapper);
-                        
-                        // component.insertAdjacentElement("beforeend", builtChild);
                     }
                 });
             }
 
             return [component];
+        }
+
+        const walk = (elements: CjsLayoutNode): HTMLElement[] => {
+            if (!Array.isArray(elements)) {
+                _CjsLoggerUtil.error("Layout have wrong pattern, component should be in array");
+
+                return [this.createErrorElement()];
+            }
+
+            if (elements.length === 0) {
+                _CjsLoggerUtil.error("Layout have an empty component space");
+
+                return [this.createErrorElement()];
+            }
+
+            const element = elements[0];
+
+            if (element instanceof CjsLayout) {
+                return element.visualise();
+            }
+
+            if(isAsyncFunction(element)) {
+                const asyncElement = document.createElement("cjsasyncelement");
+
+                (element as (() => Promise<CjsLayoutNode>))().then(asyncElements => {
+                    const children = walk([asyncElements]);
+
+                    for(const child of children) {
+                        asyncElement.insertAdjacentElement(`beforebegin`, child);
+                    }
+
+                    asyncElement.remove();
+                })
+
+                return [asyncElement];
+            }
+
+            const instance = 
+                (isConstructable(element)
+                ? new (element as Constructor<CjsComponent>)()
+                : element) as CjsComponent;
+
+            return getConstructedInstance(instance, elements);
         };
 
         this.elements(this._preSetData as TData).forEach(elements => {
