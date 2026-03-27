@@ -36,7 +36,7 @@ index.html
 Components are simple classes prototypes that return string templates (or more - described later).<br>
 Let's take a look at example component.
 
-```js
+```ts
 export class Form extends CjsComponent {
     _template() {
         return `
@@ -57,7 +57,7 @@ export class Form extends CjsComponent {
 
 If we would like to simplify this, and remove the duplicated `<label>` tags, we could create a `Label` component.
 
-```js
+```ts
 type Data = {
     type: "email" | "password"
     placeholder: string
@@ -80,7 +80,7 @@ export class Label extends CjsComponent<Data> {
 
 Now in `Form` component we can render the `Label` component.
 
-```js
+```ts
 import { Label } from "./Label";
 
 export class Form extends CjsComponent {
@@ -112,7 +112,7 @@ Mentioned command will create:
 ### Layouts
 Layouts are containing components in specific scheme, that interferes with rendering.<br>
 Let's look at example layout.
-```js
+```ts
 import {Header} from "./Header";
 import {Nav} from "./Nav";
 import {Container} from "./Container";
@@ -161,7 +161,7 @@ Take a look at this example.
 
 First we create a simple empty Form component.
 
-```js
+```ts
 export class Form extends CjsComponent {
     _template() {
         return `
@@ -175,7 +175,7 @@ export class Form extends CjsComponent {
 
 Next we recreate our Label components.
 
-```js
+```ts
 type Data = {
     type: "email"|"password"
     name: string
@@ -185,7 +185,7 @@ type Data = {
 export class Label extends CjsComponent<Data> {
 
     _template() {
-        const { type, name, placeholder } = this._renderData;
+        const { type, name, placeholder } = this.data;
     
         return `
             <label>
@@ -200,9 +200,9 @@ export class Label extends CjsComponent<Data> {
 
 And for the last component let's create a Button component that will submit the Form.
 
-```js
+```ts
 type Data = {
-    text: string,
+    text: string
     click: () => any
 }
 
@@ -228,7 +228,7 @@ export class Button extends CjsComponent<Data> {
 
 And let's combine them inside Layout.
 
-```js
+```ts
 import {Form} from "./Form";
 import {Label} from "./Label";
 import {Button} from "./Button";
