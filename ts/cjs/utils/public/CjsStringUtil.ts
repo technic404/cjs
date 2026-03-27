@@ -58,5 +58,20 @@ export const CjsStringUtil = {
         if (!value) return value;
 
         return value.charAt(0).toUpperCase() + value.slice(1);
+    },
+    kebabCaseToCamelStyle(str: string): string {
+        return str.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+    },
+
+    snakeStyleToCamelCase(str: string): string {
+        return str.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+    },
+
+    camelStyleToKebabCase(str: string): string {
+        return str.replace(/([A-Z])/g, "-$1").toLowerCase();
+    },
+
+    camelStyleToSnakeStyle(str: string): string {
+        return str.replace(/([A-Z])/g, "_$1").toLowerCase();
     }
 };

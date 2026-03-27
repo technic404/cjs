@@ -124,7 +124,7 @@ export class CjsComponent<TData = any> {
                 html,
                 "style", 
                 Object.entries(this._additionalStyle)
-                    .map(e => `${e[0]}: ${e[1]}`)
+                    .map(e => `${CjsStringUtil.camelStyleToKebabCase(e[0])}: ${e[1]}`)
                     .join("; ")
             );
             
@@ -415,5 +415,15 @@ export class CjsComponent<TData = any> {
         layout: CjsLayout
     ) {
         return (this as StaticCast<T>).getInstance().loadLayout(layout);
+    }
+
+    /** Get first occurrence of the CjsComponent as HTMLElement */
+    static getFirst<T extends CjsComponent<any>>(this: Constructor<T>) {
+        return (this as StaticCast<T>).getInstance().getFirst();
+    }
+
+    /** Get all occurrences of the CjsComponent as HTMLElement */
+    static getAll<T extends CjsComponent<any>>(this: Constructor<T>) {
+        return (this as StaticCast<T>).getInstance().getAll();
     }
 }
