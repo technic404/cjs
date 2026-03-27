@@ -33,7 +33,7 @@ index.html
 - `/src/layouts/{Layout name}/_styles` - styles of the components
 
 ### Base concept (components)
-Components are simple functions that return string.<br>
+Components are simple classes prototypes that return string templates (or more - described later).<br>
 Let's take a look at example component.
 
 ```js
