@@ -4,6 +4,9 @@ It also provides the organized files structure, so even big projects will be eas
 
 ### Files structure
 ```
+lib
+|
+└───...
 src
 │
 └───assets
@@ -15,14 +18,13 @@ src
 │   │   └───_styles
 │   │   │   │   Container.css
 │   │   │
-│   │   │   Container.mjs
-│   │   │   RootLayout.mjs
-c.js
+│   │   │   Container.ts
+│   │   │   RootLayout.ts
 index.html
 ```
 
 #### Legend
-- `/c.js` - CJS library file
+- `/lib` - CJS library file
 - `/index.html` - root html file
 - `/src/` - main project source directory
 - `/src/assets` - assets directory, where images, videos, fonts and other resources can be stored
@@ -31,12 +33,12 @@ index.html
 - `/src/layouts/{Layout name}/_styles` - styles of the components
 
 ### Base concept (components)
-Components are simple functions that return string.<br>
+Components are simple classes prototypes that return string templates (or more - described later).<br>
 Let's take a look at example component.
 
-```js
-export const Form = new class CjsComponent {
-    _() {
+```ts
+export class Form extends CjsComponent {
+    _template() {
         return `
             <form>
                 <label>
@@ -49,23 +51,21 @@ export const Form = new class CjsComponent {
         `;
     }
 
-    /** Settings */
-    _renderData = this.data;
     _cssStyle = './src/components/_styles/Form.css';
 };
 ```
 
 If we would like to simplify this, and remove the duplicated `<label>` tags, we could create a `Label` component.
 
-```js
-/** @typedef {{ type: "email"|"password", placeholder: string }} Data */
+```ts
+type Data = {
+    type: "email" | "password"
+    placeholder: string
+}
 
-/** @cjs {Data} */
-export const Label = new class CjsComponent {
-    data = {};
-
-    _() {
-        const { type, placeholder } = this._renderData;
+export class Label extends CjsComponent<Data> {
+    _template() {
+        const { type, placeholder } = this.data;
     
         return `
             <label>
@@ -74,19 +74,17 @@ export const Label = new class CjsComponent {
         `;
     }
 
-    /** Settings */
-    _renderData = this.data;
     _cssStyle = './src/components/_styles/Label.css';
 };
 ```
 
 Now in `Form` component we can render the `Label` component.
 
-```js
-import { Label } from "./Label.mjs";
+```ts
+import { Label } from "./Label";
 
-export const Form = new class CjsComponent {
-    _() {
+export class Form extends CjsComponent {
+    _template() {
         return `
             <form>
                 ${Label.render({ type: "email", placeholder: "ex. example@cloud.com" })}
@@ -95,8 +93,6 @@ export const Form = new class CjsComponent {
         `;
     }
 
-    /** Settings */
-    _renderData = this.data;
     _cssStyle = './src/components/_styles/Form.css';
 };
 ```
@@ -110,36 +106,34 @@ $ node c.js c {Component name} --l={Layout name}
 ```
 
 Mentioned command will create:
-1. The main component file `{Component name}.mjs` (and also include basic component creation structure).
+1. The main component file `{Component name}.ts` (and also include basic component creation structure).
 2. Style file under the `_styles/${Component name}.css`.
 
 ### Layouts
 Layouts are containing components in specific scheme, that interferes with rendering.<br>
 Let's look at example layout.
-```js
-import {Header} from "./Header.mjs";
-import {Nav} from "./Nav.mjs";
-import {Container} from "./Container.mjs";
-import {Footer} from "./Container.mjs";
+```ts
+import {Header} from "./Header";
+import {Nav} from "./Nav";
+import {Container} from "./Container";
+import {Footer} from "./Footer";
 
-import {WelcomeLayout} from "../welcome/WelcomeLayout.mjs";
-import {NewsLayout} from "../news/NewsLayout.mjs";
-import {ProjectsLayout} from "../projects/ProjectsLayout.mjs";
-import {CompaniesLayout} from "../companies/CompaniesLayout.mjs";
+import {WelcomeLayout} from "../welcome/WelcomeLayout";
+import {NewsLayout} from "../news/NewsLayout";
+import {ProjectsLayout} from "../projects/ProjectsLayout";
+import {CompaniesLayout} from "../companies/CompaniesLayout";
 
-export const RootLayout = new CjsLayout(
-    [
-        [Header],
-        [Nav],
-        [Container, [
-            [WelcomeLayout],
-            [NewsLayout],
-            [ProjectsLayout],
-            [CompaniesLayout]
-        ]],
-        [Footer]
-    ]
-);
+export const RootLayout = new CjsLayout(() => [
+    [Header],
+    [Nav],
+    [Container, [
+        [WelcomeLayout],
+        [NewsLayout],
+        [ProjectsLayout],
+        [CompaniesLayout]
+    ]],
+    [Footer]
+]);
 ```
 
 The provided scheme will render following html scheme.
@@ -167,31 +161,31 @@ Take a look at this example.
 
 First we create a simple empty Form component.
 
-```js
-export const Form = new class Form extends CjsComponent {
-    _() {
+```ts
+export class Form extends CjsComponent {
+    _template() {
         return `
             <form></form>
         `;
     }
 
-    /** Settings */
-    _renderData = this.data;
     _cssStyle = './src/components/_styles/Form.css';
 };
 ```
 
 Next we recreate our Label components.
 
-```js
-/** @typedef {{ type: "email"|"password", name: string, placeholder: string }} Data */
+```ts
+type Data = {
+    type: "email"|"password"
+    name: string
+    placeholder: string
+}
 
-/** @cjs {Data} */
-export const Label = new class CjsComponent {
-    data = {};
+export class Label extends CjsComponent<Data> {
 
-    _() {
-        const { type, name, placeholder } = this._renderData;
+    _template() {
+        const { type, name, placeholder } = this.data;
     
         return `
             <label>
@@ -200,26 +194,26 @@ export const Label = new class CjsComponent {
         `;
     }
 
-    /** Settings */
-    _renderData = this.data;
     _cssStyle = './src/components/_styles/Label.css';
 };
 ```
 
 And for the last component let's create a Button component that will submit the Form.
 
-```js
-/** @typedef {{ text: string, click: function }} Data */
+```ts
+type Data = {
+    text: string
+    click: () => any
+}
 
-/** @cjs {Data} */
-export const Button = new class CjsComponent {
-    data = {
+export class Button extends CjsComponent<Data> {
+    _defaultData = {
         text: "Example default text",
         click: () => console.log("Clicked!")
     };
 
-    _() {
-        const { text, click } = this._renderData;
+    _template() {
+        const { text, click } = this.data;
     
         return `
             <button ${onClick(click)}>
@@ -228,43 +222,39 @@ export const Button = new class CjsComponent {
         `;
     }
 
-    /** Settings */
-    _renderData = this.data;
     _cssStyle = './src/components/_styles/Button.css';
 };
 ```
 
 And let's combine them inside Layout.
 
-```js
-import {Form} from "./Form.mjs";
-import {Label} from "./Label.mjs";
-import {Button} from "./Button.mjs";
+```ts
+import {Form} from "./Form";
+import {Label} from "./Label";
+import {Button} from "./Button";
 
-export const RootLayout = new CjsLayout(
-    [
-        [Form, [
-            [Label.withData({
-                type: "email", 
-                name: "email",
-                placeholder: "ex. example@cloud.com"
-            })],
-            [Label.withData({
-                type: "password", 
-                name: "password",
-                placeholder: "ex. zaq1@WSX"
-            })],
-            [Button.withData({
-                text: "Submit",
-                click: async () => {
-                    const { name, password } = Form.forms[0].serialize();
+export const RootLayout = new CjsLayout(() => [
+    [Form, [
+        [Label.withData({
+            type: "email", 
+            name: "email",
+            placeholder: "ex. example@cloud.com"
+        })],
+        [Label.withData({
+            type: "password", 
+            name: "password",
+            placeholder: "ex. zaq1@WSX"
+        })],
+        [Button.withData({
+            text: "Submit",
+            click: async () => {
+                const { name, password } = Form.forms[0].serialize();
 
-                    await App.users.login(name, password);
-                }
-            })]
-        ]],
-    ]
-);
+                await App.users.login(name, password);
+            }
+        })]
+    ]],
+]);
 ```
 
 Like this you can create multiple pages just by defining the components flow.
