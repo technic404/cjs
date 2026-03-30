@@ -26,19 +26,13 @@ export class CjsLayout<TData = any> {
     }
 
     public withData(preSetData: TData): CjsLayout {
-        const clone = Object.create(Object.getPrototypeOf(this));
-        Object.assign(clone, this);
-
-        clone._preSetData = preSetData;
-        return clone;
+        this._preSetData = preSetData;
+        return this;
     }
 
     public withStyle(additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>) {
-        const clone = Object.create(Object.getPrototypeOf(this));
-        Object.assign(clone, this);
-
-        clone._additionalStyle = additionalStyle;
-        return clone;
+        this._additionalStyle = additionalStyle;
+        return this;
     }
 
     private createErrorElement() {
@@ -192,6 +186,8 @@ export class CjsLayout<TData = any> {
                     : `${existingStyle}; ${additionalStyleParsed}`
                 );
             }
+
+            this._additionalStyle = null;
         }
 
         return this._layoutObjects as HTMLElement[];
@@ -201,6 +197,9 @@ export class CjsLayout<TData = any> {
         const layoutElements = this._layoutObjects;
         const firstLayoutElementOccurrence = layoutElements[0];
         const otherLayoutElements = layoutElements.slice(1);
+
+        console.log(this._layoutObjects, firstLayoutElementOccurrence);
+        
 
         otherLayoutElements.forEach(el => el.remove());
 

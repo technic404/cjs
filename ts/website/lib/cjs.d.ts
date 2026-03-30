@@ -114,7 +114,7 @@ declare class CjsForm {
     serialize(options?: CjsFormSerializeOptions): Record<string | number, any>;
 }
 
-type CjsLayoutNode = Constructor$1<CjsComponent> | CjsComponent | CjsLayout | null | CjsLayoutNode[];
+type CjsLayoutNode = Constructor$1<CjsComponent> | CjsComponent | CjsLayout | (() => Promise<CjsLayoutNode>) | null | CjsLayoutNode[];
 declare class CjsLayout<TData = any> {
     _preSetData: TData | null;
     _additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>> | null;
@@ -125,7 +125,7 @@ declare class CjsLayout<TData = any> {
      */
     constructor(elements: (data: TData | null) => CjsLayoutNode[][]);
     withData(preSetData: TData): CjsLayout;
-    withStyle(additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>): any;
+    withStyle(additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>>): this;
     private createErrorElement;
     /** Build DOM structure */
     visualise(): HTMLElement[];
@@ -234,6 +234,10 @@ declare class CjsComponent<TData = any> {
     static fillHeight<T extends CjsComponent<any>>(this: Constructor<T>, offset?: number, maxHeight?: number): any;
     /** Loads CjsLayout inside CjsComponent */
     static loadLayout<T extends CjsComponent<any>>(this: Constructor<T>, layout: CjsLayout): any;
+    /** Get first occurrence of the CjsComponent as HTMLElement */
+    static getFirst<T extends CjsComponent<any>>(this: Constructor<T>): any;
+    /** Get all occurrences of the CjsComponent as HTMLElement */
+    static getAll<T extends CjsComponent<any>>(this: Constructor<T>): any;
 }
 
 /**
@@ -314,6 +318,10 @@ declare const CjsStringUtil: {
      * Capitalizes first letter of the string
      */
     capitalize(value: string): string;
+    kebabCaseToCamelStyle(str: string): string;
+    snakeStyleToCamelCase(str: string): string;
+    camelStyleToKebabCase(str: string): string;
+    camelStyleToSnakeStyle(str: string): string;
 };
 
 /**
