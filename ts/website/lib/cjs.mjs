@@ -68,8 +68,8 @@ const he = L.format(`&c&n${I}&r `), de = L.format(`&c&a${I}&r `), fe = L.format(
     for (; a < r; )
       t += s.charAt(Math.floor(Math.random() * n)), a += 1;
     if (e) {
-      const o = (i) => !isNaN(Number(i.substring(0, 1)));
-      for (; o(t); )
+      const c = (o) => !isNaN(Number(o.substring(0, 1)));
+      for (; c(t); )
         t = this.getRandom(r, e);
     }
     return t;
@@ -189,28 +189,28 @@ function He(r) {
 function qe(r, e = 10) {
   return E((t) => {
     let s = 0, n = 0;
-    const a = (c) => {
-      const l = c, u = "touches" in l ? l.touches[0].clientY : l.clientY;
+    const a = (i) => {
+      const l = i, u = "touches" in l ? l.touches[0].clientY : l.clientY;
       n = u, s = u;
-    }, o = (c) => {
-      const l = c, u = "touches" in l ? l.touches[0].clientY : l.clientY, h = u + 1 >= n, d = u - s;
+    }, c = (i) => {
+      const l = i, u = "touches" in l ? l.touches[0].clientY : l.clientY, h = u + 1 >= n, d = u - s;
       if (!h) {
         s = 0;
         return;
       }
       d > e && (r(t), s = 0), n = u;
-    }, { source: i } = t;
-    i.addEventListener("mousedown", a), i.addEventListener("touchstart", a), i.addEventListener("mousemove", o), i.addEventListener("touchmove", o);
+    }, { source: o } = t;
+    o.addEventListener("mousedown", a), o.addEventListener("touchstart", a), o.addEventListener("mousemove", c), o.addEventListener("touchmove", c);
   });
 }
 function Be(r, e = 50, t = 50) {
   return E((s) => {
     let n = { startX: 0, startY: 0, lastX: 0, lastY: 0 };
-    const a = (c) => {
-      const l = c, u = "touches" in l ? l.touches[0].clientX : l.clientX, h = "touches" in l ? l.touches[0].clientY : l.clientY;
+    const a = (i) => {
+      const l = i, u = "touches" in l ? l.touches[0].clientX : l.clientX, h = "touches" in l ? l.touches[0].clientY : l.clientY;
       n.lastX = u, n.startX = u, n.lastY = h, n.startY = h;
-    }, o = (c) => {
-      const l = c, u = "touches" in l ? l.touches[0].clientX : l.clientX, h = "touches" in l ? l.touches[0].clientY : l.clientY, d = u - 1 <= n.lastX, f = u - n.startX, p = h - n.startY;
+    }, c = (i) => {
+      const l = i, u = "touches" in l ? l.touches[0].clientX : l.clientX, h = "touches" in l ? l.touches[0].clientY : l.clientY, d = u - 1 <= n.lastX, f = u - n.startX, p = h - n.startY;
       if (t !== -1 && t < Math.abs(p)) {
         n.startX = 0;
         return;
@@ -220,18 +220,18 @@ function Be(r, e = 50, t = 50) {
         return;
       }
       f < -1 * e && (r(s), n.startX = 0), n.lastX = u;
-    }, { source: i } = s;
-    i.addEventListener("mousedown", a), i.addEventListener("touchstart", a), i.addEventListener("mousemove", o), i.addEventListener("touchmove", o);
+    }, { source: o } = s;
+    o.addEventListener("mousedown", a), o.addEventListener("touchstart", a), o.addEventListener("mousemove", c), o.addEventListener("touchmove", c);
   });
 }
 function Ye(r, e = 50, t = 50) {
   return E((s) => {
     let n = { startX: 0, startY: 0, lastX: 0, lastY: 0 };
-    const a = (c) => {
-      const l = c, u = "touches" in l ? l.touches[0].clientX : l.clientX, h = "touches" in l ? l.touches[0].clientY : l.clientY;
+    const a = (i) => {
+      const l = i, u = "touches" in l ? l.touches[0].clientX : l.clientX, h = "touches" in l ? l.touches[0].clientY : l.clientY;
       n.lastX = u, n.startX = u, n.lastY = h, n.startY = h;
-    }, o = (c) => {
-      const l = c, u = "touches" in l ? l.touches[0].clientX : l.clientX, h = "touches" in l ? l.touches[0].clientY : l.clientY, d = u + 1 >= n.lastX, f = u - n.startX, p = h - n.startY;
+    }, c = (i) => {
+      const l = i, u = "touches" in l ? l.touches[0].clientX : l.clientX, h = "touches" in l ? l.touches[0].clientY : l.clientY, d = u + 1 >= n.lastX, f = u - n.startX, p = h - n.startY;
       if (t !== -1 && t < Math.abs(p)) {
         n.startX = 0;
         return;
@@ -241,25 +241,25 @@ function Ye(r, e = 50, t = 50) {
         return;
       }
       f > e && (r(s), n.startX = 0), n.lastX = u;
-    }, { source: i } = s;
-    i.addEventListener("mousedown", a), i.addEventListener("touchstart", a), i.addEventListener("mousemove", o), i.addEventListener("touchmove", o);
+    }, { source: o } = s;
+    o.addEventListener("mousedown", a), o.addEventListener("touchstart", a), o.addEventListener("mousemove", c), o.addEventListener("touchmove", c);
   });
 }
 function De(r, e = 10) {
   return E((t) => {
     let s = 0, n = 0;
-    const a = (c) => {
-      const l = c, u = "touches" in l ? l.touches[0].clientY : l.clientY;
+    const a = (i) => {
+      const l = i, u = "touches" in l ? l.touches[0].clientY : l.clientY;
       n = u, s = u;
-    }, o = (c) => {
-      const l = c, u = "touches" in l ? l.touches[0].clientY : l.clientY, h = u - 1 <= n, d = u - s;
+    }, c = (i) => {
+      const l = i, u = "touches" in l ? l.touches[0].clientY : l.clientY, h = u - 1 <= n, d = u - s;
       if (!h) {
         s = 0;
         return;
       }
       d < -1 * e && (r(t), s = 0), n = u;
-    }, { source: i } = t;
-    i.addEventListener("mousedown", a), i.addEventListener("touchstart", a), i.addEventListener("mousemove", o), i.addEventListener("touchmove", o);
+    }, { source: o } = t;
+    o.addEventListener("mousedown", a), o.addEventListener("touchstart", a), o.addEventListener("mousemove", c), o.addEventListener("touchmove", c);
   });
 }
 const w = (r, e, t = !1) => $.addCallback({
@@ -305,23 +305,23 @@ class re {
     s && console.log(
       `Comparsion: "${e}" with "${t.slice(0, e.length).join("")}"`
     );
-    const a = [], o = () => {
+    const a = [], c = () => {
       s && console.log(
         "Char by char comparsion:",
         a.map(
-          (i) => `"${i.matchChar}" ${i.matchChar === i.arrayChar ? "==" : "!="} "${i.arrayChar}"`
+          (o) => `"${o.matchChar}" ${o.matchChar === o.arrayChar ? "==" : "!="} "${o.arrayChar}"`
         ).join(", ")
       );
     };
-    for (let i = 0; i < n.length; i++) {
-      const c = n[i], l = i;
+    for (let o = 0; o < n.length; o++) {
+      const i = n[o], l = o;
       if (this._isOutOfBounds(t, l))
-        return o(), !1;
+        return c(), !1;
       const u = t[l];
-      if (a.push({ matchChar: c, arrayChar: u }), u !== c)
-        return o(), !1;
+      if (a.push({ matchChar: i, arrayChar: u }), u !== i)
+        return c(), !1;
     }
-    return o(), !0;
+    return c(), !0;
   }
   /**
    * Reads string ignoring the comments sections with checks if the comment is in string
@@ -330,17 +330,17 @@ class re {
   }) {
     const { comment: t, loop: s } = this, n = this.source.split("");
     let a = "";
-    for (let c = 0; c < n.length; c++) {
-      if (s.char = n[c], s.skipChars > 0) {
+    for (let i = 0; i < n.length; i++) {
+      if (s.char = n[i], s.skipChars > 0) {
         s.skipChars--;
         continue;
       }
-      if (t.multipleLineEnabled && this._matchNextChars(t.closing, n.slice(c)) && s.comment.multipleLineOpened) {
+      if (t.multipleLineEnabled && this._matchNextChars(t.closing, n.slice(i)) && s.comment.multipleLineOpened) {
         s.comment.multipleLineOpened = !1, s.skipChars = t.closing.length - 1;
         continue;
       }
       if (t.singleLineEnabled && s.comment.singleLineOpened && this._matchNextChars(`
-`, n.slice(c))) {
+`, n.slice(i))) {
         s.comment.singleLineOpened = !1, s.skipChars = 1;
         continue;
       }
@@ -349,11 +349,11 @@ class re {
           s.string.opened = !1, s.string.openingChar = "", a += s.char;
           continue;
         }
-        if (this.stringChars.includes(s.char) && !s.string.opened && (s.string.opened = !0, s.string.openingChar = s.char), t.singleLineEnabled && this._matchNextChars(t.singleLine, n.slice(c)) && !s.string.opened) {
+        if (this.stringChars.includes(s.char) && !s.string.opened && (s.string.opened = !0, s.string.openingChar = s.char), t.singleLineEnabled && this._matchNextChars(t.singleLine, n.slice(i)) && !s.string.opened) {
           s.comment.singleLineOpened = !0;
           continue;
         }
-        if (t.multipleLineEnabled && this._matchNextChars(t.opening, n.slice(c))) {
+        if (t.multipleLineEnabled && this._matchNextChars(t.opening, n.slice(i))) {
           if (s.string.multipleLineOpened && t.ignoreInString) {
             a += s.char;
             continue;
@@ -364,20 +364,20 @@ class re {
         a += s.char;
       }
     }
-    const o = a.split(""), i = (c, l) => {
-      e(c, l, (u, h = !1) => u === void 0 ? !1 : this._matchNextChars(u, o.slice(l), h));
+    const c = a.split(""), o = (i, l) => {
+      e(i, l, (u, h = !1) => u === void 0 ? !1 : this._matchNextChars(u, c.slice(l), h));
     };
-    for (let c = 0; c < o.length; c++) {
-      const l = o[c];
+    for (let i = 0; i < c.length; i++) {
+      const l = c[i];
       if (s.string.opened && l === s.string.openingChar) {
-        s.string.opened = !1, s.string.openingChar = "", i(l, c);
+        s.string.opened = !1, s.string.openingChar = "", o(l, i);
         continue;
       }
       if (this.stringChars.includes(l) && !s.string.opened) {
-        s.string.opened = !0, s.string.openingChar = l, i(l, c);
+        s.string.opened = !0, s.string.openingChar = l, o(l, i);
         continue;
       }
-      i(l, c);
+      o(l, i);
     }
     return a;
   }
@@ -402,27 +402,27 @@ class G extends re {
   read() {
     const e = {};
     let t = !1, s = 0, n = "", a = "";
-    const o = (i) => i.replaceAll(`
+    const c = (o) => o.replaceAll(`
 `, "");
-    return this._read((i) => {
-      const c = this.loop;
-      if (i === "{" && !t && !c.string.opened) {
-        t = !0, a = o(n), n = "", a in e || (e[a] = "");
+    return this._read((o) => {
+      const i = this.loop;
+      if (o === "{" && !t && !i.string.opened) {
+        t = !0, a = c(n), n = "", a in e || (e[a] = "");
         return;
       }
       if (!t) {
-        n += i;
+        n += o;
         return;
       }
-      if (i === "{" && t && !c.string.opened && s++, i === "}" && s > 0 && !c.string.opened) {
-        s--, n += i;
+      if (o === "{" && t && !i.string.opened && s++, o === "}" && s > 0 && !i.string.opened) {
+        s--, n += o;
         return;
       }
-      if (i === "}" && s === 0 && !c.string.opened) {
-        e[a] = o(n), a = "", n = "", t = !1;
+      if (o === "}" && s === 0 && !i.string.opened) {
+        e[a] = c(n), a = "", n = "", t = !1;
         return;
       }
-      n += i;
+      n += o;
     }), e;
   }
 }
@@ -481,12 +481,12 @@ class ye extends re {
 const Ce = {
   processSelector(r) {
     const e = r.split(" "), t = e[1], s = e[2], n = {}, a = (() => {
-      let c = "", l = "";
+      let i = "", l = "";
       for (const u of s.split(""))
-        isNaN(Number(u)) ? l += u : c += u;
-      return { number: parseInt(c), unit: l };
-    })(), { number: o, unit: i } = a;
-    return n["<"] = `max-width: ${o - 1}${i}`, n["<="] = `max-width: ${o}${i}`, n[">"] = `min-width: ${o + 1}${i}`, n[">="] = `min-width: ${o}${i}`, `@media only screen and (${n[t]})`;
+        isNaN(Number(u)) ? l += u : i += u;
+      return { number: parseInt(i), unit: l };
+    })(), { number: c, unit: o } = a;
+    return n["<"] = `max-width: ${c - 1}${o}`, n["<="] = `max-width: ${c}${o}`, n[">"] = `min-width: ${c + 1}${o}`, n[">="] = `min-width: ${c}${o}`, `@media only screen and (${n[t]})`;
   }
 }, J = {
   "backdrop-filter": ["-webkit-backdrop-filter"]
@@ -494,33 +494,33 @@ const Ce = {
   processComponentStyle(r, e) {
     const t = new G(e).read();
     let s = [];
-    const n = (o, i) => {
-      o = o.trim();
-      const c = `${o} { ${i} }`;
-      return o.startsWith(":") ? [c] : o.split(",").map((l) => {
+    const n = (c, o) => {
+      c = c.trim();
+      const i = `${c} { ${o} }`;
+      return c.startsWith(":") ? [i] : c.split(",").map((l) => {
         const u = l.trim().substring(0, 1), h = u === "." || u === "#", d = [
           `${r}${h ? "" : " "}${l.trim()}`
         ];
         if (!h) {
-          const f = l.split(" "), p = f[0], v = f.slice(1).join(" "), C = p.includes(":") ? p.slice(p.indexOf(":")) : "", y = p.replace(C, ""), S = `${C} ${v}`, j = S.split(",").map((R) => R.trim()).slice(1), O = S.includes(",") ? j.map((R) => {
+          const f = l.split(" "), p = f[0], v = f.slice(1).join(" "), C = p.includes(":") ? p.slice(p.indexOf(":")) : "", y = p.replace(C, ""), S = `${C} ${v}`, j = S.split(",").map((O) => O.trim()).slice(1), R = S.includes(",") ? j.map((O) => {
             const b = [
               `${y}${r}`,
-              `${R.replace(y, "")}`
+              `${O.replace(y, "")}`
             ], T = !b[1].startsWith(":");
             return b.join(T ? " " : "");
           }) : "";
           S.includes(",") ? d.push(
             `${y}${r}${S.replace(
               j,
-              O
+              R
             )}`
           ) : d.push(`${y}${r}${S}`);
         }
         return d;
-      }).map((l) => `${l.join(", ")} { ${i} }`).flat();
-    }, a = (o, i) => {
-      const c = new G(i).read(), l = [];
-      for (const [u, h] of Object.entries(c)) {
+      }).map((l) => `${l.join(", ")} { ${o} }`).flat();
+    }, a = (c, o) => {
+      const i = new G(o).read(), l = [];
+      for (const [u, h] of Object.entries(i)) {
         const d = new ye(h).read();
         for (const [p, v] of Object.entries(d))
           if (p in J)
@@ -531,30 +531,30 @@ const Ce = {
       }
       return l;
     };
-    for (const [o, i] of Object.entries(t)) {
-      if (i.trim() === "") continue;
-      const c = o.startsWith("@media"), l = o.startsWith("@keyframes");
-      if (o.startsWith("@range")) {
-        const f = `${Ce.processSelector(o)} { ${a(o, i).join(`
+    for (const [c, o] of Object.entries(t)) {
+      if (o.trim() === "") continue;
+      const i = c.trim(), l = i.startsWith("@media"), u = i.startsWith("@keyframes"), h = i.startsWith("@range");
+      if (console.log(i, u), h) {
+        const p = `${Ce.processSelector(i)} { ${a(i, o).join(`
+`)} }`;
+        s.push(p);
+        continue;
+      }
+      if (l) {
+        const f = `${i} { ${a(
+          i,
+          o
+        ).join(`
 `)} }`;
         s.push(f);
         continue;
       }
-      if (c) {
-        const d = `${o} { ${a(
-          o,
-          i
-        ).join(`
-`)} }`;
-        s.push(d);
+      if (u) {
+        s.push(`${i} { ${o} }`);
         continue;
       }
-      if (l) {
-        s.push(`${o} { ${i} }`);
-        continue;
-      }
-      const h = n(o, i);
-      s.push(...h);
+      const d = n(i, o);
+      s.push(...d);
     }
     return s.join(" ").replaceAll(`
 `, "");
@@ -593,22 +593,22 @@ const Ce = {
     let n = 0;
     for (; n < s && r.charCodeAt(n) <= 32; ) n++;
     if (r[n] !== "<") return r;
-    const a = n, o = r.indexOf(">", a);
-    if (o === -1) return r;
-    let i = r.slice(a, o);
-    const c = new RegExp(
+    const a = n, c = r.indexOf(">", a);
+    if (c === -1) return r;
+    let o = r.slice(a, c);
+    const i = new RegExp(
       `\\b${e}\\s*=\\s*(['"])(.*?)\\1`,
       "i"
-    ), l = i.match(c);
+    ), l = o.match(i);
     let u;
     if (l) {
       const h = l[0], d = l[1], f = l[2].trim(), p = f.length === 0 ? t : f.endsWith(";") ? f + t : e === "style" ? f + "; " + t : f + " " + t, v = `${e}=${d}${p}${d}`;
-      u = i.replace(h, v);
+      u = o.replace(h, v);
     } else {
-      const h = i.endsWith("/") ? i.length - 1 : i.length;
-      u = i.slice(0, h) + ` ${e}="${t}"` + i.slice(h);
+      const h = o.endsWith("/") ? o.length - 1 : o.length;
+      u = o.slice(0, h) + ` ${e}="${t}"` + o.slice(h);
     }
-    return r.slice(0, a) + u + r.slice(o);
+    return r.slice(0, a) + u + r.slice(c);
   }
 }, k = {
   /**
@@ -619,8 +619,8 @@ const Ce = {
       if (!t || typeof t != "object") return [t];
       const s = [];
       for (const n of Object.keys(t)) {
-        const a = t[n], o = typeof a == "object" && a !== null && !Array.isArray(a);
-        s.push(...o ? e(a) : [a]);
+        const a = t[n], c = typeof a == "object" && a !== null && !Array.isArray(a);
+        s.push(...c ? e(a) : [a]);
       }
       return s;
     };
@@ -634,18 +634,18 @@ const Ce = {
     const s = (n, a) => {
       if (typeof n != "object" || n === null)
         return a ?? n;
-      const o = Array.isArray(n) ? [...n] : {}, i = /* @__PURE__ */ new Set([
+      const c = Array.isArray(n) ? [...n] : {}, o = /* @__PURE__ */ new Set([
         ...Object.keys(n ?? {}),
         ...Object.keys(a ?? {})
       ]);
-      for (const c of i) {
-        if (!(c in a)) {
-          o[c] = n?.[c];
+      for (const i of o) {
+        if (!(i in a)) {
+          c[i] = n?.[i];
           continue;
         }
-        !t && c in n ? o[c] = n[c] : o[c] = s(n?.[c], a?.[c]);
+        !t && i in n ? c[i] = n[i] : c[i] = s(n?.[i], a?.[i]);
       }
-      return o;
+      return c;
     };
     return s(r, e);
   },
@@ -658,10 +658,10 @@ const Ce = {
       const s = typeof t != "object", n = typeof HTMLElement < "u" && (t instanceof HTMLElement || t instanceof Node);
       if (s || n) return t;
       if (Array.isArray(t))
-        return t.map((o) => e(o));
+        return t.map((c) => e(c));
       const a = {};
-      for (const [o, i] of Object.entries(t))
-        a[o] = e(i);
+      for (const [c, o] of Object.entries(t))
+        a[c] = e(o);
       return a;
     };
     return e(r);
@@ -755,10 +755,10 @@ class we {
         e.setRequestHeader("Content-Type", "application/json"), e.send(JSON.stringify(this.body));
       else {
         const n = new FormData();
-        if (Object.entries(this.files).forEach(([a, o]) => {
-          o instanceof FileList ? Array.from(o).forEach(
-            (i) => n.append(a, i)
-          ) : n.append(a, o);
+        if (Object.entries(this.files).forEach(([a, c]) => {
+          c instanceof FileList ? Array.from(c).forEach(
+            (o) => n.append(a, o)
+          ) : n.append(a, c);
         }), t && !this.bodyKey) {
           console.error("BodyKey required when sending files + body"), e.send(n);
           return;
@@ -929,25 +929,25 @@ class X {
     "*": (e) => e.value
   };
   serialize(e = {}) {
-    const t = Array.from(this.#e.querySelectorAll("select")), s = Array.from(this.#e.querySelectorAll("input")), n = Array.from(this.#e.querySelectorAll("textarea")), a = [...t, ...s, ...n], o = {};
-    for (let i = 0; i < a.length; i++) {
-      const c = a[i], l = c.getAttribute("name");
+    const t = Array.from(this.#e.querySelectorAll("select")), s = Array.from(this.#e.querySelectorAll("input")), n = Array.from(this.#e.querySelectorAll("textarea")), a = [...t, ...s, ...n], c = {};
+    for (let o = 0; o < a.length; o++) {
+      const i = a[o], l = i.getAttribute("name");
       if (!l && !e.includeNoNames) continue;
-      const u = c.getAttribute("type") ?? "*", d = (this.#t[u] ?? this.#t["*"])(c), f = l ?? i;
-      o[f] = d;
+      const u = i.getAttribute("type") ?? "*", d = (this.#t[u] ?? this.#t["*"])(i), f = l ?? o;
+      c[f] = d;
     }
     if (e.checkboxesReadType === "array") {
-      const i = s.filter((c) => c.type === "checkbox");
-      for (const c of i) {
-        if (!c.name) {
-          g.error("Checkbox doesn't have a name attribute, but it's required when options.checkboxesReadType === array", c);
+      const o = s.filter((i) => i.type === "checkbox");
+      for (const i of o) {
+        if (!i.name) {
+          g.error("Checkbox doesn't have a name attribute, but it's required when options.checkboxesReadType === array", i);
           continue;
         }
-        const l = c.name;
-        (!(l in o) || !Array.isArray(o[l])) && (o[l] = []), c.checked && o[l].push(c.value);
+        const l = i.name;
+        (!(l in c) || !Array.isArray(c[l])) && (c[l] = []), i.checked && c[l].push(i.value);
       }
     }
-    return o;
+    return c;
   }
 }
 const Z = [], W = class W {
@@ -991,12 +991,12 @@ const Z = [], W = class W {
       "style",
       Object.entries(this._additionalStyle).map((n) => `${x.camelStyleToKebabCase(n[0])}: ${n[1]}`).join("; ")
     )), t && "fillHeightData" in t) {
-      const { maxHeight: n, offset: a } = t.fillHeightData, o = (i) => {
-        const { source: c } = i;
-        c.style.height = `${n !== void 0 && window.innerHeight > n ? n : window.innerHeight + a}px`;
+      const { maxHeight: n, offset: a } = t.fillHeightData, c = (o) => {
+        const { source: i } = o;
+        i.style.height = `${n !== void 0 && window.innerHeight > n ? n : window.innerHeight + a}px`;
       };
-      s.push((i) => {
-        window.addEventListener("resize", (c) => o(i)), o(i);
+      s.push((o) => {
+        window.addEventListener("resize", (i) => c(o)), c(o);
       });
     }
     return e = D.injectAttribute(e, E((n) => {
@@ -1193,30 +1193,30 @@ class V {
   /** Build DOM structure */
   visualise() {
     const e = document.createElement("div");
-    function t(o) {
-      return typeof o == "function" && o.prototype?.constructor === o;
+    function t(c) {
+      return typeof c == "function" && c.prototype?.constructor === c;
     }
-    function s(o) {
-      return o[Symbol.toStringTag] === "AsyncFunction";
+    function s(c) {
+      return c[Symbol.toStringTag] === "AsyncFunction";
     }
-    const n = (o, i) => {
-      if (!(o instanceof U))
-        return g.error("The element should be CjsComponent, but passed", o), [this.createErrorElement()];
-      const c = o.visualise();
-      if (i.length === 2) {
-        let u = c.getElementsByTagName(Y)[0];
-        const h = i[1];
+    const n = (c, o) => {
+      if (!(c instanceof U))
+        return g.error("The element should be CjsComponent, but passed", c), [this.createErrorElement()];
+      const i = c.visualise();
+      if (o.length === 2) {
+        let u = i.getElementsByTagName(Y)[0];
+        const h = o[1];
         if (!Array.isArray(h))
-          return g.error("Layout sub components at second argument have to be Array"), [c];
+          return g.error("Layout sub components at second argument have to be Array"), [i];
         h.forEach((d, f) => {
           if (d === null) return;
           const p = f === h.length - 1, v = d[0], C = a(d);
           if (v instanceof V) {
             for (const y of C)
-              c.insertAdjacentElement("beforeend", y);
+              i.insertAdjacentElement("beforeend", y);
             return;
           }
-          if (u = c.getElementsByTagName(Y)[0], u) {
+          if (u = i.getElementsByTagName(Y)[0], u) {
             p || u.insertAdjacentElement(
               "afterend",
               document.createElement(Y)
@@ -1226,49 +1226,49 @@ class V {
             u.remove();
           } else
             for (const y of C)
-              c.insertAdjacentElement("beforeend", y);
+              i.insertAdjacentElement("beforeend", y);
         });
       }
-      return [c];
-    }, a = (o) => {
-      if (!Array.isArray(o))
+      return [i];
+    }, a = (c) => {
+      if (!Array.isArray(c))
         return g.error("Layout have wrong pattern, component should be in array"), [this.createErrorElement()];
-      if (o.length === 0)
+      if (c.length === 0)
         return g.error("Layout have an empty component space"), [this.createErrorElement()];
-      const i = o[0];
-      if (i instanceof V)
-        return i.visualise();
-      if (s(i)) {
+      const o = c[0];
+      if (o instanceof V)
+        return o.visualise();
+      if (s(o)) {
         const l = document.createElement("cjsasyncelement");
-        return i().then((u) => {
+        return o().then((u) => {
           const h = a([u]);
           for (const d of h)
             l.insertAdjacentElement("beforebegin", d);
           l.remove();
         }), [l];
       }
-      const c = t(i) ? new i() : i;
-      return n(c, o);
+      const i = t(o) ? new o() : o;
+      return n(i, c);
     };
-    if (this.elements(this._preSetData).forEach((o) => {
-      if (!o) return;
-      const i = a(o.filter((c) => c !== null));
-      for (const c of i)
+    if (this.elements(this._preSetData).forEach((c) => {
+      if (!c) return;
+      const o = a(c.filter((i) => i !== null));
+      for (const i of o)
         e.insertAdjacentElement(
           "beforeend",
-          c
+          i
         );
-    }), this._layoutObjects = Array.from(e.children), console.log("_layoutObjects", this._layoutObjects), this._additionalStyle) {
-      for (const o of this._layoutObjects) {
-        const i = Object.entries(this._additionalStyle).map((u) => `${u[0]}: ${u[1]}`).join("; ") + ";", c = o.hasAttribute("style") ? o.getAttribute("style") : null;
-        if (!c) {
-          o.setAttribute("style", i);
+    }), this._layoutObjects = Array.from(e.children), this._additionalStyle) {
+      for (const c of this._layoutObjects) {
+        const o = Object.entries(this._additionalStyle).map((u) => `${u[0]}: ${u[1]}`).join("; ") + ";", i = c.hasAttribute("style") ? c.getAttribute("style") : null;
+        if (!i) {
+          c.setAttribute("style", o);
           continue;
         }
-        const l = c.endsWith(";");
-        o.setAttribute(
+        const l = i.endsWith(";");
+        c.setAttribute(
           "style",
-          l ? `${c} ${i}` : `${c}; ${i}`
+          l ? `${i} ${o}` : `${i}; ${o}`
         );
       }
       this._additionalStyle = null;
@@ -1276,8 +1276,8 @@ class V {
     return this._layoutObjects;
   }
   reRender() {
-    const e = this._layoutObjects, t = e[0], s = e.slice(1);
-    console.log(this._layoutObjects, t), s.forEach((n) => n.remove());
+    const e = this._layoutObjects, t = e[0];
+    e.slice(1).forEach((n) => n.remove());
     for (const n of this.visualise())
       t.insertAdjacentElement("beforebegin", n);
     t.remove();
@@ -1422,19 +1422,19 @@ class N {
     );
     if (!s)
       throw new Error("Keyframes style element not found");
-    const n = t ? [...this.entries].reverse() : this.entries, a = n.length === 1, o = 100 / Math.max(n.length - 1, 1), c = `{
+    const n = t ? [...this.entries].reverse() : this.entries, a = n.length === 1, c = 100 / Math.max(n.length - 1, 1), i = `{
 ${n.map((b, T) => {
-      const oe = a ? 100 : T * o, ae = Object.entries(b).map(([ce, le]) => `${ce}: ${le};`).join(" ");
+      const oe = a ? 100 : T * c, ae = Object.entries(b).map(([ce, le]) => `${ce}: ${le};`).join(" ");
       return `    ${oe}% { ${ae} }`;
     }).join(`
 `)}
-}`, l = x.getHash(c), u = ee.find((b) => b.hash === l);
+}`, l = x.getHash(i), u = ee.find((b) => b.hash === l);
     let h;
     if (u)
       h = u.animation;
     else {
       h = `${me}${x.getRandom(16)}`;
-      const b = `@keyframes ${h} ${c}`;
+      const b = `@keyframes ${h} ${i}`;
       s.innerHTML += `
 ${b}`, ee.push({
         hash: l,
@@ -1446,12 +1446,12 @@ ${b}`, ee.push({
     const y = `{ ${C.join("; ")} }`, S = x.getHash(`${this.selector}-${y}`), j = te.find((b) => b.hash === S);
     if (j)
       return j.class;
-    const O = `${h}-${S}`, R = `.${O} ${this.selector} ${y}`;
+    const R = `${h}-${S}`, O = `.${R} ${this.selector} ${y}`;
     return s.innerHTML += `
-${R}`, te.push({
+${O}`, te.push({
       hash: S,
-      class: O
-    }), O;
+      class: R
+    }), R;
   }
 }
 class ke extends q {
@@ -1651,7 +1651,7 @@ const xe = new ve(), _e = new $e(), Ae = new ke(), je = new Le(), st = {
       r[t] && e[t].enable();
   }
 };
-class Oe {
+class Re {
   /**
    * Simple translateX animation
    */
@@ -1679,7 +1679,7 @@ class Oe {
     }, s));
   }
 }
-const nt = new Oe(), Re = {
+const nt = new Re(), Oe = {
   /**
    * Returns parsed path that does not start with `./` or `/`
    */
@@ -1688,7 +1688,7 @@ const nt = new Oe(), Re = {
   }
 };
 function B(r) {
-  return `src/assets/${Re.toFixedPath(r)}`;
+  return `src/assets/${Oe.toFixedPath(r)}`;
 }
 function rt(r) {
   return B(`svg/${r}.svg`);
@@ -2015,8 +2015,8 @@ const bt = {
     if (t.length !== 0)
       for (const s of t) {
         const n = Array.from(document.body.querySelectorAll(`[${s}]`)), a = s.replace(P, "");
-        for (const o of n)
-          o.removeAttribute(s), this.#t(a, o), this.#s(a, o);
+        for (const c of n)
+          c.removeAttribute(s), this.#t(a, c), this.#s(a, c);
       }
   }
   observe() {

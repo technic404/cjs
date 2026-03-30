@@ -97,9 +97,10 @@ export const _CSSProcessor = {
             return newRules;
         };
 
-        for (const [selector, cssText] of Object.entries(rules)) {
+        for (const [_selector, cssText] of Object.entries(rules)) {
             if (cssText.trim() === "") continue;
 
+            const selector = _selector.trim();
             const isMediaRule = selector.startsWith("@media");
             const isKeyFrameRule = selector.startsWith("@keyframes");
             const isRangeRule = selector.startsWith("@range");
