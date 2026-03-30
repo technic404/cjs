@@ -198,9 +198,6 @@ export class CjsLayout<TData = any> {
         const firstLayoutElementOccurrence = layoutElements[0];
         const otherLayoutElements = layoutElements.slice(1);
 
-        console.log(this._layoutObjects, firstLayoutElementOccurrence);
-        
-
         otherLayoutElements.forEach(el => el.remove());
 
         for(const child of this.visualise()) {
