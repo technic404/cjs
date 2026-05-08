@@ -1,3 +1,8 @@
+
+const _CjsRequestsProperties = {
+    withCredentials: false
+}
+
 class CjsRequestResult<T = any> {
     constructor(
         private statusCode: number,
@@ -135,6 +140,10 @@ export class CjsRequest<TResponse = any> {
     private sendBodyOrFiles(xhr: XMLHttpRequest): void {
         const hasBody = Object.keys(this.body).length > 0;
         const hasFiles = Object.keys(this.files).length > 0;
+
+        if(_CjsRequestsProperties.withCredentials) {
+            xhr.withCredentials = true;
+        }
 
         if (hasBody || hasFiles) {
 
@@ -334,5 +343,8 @@ export const CjsRequests = {
                 localStorage.removeItem(key);
             }
         }
+    },
+    setIncludeCredentials(include: boolean): void {
+        _CjsRequestsProperties.withCredentials = include;
     }
 };

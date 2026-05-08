@@ -250,7 +250,6 @@ export class CjsComponent<TData = any> {
     public querySelector(selectors: string) {
         return this.getFirst()!.querySelector(selectors);
     }
-    
 
     /** Get first occurrence of the CjsComponent as HTMLElement */
     public getFirst() {
@@ -266,6 +265,7 @@ export class CjsComponent<TData = any> {
     public loadLayout(layout: CjsLayout) {
         for(const el of this.getAll()) {
             el.innerHTML = '';
+            if(layout._onBeforeLoadCallback) layout._onBeforeLoadCallback();
             for(const layoutEl of layout.visualise()) {
                 el.appendChild(layoutEl);
             }

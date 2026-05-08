@@ -3,13 +3,14 @@ import { CjsComponent } from "./CjsComponent";
 import { _CjsLoggerUtil } from "../utils/protected/_CjsLoggerUtil";
 import { CjsComponentReRenderTag, CjsObjectAttributePrefix } from "../constants";
 import { _DOMElementsUtil } from "../utils/protected/_DOMElementsUtil";
-import { CjsStringUtil } from "../utils/public/CjsStringUtil";
+import { CjsEventsManager } from "../events/CjsEventsManager";
 
 export type CjsLayoutNode = Constructor<CjsComponent> | CjsComponent | CjsLayout | (() => Promise<CjsLayoutNode>) | null | CjsLayoutNode[];
 
-const CjsLayoutTakenIds: string[] = [];
-
 export class CjsLayout<TData = any> {
+
+    public _onBeforeLoadCallback: (() => any) | null = null;
+    public _onAfterLoadCallback: (() => any) | null = null;
 
     public _preSetData: TData | null = null;
     public _additionalStyle: Partial<Record<keyof CSSStyleDeclaration, string>> | null = null;
@@ -40,7 +41,11 @@ export class CjsLayout<TData = any> {
     }
 
 
-    /** Build DOM structure */
+    /** 
+     * Build DOM structure
+     * 
+     * Does not automatically call the `onBeforeLoad` and `onAfterLoad` callbacks.
+     */
     public visualise(): HTMLElement[] {
         const tempWrapper = document.createElement("div");
 
@@ -190,7 +195,24 @@ export class CjsLayout<TData = any> {
             this._additionalStyle = null;
         }
 
+        if(this._onAfterLoadCallback) {
+            const onAddEventAttribute = CjsEventsManager.addOnAddElementCallback(this._onAfterLoadCallback).trim();
+            this._layoutObjects[0].setAttribute(onAddEventAttribute, "");
+        }
+
         return this._layoutObjects as HTMLElement[];
+    }
+
+    onBeforeLoad(onBeforeLoadCallback: () => any): CjsLayout {
+        this._onBeforeLoadCallback = onBeforeLoadCallback;
+
+        return this;
+    }
+
+    onAfterLoad(onAfterLoadCallback: () => any): CjsLayout {
+        this._onAfterLoadCallback = onAfterLoadCallback;
+
+        return this;
     }
 
     reRender() {
