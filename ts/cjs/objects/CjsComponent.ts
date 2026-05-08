@@ -1,7 +1,7 @@
 import { CjsObjectAttributePrefix, CjsGlobalStyleTagId } from "../constants";
 import { onLoad } from "../events/custom/LoadEvent";
 import { _CSSProcessor } from "../processors/css/CSSProcessor";
-import { CjsEvent, CjsEventsMap } from "../types";
+import { AnyHTMLElement, CjsEvent, CjsEventsMap } from "../types";
 import { _CjsLoggerUtil } from "../utils/protected/_CjsLoggerUtil";
 import { _DOMElementsUtil } from "../utils/protected/_DOMElementsUtil";
 import { _StringHTMLElementsUtil } from "../utils/protected/_StringHTMLElementsUtil";
@@ -343,12 +343,16 @@ export class CjsComponent<TData = any> {
     static getForms<T extends CjsComponent<any>>(
         this: Constructor<T>
     ): CjsForm[] | null {
-        const element = (this as StaticCast<T>).getInstance().getFirst();
+        const element = (this as StaticCast<T>).getInstance().getFirst() as AnyHTMLElement;
 
         if(!element) return null;
 
+        const forms = Array.from<HTMLFormElement>(element.querySelectorAll("form")); 
+
+        if(element.tagName === "FORM") forms.push(element as HTMLFormElement);
+
         return Array.from(
-            element.querySelectorAll("form") as HTMLFormElement[], 
+            forms, 
             (el) => new CjsForm(el)
         );
     }
@@ -418,7 +422,7 @@ export class CjsComponent<TData = any> {
     }
 
     /** Get first occurrence of the CjsComponent as HTMLElement */
-    static getFirst<T extends CjsComponent<any>>(this: Constructor<T>) {
+    static getFirst<T extends CjsComponent<any>>(this: Constructor<T>): AnyHTMLElement {
         return (this as StaticCast<T>).getInstance().getFirst();
     }
 
